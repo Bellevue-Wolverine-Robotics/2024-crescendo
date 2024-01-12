@@ -17,10 +17,10 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public static class MotorConstants {
-    public static final int frontLeftWheel = 1;
-    public static final int frontRightWheel = 2;
-    public static final int backLeftWheel = 3;
-    public static final int backRightWheel = 4;
+  public static class CANConstants {
+    public static final int frontLeft = 1;
+    public static final int frontRight = 2;
+    public static final int backLeft = 3;
+    public static final int backRight = 4;
   }
 }
