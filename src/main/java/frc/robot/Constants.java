@@ -23,4 +23,8 @@ public final class Constants {
     public static final int backLeft = 3;
     public static final int backRight = 4;
   }
+  
+  public static class Throttles{
+    public static final double limit = 1.0;
+  }
 }

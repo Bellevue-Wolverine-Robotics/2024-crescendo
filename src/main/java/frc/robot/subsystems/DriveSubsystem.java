@@ -2,14 +2,19 @@ package frc.robot.subsystems;
 
 import java.lang.Object;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.Throttles;
 
+
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -21,6 +26,12 @@ public class DriveSubsystem extends SubsystemBase{
     private CANSparkMax m_rightBack = new CANSparkMax(CANConstants.backRight, MotorType.kBrushless);
 
     private DifferentialDrive m_drive = new DifferentialDrive(m_leftFront, m_rightFront);
+
+    private RelativeEncoder m_leftEncoder =  m_leftFront.getEncoder();
+    private RelativeEncoder m_rightEncoder = m_rightFront.getEncoder();
+    private DifferentialDriveOdometry m_odometry; 
+    
+    private AHRS m_imu = new AHRS(SPI.Port.kMXP);
 
     public DriveSubsystem() {
         m_leftBack.follow(m_leftFront);
@@ -35,13 +46,18 @@ public class DriveSubsystem extends SubsystemBase{
         m_leftBack.setIdleMode(IdleMode.kBrake);
         m_rightFront.setIdleMode(IdleMode.kBrake);
         m_rightBack.setIdleMode(IdleMode.kBrake);
-    
+
+        m_odometry = new DifferentialDriveOdometry(
+            m_imu.getRotation2d(), 
+            m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
+            new Pose2d());
+        m_odometry.resetPosition(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition(), new Pose2d());
+
 
     }
 
     public Pose2d getPos(){
-        //TODO: stop retrun dummy
-        return new Pose2d();
+        return m_odometry.getPoseMeters();
     }
     public void tankDrive(double left, double right){
         this.m_drive.tankDrive(left * Throttles.limit, right * Throttles.limit);
@@ -49,4 +65,10 @@ public class DriveSubsystem extends SubsystemBase{
     public void arcadeDrive(double xSpeed, double rotation){
         this.m_drive.arcadeDrive(xSpeed * Throttles.limit, rotation * Throttles.limit);
     }
+
+    @Override
+    public void periodic(){
+        m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
+    }
+
 }
