@@ -17,7 +17,7 @@ public class DriveStraight extends Command{
     @Override
     public void execute(){
         driveSubsystem.tankDrive(0.5, 0.5);
-        debugLogger.logln("" + driveSubsystem.getPos().getY());
+        //debugLogger.logln("" + driveSubsystem.getPos().getY());
     }
 
     @Override

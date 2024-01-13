@@ -22,6 +22,9 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+
 public class DriveSubsystem extends SubsystemBase {
     private CANSparkMax m_leftBack = new CANSparkMax(CANConstants.backLeft, MotorType.kBrushless);
     private CANSparkMax m_leftFront = new CANSparkMax(CANConstants.frontLeft, MotorType.kBrushless);
@@ -56,6 +59,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftBack.follow(m_leftFront);
         m_rightBack.follow(m_rightFront);
 
+        m_leftEncoder.setPosition(0);
+        m_rightEncoder.setPosition(0);
 
         m_leftEncoder.setPositionConversionFactor(PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
         m_rightEncoder.setPositionConversionFactor(PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
@@ -98,7 +103,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
         /*debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() + " rightFront: " + m_rightFront.getOutputCurrent() 
         + "      |||      leftBack: " + m_leftBack.getOutputCurrent() + "  rightBack: " + m_rightBack.getOutputCurrent());*/
-
+        SmartDashboard.putNumber("Current Y position: ", getPos().getY());
     }
 
 }
