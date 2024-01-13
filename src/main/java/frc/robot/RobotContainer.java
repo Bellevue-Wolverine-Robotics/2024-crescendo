@@ -25,7 +25,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final Debug debugLogger = new Debug("DebugDriveSubsystem.txt");
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
 
   public RobotContainer() {
     configureBindings();

@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.kauailabs.navx.frc.AHRS;
+
+import frc.robot.Debug;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.Throttles;
 
@@ -32,8 +34,9 @@ public class DriveSubsystem extends SubsystemBase {
     private DifferentialDriveOdometry m_odometry;
 
     private AHRS m_imu = new AHRS(SPI.Port.kMXP);
+    private Debug debugLogger;
 
-    public DriveSubsystem() {
+    public DriveSubsystem(Debug debugLogger) {
         this.m_leftFront.restoreFactoryDefaults();
         this.m_leftBack.restoreFactoryDefaults();
         this.m_rightFront.restoreFactoryDefaults();
@@ -64,6 +67,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_odometry.resetPosition(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
                 new Pose2d());
 
+        this.debugLogger = debugLogger;
+
     }
 
     public Pose2d getPos() {
@@ -81,15 +86,8 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
-        try {
-            FileWriter debugFileDriveSubsystem = new FileWriter("D://DebugDriveSubsystem.txt");
-            debugFileDriveSubsystem.write("/media/sda1");
-            debugFileDriveSubsystem.close();
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 
+        debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() + " rightFront: " + m_rightFront.getOutputCurrent() 
+        + "      |||      leftBack: " + m_leftBack.getOutputCurrent() + "  rightBack: " + m_rightBack.getOutputCurrent());
 
     }
 
