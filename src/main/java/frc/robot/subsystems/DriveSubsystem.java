@@ -14,6 +14,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.Debug;
 import frc.robot.Constants.CANConstants;
+import frc.robot.Constants.PhysicalConstants;
 import frc.robot.Constants.Throttles;
 
 import com.revrobotics.CANSparkMax;
@@ -54,6 +55,15 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_leftBack.follow(m_leftFront);
         m_rightBack.follow(m_rightFront);
+
+
+        m_leftEncoder.setPositionConversionFactor(PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
+        m_rightEncoder.setPositionConversionFactor(PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
+    
+        // WPILIB expects encoder rate to be in M/S while REV returns M/Min
+        m_leftEncoder.setVelocityConversionFactor((PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO) / 60);
+        m_rightEncoder.setVelocityConversionFactor((PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO) / 60);
+    
 
         m_leftFront.setInverted(true);
         /* Only voltage output is mirrored. Settings changed on the leader do not affect the follower. */
