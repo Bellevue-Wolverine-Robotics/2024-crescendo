@@ -32,4 +32,8 @@ public final class Constants {
   public static class Throttles {
     public static final double limit = 1.0;
   }
+
+  public static class DebugSettings{
+    public static final boolean enableLogging = true;
+  }
 }

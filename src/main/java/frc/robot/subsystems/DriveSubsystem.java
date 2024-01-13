@@ -86,8 +86,8 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
-        debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() + " rightFront: " + m_rightFront.getOutputCurrent() 
-        + "      |||      leftBack: " + m_leftBack.getOutputCurrent() + "  rightBack: " + m_rightBack.getOutputCurrent());
+        /*debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() + " rightFront: " + m_rightFront.getOutputCurrent() 
+        + "      |||      leftBack: " + m_leftBack.getOutputCurrent() + "  rightBack: " + m_rightBack.getOutputCurrent());*/
 
     }
 
