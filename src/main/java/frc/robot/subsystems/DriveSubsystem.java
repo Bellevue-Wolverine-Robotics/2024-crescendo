@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.Object;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -53,7 +55,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftFront.setInverted(true);
         /* Only voltage output is mirrored. Settings changed on the leader do not affect the follower. */
         /*The motor will spin in the same direction as the leader. This can be changed by passing a true constant after the leader parameter. */
-    
 
 
         m_odometry = new DifferentialDriveOdometry(
@@ -80,6 +81,16 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
+        try {
+            FileWriter debugFileDriveSubsystem = new FileWriter("D://DebugDriveSubsystem.txt");
+            debugFileDriveSubsystem.write("/media/sda1");
+            debugFileDriveSubsystem.close();
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+
     }
 
 }
