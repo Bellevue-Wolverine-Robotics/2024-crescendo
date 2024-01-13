@@ -32,9 +32,6 @@ public class DriveSubsystem extends SubsystemBase {
     private AHRS m_imu = new AHRS(SPI.Port.kMXP);
 
     public DriveSubsystem() {
-        m_leftBack.follow(m_leftFront);
-        m_rightBack.follow(m_rightFront);
-
         this.m_leftFront.restoreFactoryDefaults();
         this.m_leftBack.restoreFactoryDefaults();
         this.m_rightFront.restoreFactoryDefaults();
@@ -46,9 +43,12 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightBack.setSmartCurrentLimit(30);
 
         m_leftFront.setIdleMode(IdleMode.kBrake);
-        m_leftBack.setIdleMode(IdleMode.kCoast);
+        m_leftBack.setIdleMode(IdleMode.kBrake);
         m_rightFront.setIdleMode(IdleMode.kBrake);
-        m_rightBack.setIdleMode(IdleMode.kCoast);
+        m_rightBack.setIdleMode(IdleMode.kBrake);
+
+        m_leftBack.follow(m_leftFront);
+        m_rightBack.follow(m_rightFront);
 
         m_leftFront.setInverted(true);
         /* Only voltage output is mirrored. Settings changed on the leader do not affect the follower. */
@@ -80,9 +80,6 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
-        System.out.println("left: " + m_leftFront.getOutputCurrent());
-        System.out.println("right: " + m_rightFront.getOutputCurrent());
-
     }
 
 }
