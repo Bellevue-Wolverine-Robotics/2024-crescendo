@@ -32,8 +32,8 @@ public class DriveSubsystem extends SubsystemBase {
     private AHRS m_imu = new AHRS(SPI.Port.kMXP);
 
     public DriveSubsystem() {
-        // m_leftBack.follow(m_leftFront);
-        // m_rightBack.follow(m_rightFront);
+        m_leftBack.follow(m_leftFront);
+        m_rightBack.follow(m_rightFront);
 
         this.m_leftFront.restoreFactoryDefaults();
         this.m_leftBack.restoreFactoryDefaults();
@@ -42,18 +42,19 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_leftFront.setSmartCurrentLimit(30);
         m_rightFront.setSmartCurrentLimit(30);
+        m_leftBack.setSmartCurrentLimit(30);
+        m_rightBack.setSmartCurrentLimit(30);
 
-        m_leftFront.setIdleMode(IdleMode.kCoast);
+        m_leftFront.setIdleMode(IdleMode.kBrake);
         m_leftBack.setIdleMode(IdleMode.kCoast);
-        m_rightFront.setIdleMode(IdleMode.kCoast);
+        m_rightFront.setIdleMode(IdleMode.kBrake);
         m_rightBack.setIdleMode(IdleMode.kCoast);
 
-        if (false) {
-            m_leftFront.setIdleMode(IdleMode.kBrake);
-            m_leftBack.setIdleMode(IdleMode.kBrake);
-            m_rightFront.setIdleMode(IdleMode.kBrake);
-            m_rightBack.setIdleMode(IdleMode.kBrake);
-        }
+        m_leftFront.setInverted(true);
+        /* Only voltage output is mirrored. Settings changed on the leader do not affect the follower. */
+        /*The motor will spin in the same direction as the leader. This can be changed by passing a true constant after the leader parameter. */
+    
+
 
         m_odometry = new DifferentialDriveOdometry(
                 m_imu.getRotation2d(),
