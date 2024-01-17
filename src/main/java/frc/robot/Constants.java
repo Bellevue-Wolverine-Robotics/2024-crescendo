@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -31,5 +33,15 @@ public final class Constants {
 
   public static class Throttles {
     public static final double limit = 1.0;
+  }
+
+  public static class DebugSettings {
+    public static final boolean enableLogging = false;
+  }
+
+  public static class PhysicalConstants {
+    public static final double DRIVE_GEAR_RATIO = 8.45;
+    public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
+    public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
   }
 }
