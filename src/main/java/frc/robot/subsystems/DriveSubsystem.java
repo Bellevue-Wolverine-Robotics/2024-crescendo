@@ -24,7 +24,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
 public class DriveSubsystem extends SubsystemBase {
     private CANSparkMax m_leftBack = new CANSparkMax(CANConstants.backLeft, MotorType.kBrushless);
     private CANSparkMax m_leftFront = new CANSparkMax(CANConstants.frontLeft, MotorType.kBrushless);
@@ -62,18 +61,30 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftEncoder.setPosition(0);
         m_rightEncoder.setPosition(0);
 
-        m_leftEncoder.setPositionConversionFactor(PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
-        m_rightEncoder.setPositionConversionFactor(PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
-    
+        m_leftEncoder.setPositionConversionFactor(
+                PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
+        m_rightEncoder.setPositionConversionFactor(
+                PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
+
         // WPILIB expects encoder rate to be in M/S while REV returns M/Min
-        m_leftEncoder.setVelocityConversionFactor((PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO) / 60);
-        m_rightEncoder.setVelocityConversionFactor((PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO) / 60);
-    
+        m_leftEncoder.setVelocityConversionFactor(
+                (PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO) / 60);
+        m_rightEncoder.setVelocityConversionFactor(
+                (PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO) / 60);
 
         m_leftFront.setInverted(true);
-        /* Only voltage output is mirrored. Settings changed on the leader do not affect the follower. */
-        /*The motor will spin in the same direction as the leader. This can be changed by passing a true constant after the leader parameter. */
 
+        m_imu.reset();
+        m_imu.resetDisplacement();
+        m_imu.zeroYaw();
+        /*
+         * Only voltage output is mirrored. Settings changed on the leader do not affect
+         * the follower.
+         */
+        /*
+         * The motor will spin in the same direction as the leader. This can be changed
+         * by passing a true constant after the leader parameter.
+         */
 
         m_odometry = new DifferentialDriveOdometry(
                 m_imu.getRotation2d(),
@@ -101,9 +112,20 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
-        /*debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() + " rightFront: " + m_rightFront.getOutputCurrent() 
-        + "      |||      leftBack: " + m_leftBack.getOutputCurrent() + "  rightBack: " + m_rightBack.getOutputCurrent());*/
+        /*
+         * debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() +
+         * " rightFront: " + m_rightFront.getOutputCurrent()
+         * + "      |||      leftBack: " + m_leftBack.getOutputCurrent() +
+         * "  rightBack: " + m_rightBack.getOutputCurrent());
+         */
         SmartDashboard.putNumber("Current Y position: ", getPos().getY());
+        SmartDashboard.putNumber("Current X position: ", getPos().getX());
+        SmartDashboard.putNumber("Current Heading: ", getPos().getRotation().getDegrees());
+        SmartDashboard.putNumber("m_imu: ", m_imu.getAngle());
+
+        SmartDashboard.putNumber("Left Encoder: ", m_leftEncoder.getPosition());
+        SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
+
     }
 
 }

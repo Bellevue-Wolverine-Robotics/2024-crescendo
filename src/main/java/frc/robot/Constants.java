@@ -35,13 +35,13 @@ public final class Constants {
     public static final double limit = 1.0;
   }
 
-  public static class DebugSettings{
-    public static final boolean enableLogging = true;
+  public static class DebugSettings {
+    public static final boolean enableLogging = false;
   }
 
-  public static class PhysicalConstants{
+  public static class PhysicalConstants {
     public static final double DRIVE_GEAR_RATIO = 8.45;
     public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
-    public static final double WHEEL_CIRCUMFERENCE_METERS =  Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
+    public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
   }
 }
