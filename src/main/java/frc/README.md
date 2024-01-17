@@ -2,18 +2,18 @@
 
 ### Drivetrain
  - [x] Odometry
- - [ ] Driving speed switcher (fast, med, slow)
- - [ ] PathPlanner
+ - [ ] Driving speed switcher (fast, med, slow) [MED]
+ - [ ] PathPlanner [LOW]
 
 ### Intake
- - [ ] Create intake motor
- - [ ] Bind intake command to joystick button
+ - [ ] Create intake motor [HI]
+ - [ ] Bind intake command to joystick button [HI]
 
 ### Climber
- - [ ] Create basic climber motor
- - [ ] Bind commands for bringing climber up and down
- - [ ] Setup encoder + limit switch to detect if climber is at bounds
- - [ ] PID to automatically move climber to right position
+ - [ ] Create basic climber motor [HI]
+ - [ ] Bind commands for bringing climber up and down [HI]
+ - [ ] Setup encoder + limit switch to detect if climber is at bounds [HI]
+ - [ ] PID to automatically move climber to right position [MED]
 
 
 ### Flywheel
@@ -21,7 +21,7 @@
 
 
 ### Vision
- - [ ] Set up basic apriltag parsing
- - [ ] Calculate distance and angle from apriltags
- - [ ] Use april tag data for correcting odometry
- - [ ] Set up on-the-fly path generation to move bot to correct location
+ - [ ] Set up basic apriltag parsing [MED]
+ - [ ] Calculate distance and angle from apriltags [MED]
+ - [ ] Use april tag data for correcting odometry [LO]
+ - [ ] Set up on-the-fly path generation to move bot to correct location [LO]
