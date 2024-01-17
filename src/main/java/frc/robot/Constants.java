@@ -27,6 +27,20 @@ public final class Constants {
     public static final int frontRight = 3;
     public static final int backLeft = 2;
     public static final int backRight = 4;
+
+    public static final int kFlywheelId = -1;
+  }
+
+  public static class PIDConstants {
+    public static class FlywheelPID {
+      public static final int kP = -1;
+      public static final int kI = -1;
+      public static final int kD = -1;
+      public static final int kIZone = -1;
+      public static final int kFF = -1;
+      public static final int kMinOutput = -1;
+      public static final int kMaxOutput = 1;
+    }
   }
 
   public static class Throttles {
