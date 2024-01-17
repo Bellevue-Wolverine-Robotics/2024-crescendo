@@ -35,4 +35,9 @@ public class FlywheelSubsystem extends SubsystemBase {
 	public void setFlywheelVelocity(double setpoint) {
 		m_flywheelPidController.setReference(setpoint, ControlType.kVelocity);
 	}
+
+	@Override
+	public void periodic() {
+		System.out.println("Flywheel Velocity: " + m_flywheelEncoder.getVelocity());
+	}
 }
