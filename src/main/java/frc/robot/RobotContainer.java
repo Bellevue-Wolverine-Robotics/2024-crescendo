@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PIDConstants.FlywheelPID;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.Autos;
 import frc.robot.commands.*;
@@ -33,9 +34,9 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
   private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
 
-  private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
 
-  private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.OPERATOR_CONTROLLER_PORT);
+  private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
   public RobotContainer() {
     configureBindings();
@@ -46,7 +47,11 @@ public class RobotContainer {
         new ArcadeDrive(m_driveSubsystem, () -> m_driverController.getY(), () -> m_driverController.getX()));
 
     m_flywheelSubsystem.setDefaultCommand(
-        new InstantCommand(() -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() * 1580), // TODO: change to constant
+        new InstantCommand(
+            () -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() * FlywheelPID.kMaxRPM), // TODO:
+            // change
+            // to
+            // constant
             m_flywheelSubsystem));
 
   }

@@ -1,12 +1,14 @@
 package frc.robot.subsystems;
 
-import com.pathplanner.lib.util.PIDConstants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUsageId;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.PIDConstants.FlywheelPID;
@@ -33,6 +35,12 @@ public class FlywheelSubsystem extends SubsystemBase {
 	}
 
 	public void setFlywheelVelocity(double setpoint) {
+		System.out.println("Setpoint: " + setpoint);
+
+		SmartDashboard.putNumber("Setpoint", setpoint);
+		SmartDashboard.putNumber("Flywheel Velocity", m_flywheelEncoder.getVelocity());
+		SmartDashboard.putNumber("Error", setpoint - m_flywheelEncoder.getVelocity());
+
 		m_flywheelPidController.setReference(setpoint, ControlType.kVelocity);
 	}
 

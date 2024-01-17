@@ -20,28 +20,30 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int DRIVER_CONTROLLER_PORT = 0;
-    public static final int OPERATOR_CONTROLLER_PORT = 1;
+    public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
   }
 
   public static class CANConstants {
-    public static final int frontLeft = 1;
-    public static final int frontRight = 3;
-    public static final int backLeft = 2;
-    public static final int backRight = 4;
+    public static final int frontLeftId = 1;
+    public static final int frontRightId = 3;
+    public static final int backLeftId = 2;
+    public static final int backRightId = 4;
 
-    public static final int kFlywheelId = -1;
+    public static final int kFlywheelId = 5;
   }
 
   public static class PIDConstants {
     public static class FlywheelPID {
-      public static final int kP = -1;
-      public static final int kI = -1;
-      public static final int kD = -1;
-      public static final int kIZone = -1;
-      public static final int kFF = -1;
-      public static final int kMinOutput = -1;
-      public static final int kMaxOutput = 1;
+      public static final double kMaxRPM = 5828;
+
+      public static final double kP = 6e-4;
+      public static final double kI = 0;
+      public static final double kD = 0;
+      public static final double kIZone = 0;
+      public static final double kFF = 1 / kMaxRPM;
+      public static final double kMinOutput = -1;
+      public static final double kMaxOutput = 1;
     }
   }
 

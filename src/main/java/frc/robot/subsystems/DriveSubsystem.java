@@ -22,13 +22,14 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
-    private CANSparkMax m_leftBack = new CANSparkMax(CANConstants.backLeft, MotorType.kBrushless);
-    private CANSparkMax m_leftFront = new CANSparkMax(CANConstants.frontLeft, MotorType.kBrushless);
-    private CANSparkMax m_rightFront = new CANSparkMax(CANConstants.frontRight, MotorType.kBrushless);
-    private CANSparkMax m_rightBack = new CANSparkMax(CANConstants.backRight, MotorType.kBrushless);
+    private CANSparkMax m_leftBack = new CANSparkMax(CANConstants.backLeftId, MotorType.kBrushless);
+    private CANSparkMax m_leftFront = new CANSparkMax(CANConstants.frontLeftId, MotorType.kBrushless);
+    private CANSparkMax m_rightFront = new CANSparkMax(CANConstants.frontRightId, MotorType.kBrushless);
+    private CANSparkMax m_rightBack = new CANSparkMax(CANConstants.backRightId, MotorType.kBrushless);
 
     private DifferentialDrive m_drive = new DifferentialDrive(m_leftFront, m_rightFront);
 
@@ -39,7 +40,11 @@ public class DriveSubsystem extends SubsystemBase {
     private AHRS m_imu = new AHRS(SPI.Port.kMXP);
     private Debug debugLogger;
 
+    private Field2d m_field = new Field2d();
+
     public DriveSubsystem(Debug debugLogger) {
+        SmartDashboard.putData("Field", m_field);
+
         this.m_leftFront.restoreFactoryDefaults();
         this.m_leftBack.restoreFactoryDefaults();
         this.m_rightFront.restoreFactoryDefaults();
@@ -125,6 +130,8 @@ public class DriveSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Left Encoder: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
+
+        m_field.setRobotPose(m_odometry.getPoseMeters());
 
     }
 
