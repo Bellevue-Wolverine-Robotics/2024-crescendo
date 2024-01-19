@@ -1,11 +1,14 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
+import frc.robot.Constants.Climbing;
 import frc.robot.Constants.PhysicalConstants;
 import frc.robot.Constants.Throttles;
 
@@ -19,6 +22,9 @@ public class ClimberSubsystem extends SubsystemBase{
         this.climbMotor1.restoreFactoryDefaults();
         this.climbMotor2.restoreFactoryDefaults();
 
+        this.climbMotor1.setIdleMode(IdleMode.kBrake);
+        this.climbMotor2.setIdleMode(IdleMode.kBrake);
+
         this.climbMotor1.setSmartCurrentLimit(30);
         this.climbMotor2.setSmartCurrentLimit(30);
     
@@ -27,9 +33,8 @@ public class ClimberSubsystem extends SubsystemBase{
 
         climberEncoder.setPosition(0.0);
         climberEncoder.setPositionConversionFactor(PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
-        
     }
-
+    
     public double getPosition(){
         return this.climberEncoder.getPosition();
     }
@@ -38,11 +43,13 @@ public class ClimberSubsystem extends SubsystemBase{
     public void setSpeed(double speed)
     //@requires 0.0 <= speed && speed <= 1.0;
     {
-        speed = speed > 1.0? 1.0: speed;
-        speed = speed < 0.0? 0.0: speed;
-        climbMotor1.setVoltage(speed*Throttles.climberVoltage);
+        climbMotor1.setVoltage(MathUtil.clamp(speed, 0.0, 1.0)*Climbing.climberVoltage);
     }
 
+
+    public void stop(){
+        climbMotor1.set(0.0);
+    }
 
 
 
