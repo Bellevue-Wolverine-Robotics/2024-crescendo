@@ -24,6 +24,7 @@ public class Debug {
     public void logln(String logInfo){
         this.log(logInfo + '\n');
     }
+
     public void log(String logInfo){
         if(DebugSettings.enableLogging){
             try {
@@ -36,11 +37,13 @@ public class Debug {
     }
 
     public void closelog(){
-        try {
-            this.debugFileDriveSubsystem.close();
-        } catch (IOException e) {
+        if(DebugSettings.enableLogging){
+            try {
+                this.debugFileDriveSubsystem.close();
+            } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+                e.printStackTrace();
+            }
         }
     }
 

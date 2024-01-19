@@ -48,12 +48,9 @@ public class RobotContainer {
   private final CommandJoystick m_driverController = new CommandJoystick(DriveConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
-  private Throttles prevThrottle;
-
-  private SendableChooser<Throttles> throttleSelection;
-
   public RobotContainer() {
     configureBindings();
+    smartDashBoardBinding();
   }
 
   private void configureBindings() {
@@ -73,6 +70,11 @@ public class RobotContainer {
     m_operatorController.button(OperatorConstants.goDownButton).whileTrue(new InstantCommand(m_climberSubsystem::goUp, m_climberSubsystem));
 
 
+  }
+
+
+  public void smartDashBoardBinding(){
+    SmartDashboard.putData("Save logging info", new DebugClose(debugLogger));
   }
 
   public void setDriveThrottleSpeed(Throttles throttleSpeed){
