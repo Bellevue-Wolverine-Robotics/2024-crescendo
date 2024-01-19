@@ -72,6 +72,7 @@ public final class Constants {
     public static final double climbingDistance = 1.0;
     public static final double climbTolerance = (0.05)*climbingDistance;
     public static final double climbRateMax  = 1.0;
+    public static final int limitSwitchDigitalPort = 0;
   }
 
   public static class DebugSettings {

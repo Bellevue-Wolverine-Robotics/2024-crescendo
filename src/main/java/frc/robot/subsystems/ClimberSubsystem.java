@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.Climbing;
@@ -15,7 +16,9 @@ import frc.robot.Constants.Throttles;
 public class ClimberSubsystem extends SubsystemBase{
     private CANSparkMax climbMotor1 = new CANSparkMax(CANConstants.climbMotor1, MotorType.kBrushless);
     private CANSparkMax climbMotor2 = new CANSparkMax(CANConstants.climbMotor2, MotorType.kBrushless);
+    private DigitalInput limitSwitch = new DigitalInput(Climbing.limitSwitchDigitalPort);
 
+    private boolean limitSwitchEnabled = true;
     private RelativeEncoder climberEncoder = climbMotor1.getEncoder();
 
     public ClimberSubsystem(){
@@ -34,7 +37,7 @@ public class ClimberSubsystem extends SubsystemBase{
         climberEncoder.setPosition(0.0);
         climberEncoder.setPositionConversionFactor(PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
     }
-    
+
     public double getPosition(){
         return this.climberEncoder.getPosition();
     }
@@ -43,7 +46,12 @@ public class ClimberSubsystem extends SubsystemBase{
     public void setSpeed(double speed)
     //@requires 0.0 <= speed && speed <= 1.0;
     {
-        climbMotor1.setVoltage(MathUtil.clamp(speed, 0.0, 1.0)*Climbing.climberVoltage);
+        if(limitSwitchEnabled && limitSwitch.get()){
+            climbMotor1.setVoltage(0.0);
+        }
+        else{
+            climbMotor1.setVoltage(MathUtil.clamp(speed, 0.0, 1.0)*Climbing.climberVoltage);
+        }
     }
 
 
