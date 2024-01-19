@@ -7,14 +7,13 @@ import frc.robot.Constants.DebugSettings;
 
 
 public class Debug {
-    private String debugFileName;
+    private FileWriter debugFileDriveSubsystem;
+
     
     public Debug(String filename){
         if(DebugSettings.enableLogging){
-            debugFileName = "media/sda1/" + filename;
             try {
-                FileWriter debugFileDriveSubsystem = new FileWriter(debugFileName);
-                debugFileDriveSubsystem.write("");
+                this.debugFileDriveSubsystem = new FileWriter("media/sda1/" + filename);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -28,14 +27,20 @@ public class Debug {
     public void log(String logInfo){
         if(DebugSettings.enableLogging){
             try {
-                FileWriter debugFileDriveSubsystem = new FileWriter(debugFileName, true);
-                debugFileDriveSubsystem.write(logInfo);
-                debugFileDriveSubsystem.close();
-
+                this.debugFileDriveSubsystem.write(logInfo);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             } 
+        }
+    }
+
+    public void closelog(){
+        try {
+            this.debugFileDriveSubsystem.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
