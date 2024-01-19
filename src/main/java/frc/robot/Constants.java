@@ -34,37 +34,24 @@ public final class Constants {
     public static final int kOperatorControllerPort = 1;
   }
 
-  public static class CANConstants {
-    public static final int frontLeftId = 1;
-    public static final int frontRightId = 3;
-    public static final int backLeftId = 2;
-    public static final int backRightId = 4;
+  public static class Flywheel {
+    public static final double kMaxRPM = 5828;
 
     public static final int kFlywheelId = 5;
 
-    public static final int climbMotor1 = -1;
-    public static final int climbMotor2 = -1; 
-  }
-
-  public static class PIDConstants {
-    public static class FlywheelPID {
-      public static final double kMaxRPM = 5828;
-
-      public static final double kP = 6e-4;
-      public static final double kI = 0;
-      public static final double kD = 0;
-      public static final double kIZone = 0;
-      public static final double kFF = 1 / kMaxRPM;
-      public static final double kMinOutput = -1;
-      public static final double kMaxOutput = 1;
-    }
-  }
-
-  public static class Throttles {
-    public static final double limit = 1.0;
+    public static final double kP = 6e-4;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kIZone = 0;
+    public static final double kFF = 1 / kMaxRPM;
+    public static final double kMinOutput = -1;
+    public static final double kMaxOutput = 1;
   }
 
   public static class Climbing{
+    public static final int climbMotor1 = -1;
+    public static final int climbMotor2 = -1; 
+
     public static final double climberVoltage = 12;
     public static final double kP = 1.0;
     public static final double kI = 0;
@@ -73,20 +60,31 @@ public final class Constants {
     public static final double climbTolerance = (0.05)*climbingDistance;
     public static final double climbRateMax  = 1.0;
     public static final int limitSwitchDigitalPort = 0;
+
+    public static final double DRIVE_GEAR_RATIO = 8.45;
+    public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
+    public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
+
   }
+
+  public static class Drive{
+    public static final int frontLeftId = 1;
+    public static final int frontRightId = 3;
+    public static final int backLeftId = 2;
+    public static final int backRightId = 4;
+
+    public static final double DRIVE_GEAR_RATIO = 8.45;
+    public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
+    public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
+
+    public static final double limit = 1.0;
+
+  }
+
 
   public static class DebugSettings {
     public static final boolean enableLogging = false;
   }
-
-  public static class PhysicalConstants {
-    public static final double DRIVE_GEAR_RATIO = 8.45;
-    public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
-    public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
-  }
-
-
-
 
 
 }

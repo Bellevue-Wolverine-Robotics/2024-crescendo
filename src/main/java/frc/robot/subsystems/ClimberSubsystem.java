@@ -8,14 +8,12 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.CANConstants;
 import frc.robot.Constants.Climbing;
-import frc.robot.Constants.PhysicalConstants;
-import frc.robot.Constants.Throttles;
+import frc.robot.commands.Climb;
 
 public class ClimberSubsystem extends SubsystemBase{
-    private CANSparkMax climbMotor1 = new CANSparkMax(CANConstants.climbMotor1, MotorType.kBrushless);
-    private CANSparkMax climbMotor2 = new CANSparkMax(CANConstants.climbMotor2, MotorType.kBrushless);
+    private CANSparkMax climbMotor1 = new CANSparkMax(Climbing.climbMotor1, MotorType.kBrushless);
+    private CANSparkMax climbMotor2 = new CANSparkMax(Climbing.climbMotor2, MotorType.kBrushless);
     private DigitalInput limitSwitch = new DigitalInput(Climbing.limitSwitchDigitalPort);
 
     private boolean limitSwitchEnabled = true;
@@ -35,7 +33,7 @@ public class ClimberSubsystem extends SubsystemBase{
         climbMotor2.follow(climbMotor1, true);
 
         climberEncoder.setPosition(0.0);
-        climberEncoder.setPositionConversionFactor(PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
+        climberEncoder.setPositionConversionFactor(Climbing.WHEEL_CIRCUMFERENCE_METERS / Climbing.DRIVE_GEAR_RATIO);
     }
 
     public double getPosition(){

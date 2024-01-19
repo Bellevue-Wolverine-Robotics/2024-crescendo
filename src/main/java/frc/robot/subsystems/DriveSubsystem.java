@@ -13,9 +13,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.Debug;
-import frc.robot.Constants.CANConstants;
-import frc.robot.Constants.PhysicalConstants;
-import frc.robot.Constants.Throttles;
+import frc.robot.Constants.Drive;
+
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -26,10 +25,10 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
-    private CANSparkMax m_leftBack = new CANSparkMax(CANConstants.backLeftId, MotorType.kBrushless);
-    private CANSparkMax m_leftFront = new CANSparkMax(CANConstants.frontLeftId, MotorType.kBrushless);
-    private CANSparkMax m_rightFront = new CANSparkMax(CANConstants.frontRightId, MotorType.kBrushless);
-    private CANSparkMax m_rightBack = new CANSparkMax(CANConstants.backRightId, MotorType.kBrushless);
+    private CANSparkMax m_leftBack = new CANSparkMax(Drive.backLeftId, MotorType.kBrushless);
+    private CANSparkMax m_leftFront = new CANSparkMax(Drive.frontLeftId, MotorType.kBrushless);
+    private CANSparkMax m_rightFront = new CANSparkMax(Drive.frontRightId, MotorType.kBrushless);
+    private CANSparkMax m_rightBack = new CANSparkMax(Drive.backRightId, MotorType.kBrushless);
 
     private DifferentialDrive m_drive = new DifferentialDrive(m_leftFront, m_rightFront);
 
@@ -67,15 +66,15 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightEncoder.setPosition(0);
 
         m_leftEncoder.setPositionConversionFactor(
-                PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
+                Drive.WHEEL_CIRCUMFERENCE_METERS / Drive.DRIVE_GEAR_RATIO);
         m_rightEncoder.setPositionConversionFactor(
-                PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO);
+                Drive.WHEEL_CIRCUMFERENCE_METERS / Drive.DRIVE_GEAR_RATIO);
 
         // WPILIB expects encoder rate to be in M/S while REV returns M/Min
         m_leftEncoder.setVelocityConversionFactor(
-                (PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO) / 60);
+                (Drive.WHEEL_CIRCUMFERENCE_METERS / Drive.DRIVE_GEAR_RATIO) / 60);
         m_rightEncoder.setVelocityConversionFactor(
-                (PhysicalConstants.WHEEL_CIRCUMFERENCE_METERS / PhysicalConstants.DRIVE_GEAR_RATIO) / 60);
+                (Drive.WHEEL_CIRCUMFERENCE_METERS / Drive.DRIVE_GEAR_RATIO) / 60);
 
         m_leftFront.setInverted(true);
 
@@ -107,11 +106,11 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void tankDrive(double left, double right) {
-        this.m_drive.tankDrive(left * Throttles.limit, right * Throttles.limit);
+        this.m_drive.tankDrive(left * Drive.limit, right * Drive.limit);
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {
-        this.m_drive.arcadeDrive(xSpeed * Throttles.limit, rotation * Throttles.limit);
+        this.m_drive.arcadeDrive(xSpeed * Drive.limit, rotation * Drive.limit);
     }
 
     @Override
@@ -134,5 +133,11 @@ public class DriveSubsystem extends SubsystemBase {
         m_field.setRobotPose(m_odometry.getPoseMeters());
 
     }
+
+
+    
+
+
+
 
 }
