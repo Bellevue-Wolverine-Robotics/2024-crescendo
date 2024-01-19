@@ -2,7 +2,7 @@
 
 ### Drivetrain
  - [x] Odometry
- - [ ] Driving speed switcher (fast, med, slow) [MED]
+ - [x] Driving speed switcher (fast, med, slow) [MED]
  - [ ] PathPlanner [LOW]
 
 ### Intake
@@ -10,10 +10,10 @@
  - [ ] Bind intake command to joystick button [HI]
 
 ### Climber
- - [ ] Create basic climber motor [HI]
- - [ ] Bind commands for bringing climber up and down [HI]
- - [ ] Setup encoder + limit switch to detect if climber is at bounds [HI]
- - [ ] PID to automatically move climber to right position [MED]
+ - [x] Create basic climber motor [HI]
+ - [x] Bind commands for bringing climber up and down [HI]
+ - [x] Setup encoder + limit switch to detect if climber is at bounds [HI]
+ - [x] PID to automatically move climber to right position [MED]
 
 
 ### Flywheel
