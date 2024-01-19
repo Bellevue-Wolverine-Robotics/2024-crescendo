@@ -52,6 +52,12 @@ public class ClimberSubsystem extends SubsystemBase{
         }
     }
 
+    public void goUp(){
+        setSpeed(Climbing.operatorClimbSpeed);
+    }
+    public void goDown(){
+        setSpeed(-Climbing.operatorClimbSpeed);
+    }
 
     public void stop(){
         climbMotor1.set(0.0);

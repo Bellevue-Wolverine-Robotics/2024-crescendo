@@ -29,10 +29,19 @@ import edu.wpi.first.math.util.Units;
  */
 
 public final class Constants {
-  public static class OperatorConstants {
+  public static class DriveConstants{
     public static final int kDriverControllerPort = 0;
-    public static final int kOperatorControllerPort = 1;
   }
+
+  public static class OperatorConstants {
+    public static final int kOperatorControllerPort = 1;   
+    public static final int climbButton = 2;//I HAVE NO CLUE WHICH BUTTON THIS IS LMAO FIX THIS 
+    public static final int goUpButton = 3;
+    public static final int goDownButton = 4;
+
+  }
+
+  
 
   public static class Flywheel {
     public static final double kMaxRPM = 5828;
@@ -60,11 +69,13 @@ public final class Constants {
     public static final double climbTolerance = (0.05)*climbingDistance;
     public static final double climbRateMax  = 1.0;
     public static final int limitSwitchDigitalPort = 0;
+    public static final double operatorClimbSpeed = 0;
 
     public static final double DRIVE_GEAR_RATIO = 8.45;
     public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
     public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
 
+    
   }
 
   public static class Drive{

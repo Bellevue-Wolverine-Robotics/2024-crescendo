@@ -4,12 +4,14 @@
 
 package frc.robot;
 
+import frc.robot.Constants.Climbing;
 import frc.robot.Constants.Drive;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Flywheel;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Enums.Throttles;
 import frc.robot.commands.*;
-
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
@@ -19,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import java.time.Instant;
 
 import org.apache.commons.io.input.MessageDigestCalculatingInputStream;
 
@@ -38,8 +42,10 @@ public class RobotContainer {
   private final Debug debugLogger = new Debug("DebugDriveSubsystem.txt");
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
   private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
+  private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
 
-  private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
+
+  private final CommandJoystick m_driverController = new CommandJoystick(DriveConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
   private Throttles prevThrottle;
@@ -61,6 +67,11 @@ public class RobotContainer {
             // to
             // constant
             m_flywheelSubsystem));
+            
+    m_operatorController.button(OperatorConstants.climbButton).whileTrue(new Climb(m_climberSubsystem, Climbing.climbingDistance, true));
+    m_operatorController.button(OperatorConstants.goUpButton).whileTrue(new InstantCommand(m_climberSubsystem::goUp, m_climberSubsystem));
+    m_operatorController.button(OperatorConstants.goDownButton).whileTrue(new InstantCommand(m_climberSubsystem::goUp, m_climberSubsystem));
+
 
   }
 
