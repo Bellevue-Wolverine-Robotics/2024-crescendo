@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.apache.commons.lang3.ObjectUtils.Null;
+
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -18,6 +20,14 @@ import edu.wpi.first.math.util.Units;
  * wherever the
  * constants are needed, to reduce verbosity.
  */
+
+/*
+ * Constants -> properties -> subsystem or 
+ * Constants -> subsystem -> properties
+ * ahhhhhhhh
+ * 
+ */
+
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -31,6 +41,9 @@ public final class Constants {
     public static final int backRightId = 4;
 
     public static final int kFlywheelId = 5;
+
+    public static final int climbMotor1 = -1;
+    public static final int climbMotor2 = -1; 
   }
 
   public static class PIDConstants {
@@ -51,6 +64,17 @@ public final class Constants {
     public static final double limit = 1.0;
   }
 
+  public static class Climbing{
+    public static final double climberVoltage = 12;
+    public static final double kP = 1.0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double climbingDistance = 1.0;
+    public static final double climbTolerance = (0.05)*climbingDistance;
+    public static final double climbRateMax  = 1.0;
+    public static final int limitSwitchDigitalPort = 0;
+  }
+
   public static class DebugSettings {
     public static final boolean enableLogging = false;
   }
@@ -60,4 +84,9 @@ public final class Constants {
     public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
     public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
   }
+
+
+
+
+
 }
