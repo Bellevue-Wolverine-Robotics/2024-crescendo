@@ -4,8 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.Constants.Flywheel;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.PIDConstants.FlywheelPID;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.Autos;
 import frc.robot.commands.*;
@@ -48,7 +48,7 @@ public class RobotContainer {
 
     m_flywheelSubsystem.setDefaultCommand(
         new InstantCommand(
-            () -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() * FlywheelPID.kMaxRPM), // TODO:
+            () -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() * Flywheel.kMaxRPM), // TODO:
             // change
             // to
             // constant
