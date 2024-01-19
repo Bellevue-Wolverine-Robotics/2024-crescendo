@@ -5,13 +5,16 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PIDConstants.FlywheelPID;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.Autos;
 import frc.robot.commands.*;
 
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.FlywheelSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,19 +32,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   private final Debug debugLogger = new Debug("DebugDriveSubsystem.txt");
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
+  private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
+
+  private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
+
+  private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
   public RobotContainer() {
     configureBindings();
   }
 
-  private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.DRIVER_CONTROLLER_PORT);
-
-  private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.OPERATOR_CONTROLLER_PORT);
-
   private void configureBindings() {
-
     m_driveSubsystem.setDefaultCommand(
         new ArcadeDrive(m_driveSubsystem, () -> m_driverController.getY(), () -> m_driverController.getX()));
+
+    m_flywheelSubsystem.setDefaultCommand(
+        new InstantCommand(
+            () -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() * FlywheelPID.kMaxRPM), // TODO:
+            // change
+            // to
+            // constant
+            m_flywheelSubsystem));
 
   }
 
