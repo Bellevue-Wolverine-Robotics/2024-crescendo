@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.apache.commons.lang3.ObjectUtils.Null;
+
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -31,6 +33,9 @@ public final class Constants {
     public static final int backRightId = 4;
 
     public static final int kFlywheelId = 5;
+
+    public static final int climbMotor1 = -1;
+    public static final int climbMotor2 = -1; 
   }
 
   public static class PIDConstants {
@@ -49,6 +54,7 @@ public final class Constants {
 
   public static class Throttles {
     public static final double limit = 1.0;
+    public static final double climberVoltage = 12;
   }
 
   public static class DebugSettings {
@@ -60,4 +66,9 @@ public final class Constants {
     public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
     public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
   }
+
+
+
+
+
 }
