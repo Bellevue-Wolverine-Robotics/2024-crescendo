@@ -36,6 +36,7 @@ public class DriveSubsystem extends SubsystemBase {
     private RelativeEncoder m_rightEncoder = m_rightFront.getEncoder();
     private DifferentialDriveOdometry m_odometry;
 
+    private double speedLimit;
     private AHRS m_imu = new AHRS(SPI.Port.kMXP);
     private Debug debugLogger;
 
@@ -81,6 +82,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_imu.reset();
         m_imu.resetDisplacement();
         m_imu.zeroYaw();
+
+        speedLimit = Drive.limit;
         /*
          * Only voltage output is mirrored. Settings changed on the leader do not affect
          * the follower.
@@ -106,11 +109,19 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void tankDrive(double left, double right) {
-        this.m_drive.tankDrive(left * Drive.limit, right * Drive.limit);
+        this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {
-        this.m_drive.arcadeDrive(xSpeed * Drive.limit, rotation * Drive.limit);
+        this.m_drive.arcadeDrive(xSpeed * speedLimit, rotation * speedLimit);
+    }
+
+    public void setSpeedLimit(double speedLimit){
+        this.speedLimit = speedLimit;
+    }
+
+    public double getSpeedLimit(){
+        return this.speedLimit;
     }
 
     @Override

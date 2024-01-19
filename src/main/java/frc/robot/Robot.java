@@ -5,8 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Enums.Throttles;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,6 +24,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private SendableChooser<Throttles> throttleSelection;
+  private Throttles prevThrottle;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -33,6 +38,13 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    throttleSelection = new SendableChooser<Throttles> ();
+    throttleSelection.setDefaultOption("Fast", Throttles.FAST);
+    throttleSelection.addOption("Medium", Throttles.MEDIUM);
+    throttleSelection.addOption("Slow", Throttles.SLOW);
+    SmartDashboard.putData("Max Speed", throttleSelection);
+    this.prevThrottle = throttleSelection.getSelected();
   }
 
   /**
@@ -55,6 +67,12 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    if(throttleSelection.getSelected() != prevThrottle){
+      prevThrottle = throttleSelection.getSelected();
+      m_robotContainer.setDriveThrottleSpeed(throttleSelection.getSelected());
+    }
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

@@ -79,6 +79,10 @@ public final class Constants {
 
     public static final double limit = 1.0;
 
+    public static final double FAST = 1.0;
+    public static final double MEDIUM = 0.65;
+    public static final double SLOW = 0.30;
+
   }
 
 

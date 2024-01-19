@@ -4,20 +4,25 @@
 
 package frc.robot;
 
+import frc.robot.Constants.Drive;
 import frc.robot.Constants.Flywheel;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.Autos;
+import frc.robot.Enums.Throttles;
 import frc.robot.commands.*;
 
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
+import pabeles.concurrency.IntOperatorTask.Max;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import org.apache.commons.io.input.MessageDigestCalculatingInputStream;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -35,8 +40,11 @@ public class RobotContainer {
   private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
 
   private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
-
   private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
+
+  private Throttles prevThrottle;
+
+  private SendableChooser<Throttles> throttleSelection;
 
   public RobotContainer() {
     configureBindings();
@@ -55,6 +63,23 @@ public class RobotContainer {
             m_flywheelSubsystem));
 
   }
+
+  public void setDriveThrottleSpeed(Throttles throttleSpeed){
+    switch (throttleSpeed){
+      case FAST:
+        m_driveSubsystem.setSpeedLimit(Drive.FAST);
+        break;
+      case MEDIUM:
+        m_driveSubsystem.setSpeedLimit(Drive.MEDIUM);
+        break;
+      case SLOW:
+        m_driveSubsystem.setSpeedLimit(Drive.SLOW);
+        break;
+      default:
+        break;
+    }
+  }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
