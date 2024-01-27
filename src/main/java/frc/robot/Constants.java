@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import org.apache.commons.lang3.ObjectUtils.Null;
-
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -22,28 +20,28 @@ import edu.wpi.first.math.util.Units;
  */
 
 /*
- * Constants -> properties -> subsystem or 
+ * Constants -> properties -> subsystem or
  * Constants -> subsystem -> properties
  * ahhhhhhhh
  * 
  */
 
 public final class Constants {
-  public static class DriveConstants{
-    public static final int kDriverControllerPort = 0;
-  }
-
   public static class OperatorConstants {
-    public static final int kOperatorControllerPort = 1;   
-    public static final int climbButton = 2;//I HAVE NO CLUE WHICH BUTTON THIS IS LMAO FIX THIS 
-    public static final int goUpButton = 3;
-    public static final int goDownButton = 4;
+    public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
+
+    // Climbing
+    public static final int kClimbToSetpointButton = 2;// I HAVE NO CLUE WHICH BUTTON THIS IS LMAO FIX THIS
+    public static final int kClimbUpButton = 3;
+    public static final int kClimbDownButton = 4;
+
+    // Intake
+    public static final int kIntakeEnableButton = 5;
 
   }
 
-  
-
-  public static class Flywheel {
+  public static class FlywheelConstants {
     public static final double kMaxRPM = 5828;
 
     public static final int kFlywheelId = 5;
@@ -57,28 +55,26 @@ public final class Constants {
     public static final double kMaxOutput = 1;
   }
 
-  public static class Climbing{
+  public static class ClimbingConstants {
     public static final int climbMotor1 = -1;
-    public static final int climbMotor2 = -1; 
+    public static final int climbMotor2 = -1;
 
     public static final double climberVoltage = 12;
     public static final double kP = 1.0;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double climbingDistance = 1.0;
-    public static final double climbTolerance = (0.05)*climbingDistance;
-    public static final double climbRateMax  = 1.0;
+    public static final double climbTolerance = (0.05) * climbingDistance;
+    public static final double climbRateMax = 1.0;
     public static final int limitSwitchDigitalPort = 0;
     public static final double operatorClimbSpeed = 0;
 
     public static final double DRIVE_GEAR_RATIO = 8.45;
     public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
     public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
-
-    
   }
 
-  public static class Drive{
+  public static class DriveConstants {
     public static final int frontLeftId = 1;
     public static final int frontRightId = 3;
     public static final int backLeftId = 2;
@@ -93,13 +89,14 @@ public final class Constants {
     public static final double FAST = 1.0;
     public static final double MEDIUM = 0.65;
     public static final double SLOW = 0.30;
-
   }
 
+  public static class IntakeConstants {
+    public static final int kIntakeMotorId = 6;
+  }
 
   public static class DebugSettings {
     public static final boolean enableLogging = false;
   }
-
 
 }

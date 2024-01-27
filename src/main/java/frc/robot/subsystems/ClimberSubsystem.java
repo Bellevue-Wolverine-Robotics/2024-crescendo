@@ -8,18 +8,18 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.Climbing;
+import frc.robot.Constants.ClimbingConstants;
 import frc.robot.commands.Climb;
 
-public class ClimberSubsystem extends SubsystemBase{
-    private CANSparkMax climbMotor1 = new CANSparkMax(Climbing.climbMotor1, MotorType.kBrushless);
-    private CANSparkMax climbMotor2 = new CANSparkMax(Climbing.climbMotor2, MotorType.kBrushless);
-    private DigitalInput limitSwitch = new DigitalInput(Climbing.limitSwitchDigitalPort);
+public class ClimberSubsystem extends SubsystemBase {
+    private CANSparkMax climbMotor1 = new CANSparkMax(ClimbingConstants.climbMotor1, MotorType.kBrushless);
+    private CANSparkMax climbMotor2 = new CANSparkMax(ClimbingConstants.climbMotor2, MotorType.kBrushless);
+    private DigitalInput limitSwitch = new DigitalInput(ClimbingConstants.limitSwitchDigitalPort);
 
     private boolean limitSwitchEnabled = true;
     private RelativeEncoder climberEncoder = climbMotor1.getEncoder();
 
-    public ClimberSubsystem(){
+    public ClimberSubsystem() {
         this.climbMotor1.restoreFactoryDefaults();
         this.climbMotor2.restoreFactoryDefaults();
 
@@ -28,43 +28,40 @@ public class ClimberSubsystem extends SubsystemBase{
 
         this.climbMotor1.setSmartCurrentLimit(30);
         this.climbMotor2.setSmartCurrentLimit(30);
-    
-        //Motor 1 and Motor 2 spin opposite direction.
+
+        // Motor 1 and Motor 2 spin opposite direction.
         climbMotor2.follow(climbMotor1, true);
 
         climberEncoder.setPosition(0.0);
-        climberEncoder.setPositionConversionFactor(Climbing.WHEEL_CIRCUMFERENCE_METERS / Climbing.DRIVE_GEAR_RATIO);
+        climberEncoder
+                .setPositionConversionFactor(
+                        ClimbingConstants.WHEEL_CIRCUMFERENCE_METERS / ClimbingConstants.DRIVE_GEAR_RATIO);
     }
 
-    public double getPosition(){
+    public double getPosition() {
         return this.climberEncoder.getPosition();
     }
 
-    
     public void setSpeed(double speed)
-    //@requires 0.0 <= speed && speed <= 1.0;
+    // @requires 0.0 <= speed && speed <= 1.0;
     {
-        if(limitSwitchEnabled && limitSwitch.get()){
+        if (limitSwitchEnabled && limitSwitch.get()) {
             climbMotor1.setVoltage(0.0);
-        }
-        else{
-            climbMotor1.setVoltage(MathUtil.clamp(speed, 0.0, 1.0)*Climbing.climberVoltage);
+        } else {
+            climbMotor1.setVoltage(MathUtil.clamp(speed, 0.0, 1.0) * ClimbingConstants.climberVoltage);
         }
     }
 
-    public void goUp(){
-        setSpeed(Climbing.operatorClimbSpeed);
-    }
-    public void goDown(){
-        setSpeed(-Climbing.operatorClimbSpeed);
+    public void goUp() {
+        setSpeed(ClimbingConstants.operatorClimbSpeed);
     }
 
-    public void stop(){
+    public void goDown() {
+        setSpeed(-ClimbingConstants.operatorClimbSpeed);
+    }
+
+    public void stop() {
         climbMotor1.set(0.0);
     }
 
-
-
-
-    
 }
