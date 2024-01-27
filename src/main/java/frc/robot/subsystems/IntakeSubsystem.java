@@ -10,17 +10,19 @@ public class IntakeSubsystem extends SubsystemBase {
 	private CANSparkMax m_intakeMotor;
 
 	public IntakeSubsystem() {
-		m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakeMotorId, MotorType.kBrushless);
+		// m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakeMotorId,
+		// MotorType.kBrushless);
 
-		m_intakeMotor.restoreFactoryDefaults();
+		// m_intakeMotor.restoreFactoryDefaults();
 	}
 
 	public void enableIntake() {
-		m_intakeMotor.set(1);
+		System.out.println("intake enabled");
+		// m_intakeMotor.set(1);
 	}
 
 	public void disableIntake() {
-		m_intakeMotor.set(0);
+		// m_intakeMotor.set(0);
 	}
 
 	@Override

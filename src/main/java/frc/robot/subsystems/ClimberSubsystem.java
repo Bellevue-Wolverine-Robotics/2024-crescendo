@@ -1,67 +1,113 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbingConstants;
-import frc.robot.commands.Climb;
 
 public class ClimberSubsystem extends SubsystemBase {
-    private CANSparkMax climbMotor1 = new CANSparkMax(ClimbingConstants.climbMotor1, MotorType.kBrushless);
-    private CANSparkMax climbMotor2 = new CANSparkMax(ClimbingConstants.climbMotor2, MotorType.kBrushless);
+    private CANSparkMax m_leftClimbMotor;
+    private CANSparkMax m_rightClimbMotor;
+
+    private SparkPIDController m_leftClimbPidController;
+    private SparkPIDController m_rightClimbPidController;
+
+    private RelativeEncoder m_leftClimbRelativeEncoder;
+    private RelativeEncoder m_rightClimbRelativeEncoder;
+
     private DigitalInput limitSwitch = new DigitalInput(ClimbingConstants.limitSwitchDigitalPort);
 
     private boolean limitSwitchEnabled = true;
-    private RelativeEncoder climberEncoder = climbMotor1.getEncoder();
 
     public ClimberSubsystem() {
-        this.climbMotor1.restoreFactoryDefaults();
-        this.climbMotor2.restoreFactoryDefaults();
+        m_leftClimbMotor = new CANSparkMax(ClimbingConstants.kLeftClimbMotorId, MotorType.kBrushless);
+        m_rightClimbMotor = new CANSparkMax(ClimbingConstants.kRightClimbMotorId, MotorType.kBrushless);
 
-        this.climbMotor1.setIdleMode(IdleMode.kBrake);
-        this.climbMotor2.setIdleMode(IdleMode.kBrake);
+        m_rightClimbMotor.follow(m_leftClimbMotor, true);
 
-        this.climbMotor1.setSmartCurrentLimit(30);
-        this.climbMotor2.setSmartCurrentLimit(30);
+        m_leftClimbRelativeEncoder = m_leftClimbMotor.getEncoder();
+        m_rightClimbRelativeEncoder = m_rightClimbMotor.getEncoder();
 
-        // Motor 1 and Motor 2 spin opposite direction.
-        climbMotor2.follow(climbMotor1, true);
+        m_leftClimbPidController = m_leftClimbMotor.getPIDController();
+        m_rightClimbPidController = m_rightClimbMotor.getPIDController();
 
-        climberEncoder.setPosition(0.0);
-        climberEncoder
-                .setPositionConversionFactor(
-                        ClimbingConstants.WHEEL_CIRCUMFERENCE_METERS / ClimbingConstants.DRIVE_GEAR_RATIO);
+        buildMotor(m_leftClimbMotor);
+        buildMotor(m_rightClimbMotor);
+
+        buildRelativeEncoder(m_leftClimbRelativeEncoder, false);
+        buildRelativeEncoder(m_rightClimbRelativeEncoder, true);
+
+        buildPidController(m_leftClimbPidController);
+        buildPidController(m_rightClimbPidController);
+    }
+
+    private void buildMotor(CANSparkMax motor) {
+        motor.restoreFactoryDefaults();
+
+        motor.setIdleMode(IdleMode.kBrake);
+        motor.setSmartCurrentLimit(ClimbingConstants.kSmartCurrentLimit);
+    }
+
+    private void buildRelativeEncoder(RelativeEncoder encoder, boolean inverted) {
+        encoder.setPosition(0.0);
+        encoder.setPositionConversionFactor(
+                inverted ? ClimbingConstants.kPositionConversionFactor : -ClimbingConstants.kPositionConversionFactor);
+    }
+
+    private void buildPidController(SparkPIDController pidController) {
+        pidController.setP(ClimbingConstants.kP);
+        pidController.setI(ClimbingConstants.kI);
+        pidController.setD(ClimbingConstants.kD);
+        pidController.setIZone(ClimbingConstants.kIZone);
+        pidController.setFF(ClimbingConstants.kFF);
+        pidController.setOutputRange(ClimbingConstants.kMinOutput, ClimbingConstants.kMaxOutput);
     }
 
     public double getPosition() {
-        return this.climberEncoder.getPosition();
+        return m_leftClimbRelativeEncoder.getPosition(); // ideally returns both
     }
 
     public void setSpeed(double speed)
     // @requires 0.0 <= speed && speed <= 1.0;
     {
         if (limitSwitchEnabled && limitSwitch.get()) {
-            climbMotor1.setVoltage(0.0);
+            m_leftClimbMotor.setVoltage(0.0);
         } else {
-            climbMotor1.setVoltage(MathUtil.clamp(speed, 0.0, 1.0) * ClimbingConstants.climberVoltage);
+            m_leftClimbMotor.setVoltage(MathUtil.clamp(speed, 0.0, 1.0) * ClimbingConstants.climberVoltage);
         }
     }
 
-    public void goUp() {
-        setSpeed(ClimbingConstants.operatorClimbSpeed);
+    public void setVoltageRaw(double rawVoltage) {
+        m_leftClimbMotor.setVoltage(rawVoltage);
+        m_rightClimbMotor.setVoltage(rawVoltage);
     }
 
-    public void goDown() {
-        setSpeed(-ClimbingConstants.operatorClimbSpeed);
+    public Command climbUpCommand() {
+        // return this.runOnce(() -> setSpeed(ClimbingConstants.kOperatorClimbSpeed));
+        return this.runOnce(() -> setVoltageRaw(1));
+    }
+
+    public Command climbDownCommand() {
+        // return this.runOnce(() -> setSpeed(-ClimbingConstants.kOperatorClimbSpeed));
+        return this.runOnce(() -> setVoltageRaw(-1));
+    }
+
+    public Command climbToPositionSetpointCommand(double setpoint) {
+        return this.runOnce(() -> {
+            m_leftClimbPidController.setReference(setpoint, ControlType.kPosition);
+            m_rightClimbPidController.setReference(setpoint, ControlType.kPosition);
+        });
     }
 
     public void stop() {
-        climbMotor1.set(0.0);
+        m_leftClimbMotor.set(0.0);
     }
-
 }

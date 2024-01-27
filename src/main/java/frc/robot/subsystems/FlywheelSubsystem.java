@@ -6,8 +6,6 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.math.MathUsageId;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FlywheelConstants;
@@ -34,8 +32,6 @@ public class FlywheelSubsystem extends SubsystemBase {
 	}
 
 	public void setFlywheelVelocity(double setpoint) {
-		System.out.println("Setpoint: " + setpoint);
-
 		SmartDashboard.putNumber("Setpoint", setpoint);
 		SmartDashboard.putNumber("Flywheel Velocity", m_flywheelEncoder.getVelocity());
 		SmartDashboard.putNumber("Error", setpoint - m_flywheelEncoder.getVelocity());
@@ -45,6 +41,5 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		System.out.println("Flywheel Velocity: " + m_flywheelEncoder.getVelocity());
 	}
 }

@@ -18,8 +18,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
-import java.time.Instant;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -47,23 +45,25 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    m_driveSubsystem.setDefaultCommand(
-        new ArcadeDrive(m_driveSubsystem, () -> m_driverController.getY(), () -> m_driverController.getX()));
+    // m_driveSubsystem.setDefaultCommand(
+    // new ArcadeDrive(m_driveSubsystem, () -> m_driverController.getY(), () ->
+    // m_driverController.getX()));
 
-    m_flywheelSubsystem.setDefaultCommand(
-        new InstantCommand(
-            () -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() * FlywheelConstants.kMaxRPM), // TODO:
-            // change
-            // to
-            // constant
-            m_flywheelSubsystem));
+    // m_flywheelSubsystem.setDefaultCommand(
+    // new InstantCommand(
+    // () -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() *
+    // FlywheelConstants.kMaxRPM), // TODO:
+    // // change
+    // // to
+    // // constant
+    // m_flywheelSubsystem));
 
     m_operatorController.button(OperatorConstants.kClimbToSetpointButton)
-        .whileTrue(new Climb(m_climberSubsystem, ClimbingConstants.climbingDistance, true));
+        .onTrue(m_climberSubsystem.climbToPositionSetpointCommand(1));
     m_operatorController.button(OperatorConstants.kClimbUpButton)
-        .whileTrue(new InstantCommand(m_climberSubsystem::goUp, m_climberSubsystem));
+        .whileTrue(m_climberSubsystem.climbUpCommand());
     m_operatorController.button(OperatorConstants.kClimbDownButton)
-        .whileTrue(new InstantCommand(m_climberSubsystem::goUp, m_climberSubsystem));
+        .whileTrue(m_climberSubsystem.climbDownCommand());
 
     m_operatorController.button(OperatorConstants.kIntakeEnableButton)
         .whileTrue(new InstantCommand(m_intakeSubsystem::enableIntake, m_intakeSubsystem));

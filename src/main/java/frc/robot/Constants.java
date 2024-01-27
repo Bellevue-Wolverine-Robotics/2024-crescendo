@@ -44,7 +44,7 @@ public final class Constants {
   public static class FlywheelConstants {
     public static final double kMaxRPM = 5828;
 
-    public static final int kFlywheelId = -1;
+    public static final int kFlywheelId = 5;
 
     public static final double kP = 6e-4;
     public static final double kI = 0;
@@ -56,22 +56,29 @@ public final class Constants {
   }
 
   public static class ClimbingConstants {
-    public static final int climbMotor1 = -1;
-    public static final int climbMotor2 = -1;
+    public static final int kLeftClimbMotorId = 6;
+    public static final int kRightClimbMotorId = 7;
 
     public static final double climberVoltage = 12;
+
     public static final double kP = 1.0;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double kIZone = 0;
+    public static final double kFF = 0; // TODO: BASE THIS ON THE ACTUAL GRAVITY FORCE OF ROBOT
+    public static final double kMinOutput = -1.0;
+    public static final double kMaxOutput = 1.0;
+
     public static final double climbingDistance = 1.0;
     public static final double climbTolerance = (0.05) * climbingDistance;
     public static final double climbRateMax = 1.0;
     public static final int limitSwitchDigitalPort = 0;
-    public static final double operatorClimbSpeed = 0;
 
-    public static final double DRIVE_GEAR_RATIO = 8.45;
-    public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
-    public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
+    public static final double kOperatorClimbSpeed = 0.3;
+
+    public static final double kPositionConversionFactor = 1.0; // depends on gear ratio and diameter
+
+    public static final int kSmartCurrentLimit = 30;
   }
 
   public static class DriveConstants {
