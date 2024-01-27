@@ -92,12 +92,12 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public Command climbUpCommand() {
         // return this.runOnce(() -> setSpeed(ClimbingConstants.kOperatorClimbSpeed));
-        return this.runOnce(() -> setVoltageRaw(1));
+        return this.startEnd(() -> setVoltageRaw(1), () -> stopMotors());
     }
 
     public Command climbDownCommand() {
         // return this.runOnce(() -> setSpeed(-ClimbingConstants.kOperatorClimbSpeed));
-        return this.runOnce(() -> setVoltageRaw(-1));
+        return this.startEnd(() -> setVoltageRaw(-1), () -> stopMotors());
     }
 
     public Command climbToPositionSetpointCommand(double setpoint) {
@@ -107,7 +107,8 @@ public class ClimberSubsystem extends SubsystemBase {
         });
     }
 
-    public void stop() {
+    public void stopMotors() {
         m_leftClimbMotor.set(0.0);
+        m_rightClimbMotor.set(0.0);
     }
 }

@@ -36,7 +36,7 @@ public class Climb extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        climberSubsystem.stop();
+        climberSubsystem.stopMotors();
     }
 
 }
