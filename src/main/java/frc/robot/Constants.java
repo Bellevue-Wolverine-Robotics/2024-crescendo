@@ -37,8 +37,8 @@ public final class Constants {
     public static final int kClimbDownButton = 4;
 
     // Intake
-    public static final int kIntakeEnableButton = 5;
-
+    public static final int kIntakeEnableMotorButton = 6;
+    public static final int kIntakeDisableMotorButton = 7;
   }
 
   public static class FlywheelConstants {
@@ -100,7 +100,26 @@ public final class Constants {
 
   public static class IntakeConstants {
     public static final int kIntakeMotorId = 6;
-    public static final int kIntakeArmId = 5; 
+    public static final int kIntakeArmId = 5;
+
+    public static final int kSmartCurrentLimit = 30;
+
+    public static final double kPositionConversionFactor = 1.0; // depends on gear ratio and diameter
+
+    public static final double kIntakeSpeed = 0.3;
+
+    public static final double kIntakeArmSpeed = 0.3;
+    public static final double kIntakeArmDistance = 1.0;
+    public static final double kIntakeArmTolerance = (0.05) * kIntakeArmDistance;
+    public static final double kIntakeArmP = 1.0;
+    public static final double kIntakeArmI = 0;
+    public static final double kIntakeArmD = 0;
+    public static final double kIntakeArmFFStatic = 0;
+    public static final double kIntakeArmFFGravity = -
+    
+
+
+    
   }
 
   public static class DebugSettings {

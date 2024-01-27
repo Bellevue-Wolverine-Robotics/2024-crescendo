@@ -3,27 +3,28 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
-public class IntakeSubsystem extends SubsystemBase {
+public class IntakeMotorSubsystem extends SubsystemBase {
 	private CANSparkMax m_intakeMotor;
-	private CANSparkMax m_intakeArm;
 
-	public IntakeSubsystem() {
+	public IntakeMotorSubsystem() {
 		m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakeMotorId, MotorType.kBrushless);
-		m_intakeArm = new CANSparkMax(IntakeConstants.kIntakeArmId, MotorType.kBrushless);
-
 		m_intakeMotor.restoreFactoryDefaults();
 	}
 
-	public void enableIntake() {
-		System.out.println("intake enabled");
-		m_intakeMotor.set(1);
+	public void setIntakeMotor(double speed) {
+		m_intakeMotor.set(speed);
 	}
 
-	public void disableIntake() {
-		m_intakeMotor.set(0);
+	public Command enableIntake() {
+		return this.runOnce(() -> m_intakeMotor.set(0.2));
+	}
+
+	public Command disableIntake() {
+		return this.runOnce(() -> m_intakeMotor.set(0));
 	}
 
 	@Override

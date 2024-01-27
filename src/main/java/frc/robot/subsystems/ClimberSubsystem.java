@@ -28,25 +28,28 @@ public class ClimberSubsystem extends SubsystemBase {
     private boolean limitSwitchEnabled = true;
 
     public ClimberSubsystem() {
-        m_leftClimbMotor = new CANSparkMax(ClimbingConstants.kLeftClimbMotorId, MotorType.kBrushless);
-        m_rightClimbMotor = new CANSparkMax(ClimbingConstants.kRightClimbMotorId, MotorType.kBrushless);
+        // m_leftClimbMotor = new CANSparkMax(ClimbingConstants.kLeftClimbMotorId,
+        // MotorType.kBrushless);
+        // m_rightClimbMotor = new CANSparkMax(ClimbingConstants.kRightClimbMotorId,
+        // MotorType.kBrushless);
 
-        // m_rightClimbMotor.follow(m_leftClimbMotor, true); // THIS DOESN'T WORK RN IDK WHY
+        // // m_rightClimbMotor.follow(m_leftClimbMotor, true); // THIS DOESN'T WORK RN
+        // IDK WHY
 
-        m_leftClimbRelativeEncoder = m_leftClimbMotor.getEncoder();
-        m_rightClimbRelativeEncoder = m_rightClimbMotor.getEncoder();
+        // m_leftClimbRelativeEncoder = m_leftClimbMotor.getEncoder();
+        // m_rightClimbRelativeEncoder = m_rightClimbMotor.getEncoder();
 
-        m_leftClimbPidController = m_leftClimbMotor.getPIDController();
-        m_rightClimbPidController = m_rightClimbMotor.getPIDController();
+        // m_leftClimbPidController = m_leftClimbMotor.getPIDController();
+        // m_rightClimbPidController = m_rightClimbMotor.getPIDController();
 
-        buildMotor(m_leftClimbMotor, false);
-        buildMotor(m_rightClimbMotor, true);
+        // buildMotor(m_leftClimbMotor, false);
+        // buildMotor(m_rightClimbMotor, true);
 
-        buildRelativeEncoder(m_leftClimbRelativeEncoder, false);
-        buildRelativeEncoder(m_rightClimbRelativeEncoder, true);
+        // buildRelativeEncoder(m_leftClimbRelativeEncoder, false);
+        // buildRelativeEncoder(m_rightClimbRelativeEncoder, true);
 
-        buildPidController(m_leftClimbPidController);
-        buildPidController(m_rightClimbPidController);
+        // buildPidController(m_leftClimbPidController);
+        // buildPidController(m_rightClimbPidController);
     }
 
     private void buildMotor(CANSparkMax motor, boolean inverted) {
@@ -87,8 +90,8 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void setVoltageRaw(double rawVoltage) {
-        m_leftClimbMotor.setVoltage(rawVoltage);
-        m_rightClimbMotor.setVoltage(rawVoltage);
+        // m_leftClimbMotor.setVoltage(rawVoltage);
+        // m_rightClimbMotor.setVoltage(rawVoltage);
     }
 
     public Command climbUpCommand() {
