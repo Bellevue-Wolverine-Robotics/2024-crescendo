@@ -39,8 +39,8 @@ public class ClimberSubsystem extends SubsystemBase {
         m_leftClimbPidController = m_leftClimbMotor.getPIDController();
         m_rightClimbPidController = m_rightClimbMotor.getPIDController();
 
-        buildMotor(m_leftClimbMotor);
-        buildMotor(m_rightClimbMotor);
+        buildMotor(m_leftClimbMotor, false);
+        buildMotor(m_rightClimbMotor, true);
 
         buildRelativeEncoder(m_leftClimbRelativeEncoder, false);
         buildRelativeEncoder(m_rightClimbRelativeEncoder, true);
