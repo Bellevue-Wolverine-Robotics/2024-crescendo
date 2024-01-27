@@ -44,7 +44,7 @@ public final class Constants {
   public static class FlywheelConstants {
     public static final double kMaxRPM = 5828;
 
-    public static final int kFlywheelId = 5;
+    public static final int kFlywheelId = -1;
 
     public static final double kP = 6e-4;
     public static final double kI = 0;
@@ -92,7 +92,7 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
-    public static final int kIntakeMotorId = 6;
+    public static final int kIntakeMotorId = 5;
   }
 
   public static class DebugSettings {
