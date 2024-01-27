@@ -49,9 +49,10 @@ public class ClimberSubsystem extends SubsystemBase {
         buildPidController(m_rightClimbPidController);
     }
 
-    private void buildMotor(CANSparkMax motor) {
+    private void buildMotor(CANSparkMax motor, boolean inverted) {
         motor.restoreFactoryDefaults();
 
+        motor.setInverted(inverted);
         motor.setIdleMode(IdleMode.kBrake);
         motor.setSmartCurrentLimit(ClimbingConstants.kSmartCurrentLimit);
     }
