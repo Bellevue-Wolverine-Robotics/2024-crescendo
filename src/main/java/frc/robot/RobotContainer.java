@@ -45,9 +45,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // m_driveSubsystem.setDefaultCommand(
-    // new ArcadeDrive(m_driveSubsystem, () -> m_driverController.getY(), () ->
-    // m_driverController.getX()));
+    m_driveSubsystem.setDefaultCommand(
+      new ArcadeDrive(m_driveSubsystem, () -> m_driverController.getY(), () ->
+      m_driverController.getX()));
 
     // m_flywheelSubsystem.setDefaultCommand(
     // new InstantCommand(

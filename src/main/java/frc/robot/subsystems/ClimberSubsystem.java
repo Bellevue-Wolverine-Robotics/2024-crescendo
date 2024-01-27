@@ -31,7 +31,7 @@ public class ClimberSubsystem extends SubsystemBase {
         m_leftClimbMotor = new CANSparkMax(ClimbingConstants.kLeftClimbMotorId, MotorType.kBrushless);
         m_rightClimbMotor = new CANSparkMax(ClimbingConstants.kRightClimbMotorId, MotorType.kBrushless);
 
-        m_rightClimbMotor.follow(m_leftClimbMotor, true);
+        // m_rightClimbMotor.follow(m_leftClimbMotor, true);
 
         m_leftClimbRelativeEncoder = m_leftClimbMotor.getEncoder();
         m_rightClimbRelativeEncoder = m_rightClimbMotor.getEncoder();
