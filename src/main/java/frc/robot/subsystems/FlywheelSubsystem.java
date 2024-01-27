@@ -16,27 +16,27 @@ public class FlywheelSubsystem extends SubsystemBase {
 	private RelativeEncoder m_flywheelEncoder;
 
 	public FlywheelSubsystem() {
-		m_flywheelMotor = new CANSparkMax(FlywheelConstants.kFlywheelId, MotorType.kBrushless);
+		// m_flywheelMotor = new CANSparkMax(FlywheelConstants.kFlywheelId, MotorType.kBrushless);
 
-		m_flywheelMotor.restoreFactoryDefaults();
+		// m_flywheelMotor.restoreFactoryDefaults();
 
-		m_flywheelPidController = m_flywheelMotor.getPIDController();
-		m_flywheelEncoder = m_flywheelMotor.getEncoder();
+		// m_flywheelPidController = m_flywheelMotor.getPIDController();
+		// m_flywheelEncoder = m_flywheelMotor.getEncoder();
 
-		m_flywheelPidController.setP(FlywheelConstants.kP);
-		m_flywheelPidController.setI(FlywheelConstants.kI);
-		m_flywheelPidController.setD(FlywheelConstants.kD);
-		m_flywheelPidController.setIZone(FlywheelConstants.kIZone);
-		m_flywheelPidController.setFF(FlywheelConstants.kFF);
-		m_flywheelPidController.setOutputRange(FlywheelConstants.kMinOutput, FlywheelConstants.kMaxOutput);
+		// m_flywheelPidController.setP(FlywheelConstants.kP);
+		// m_flywheelPidController.setI(FlywheelConstants.kI);
+		// m_flywheelPidController.setD(FlywheelConstants.kD);
+		// m_flywheelPidController.setIZone(FlywheelConstants.kIZone);
+		// m_flywheelPidController.setFF(FlywheelConstants.kFF);
+		// m_flywheelPidController.setOutputRange(FlywheelConstants.kMinOutput, FlywheelConstants.kMaxOutput);
 	}
 
 	public void setFlywheelVelocity(double setpoint) {
-		SmartDashboard.putNumber("Setpoint", setpoint);
-		SmartDashboard.putNumber("Flywheel Velocity", m_flywheelEncoder.getVelocity());
-		SmartDashboard.putNumber("Error", setpoint - m_flywheelEncoder.getVelocity());
+		// SmartDashboard.putNumber("Setpoint", setpoint);
+		// SmartDashboard.putNumber("Flywheel Velocity", m_flywheelEncoder.getVelocity());
+		// SmartDashboard.putNumber("Error", setpoint - m_flywheelEncoder.getVelocity());
 
-		m_flywheelPidController.setReference(setpoint, ControlType.kVelocity);
+		// m_flywheelPidController.setReference(setpoint, ControlType.kVelocity);
 	}
 
 	@Override

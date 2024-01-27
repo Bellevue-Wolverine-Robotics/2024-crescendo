@@ -99,7 +99,8 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
-    public static final int kIntakeMotorId = 5;
+    public static final int kIntakeMotorId = 6;
+    public static final int kIntakeArmId = 5; 
   }
 
   public static class DebugSettings {
