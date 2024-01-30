@@ -114,12 +114,8 @@ public final class Constants {
     public static final double kIntakeArmP = 1.0;
     public static final double kIntakeArmI = 0;
     public static final double kIntakeArmD = 0;
-    public static final double kIntakeArmFFStatic = 0;
-    public static final double kIntakeArmFFGravity = -
-    
+    public static final double kIntakeArmFFGravity = 0;
 
-
-    
   }
 
   public static class DebugSettings {

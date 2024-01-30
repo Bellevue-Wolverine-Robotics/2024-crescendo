@@ -15,6 +15,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
 	public IntakeArmSubsystem() {
 		m_intakeArm = new CANSparkMax(IntakeConstants.kIntakeArmId, MotorType.kBrushless);
+
 		m_intakeArm.restoreFactoryDefaults();
 		m_intakeArm.setIdleMode(IdleMode.kBrake);
 		m_intakeArm.setSmartCurrentLimit(IntakeConstants.kSmartCurrentLimit);
@@ -28,8 +29,16 @@ public class IntakeArmSubsystem extends SubsystemBase {
 		m_intakeArm.set(speed);
 	}
 
+	public void setIntakeArmVoltage(double voltage) {
+		m_intakeArm.setVoltage(voltage);
+	}
+
 	public Command enableIntakeArm() {
 		return this.runOnce(() -> m_intakeArm.set(0.2));
+	}
+
+	public double getAngle() {
+		return m_intakeArmRelativeEncoder.getPosition();
 	}
 
 	public Command disableIntakeArm() {
@@ -39,5 +48,4 @@ public class IntakeArmSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 	}
-
 }
