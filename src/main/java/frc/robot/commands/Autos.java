@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeMotorSubsystem;
+import frc.robot.commands.IntakeArm;
+
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
@@ -23,9 +25,9 @@ public final class Autos {
   }
 
 
-  public static Command IntakeSequence(IntakeArmSubsystem intakeArmSubsystem, IntakeMotorSubsystem intakeMotorSubsystem){
-      return new SequentialCommandGroup(new IntakeArm(intakeArmSubsystem, IntakeConstants.intakePositionDeployed), 
+  public static Command IntakeSequence(IntakeArmSubsystem m_intakeArmSubsystem, IntakeMotorSubsystem intakeMotorSubsystem){
+      return new SequentialCommandGroup(new IntakeArm(m_intakeArmSubsystem, IntakeConstants.intakePositionDeployed), 
                                         new IntakeMotor(intakeMotorSubsystem), 
-                                        new IntakeArm(intakeArmSubsystem, IntakeConstants.intakePositionStowed));
+                                        new IntakeArm(m_intakeArmSubsystem, IntakeConstants.intakePositionStowed));
   }
 }

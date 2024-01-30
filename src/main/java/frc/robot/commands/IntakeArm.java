@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.IntakeMotorSubsystem;
 
 public class IntakeArm extends Command{
 	private IntakeArmSubsystem m_intakeArmSubsystem;
@@ -13,8 +14,8 @@ public class IntakeArm extends Command{
 
 	private double m_setpoint;
 
-	public IntakeArm(IntakeArmSubsystem intakeArmSubsystem, double setpoint) {
-		m_intakeArmSubsystem = intakeArmSubsystem;
+	public IntakeArm(IntakeArmSubsystem m_intakeArmSubsystem, double setpoint) {
+		m_intakeArmSubsystem = m_intakeArmSubsystem;
 
 		m_feedForward = new ArmFeedforward(0.0, IntakeConstants.kIntakeArmFFGravity, 0.0, 0.0);
 		m_controller = new PIDController(IntakeConstants.kIntakeArmP,

@@ -13,6 +13,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
+import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeMotorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -33,7 +34,10 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
   private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
-  private final IntakeMotorSubsystem m_intakeSubsystem = new IntakeMotorSubsystem();
+  
+  private final IntakeArmSubsystem m_intakeArmSubsystem = new IntakeArmSubsystem();
+  private final IntakeMotorSubsystem m_intakeMotorSubsystem = new IntakeMotorSubsystem();
+
 
   private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
@@ -63,9 +67,11 @@ public class RobotContainer {
 
     // intake
     m_operatorController.button(OperatorConstants.kIntakeEnableMotorButton)
-        .onTrue(m_intakeSubsystem.enableIntake());
-    m_operatorController.button(OperatorConstants.kIntakeDisableMotorButton)
-        .onTrue(m_intakeSubsystem.disableIntake());
+        .onTrue(Autos.IntakeSequence(m_intakeArmSubsystem, m_intakeMotorSubsystem));
+   
+
+
+      
   }
 
   public void smartDashBoardBinding() {
