@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeArmSubsystem;
 
-public class IntakeArm extends Command {
+public class IntakeArm extends Command{
 	private IntakeArmSubsystem m_intakeArmSubsystem;
 	private ArmFeedforward m_feedForward;
 	private PIDController m_controller;
@@ -34,11 +34,13 @@ public class IntakeArm extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return false;
+		return m_controller.atSetpoint();
 	}
 
 	@Override
 	public void end(boolean interrupted) {
+		m_intakeArmSubsystem.setIntakeArmVoltage(0.0);
 	}
+
 
 }

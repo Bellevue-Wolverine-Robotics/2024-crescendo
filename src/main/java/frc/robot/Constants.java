@@ -116,6 +116,14 @@ public final class Constants {
     public static final double kIntakeArmD = 0;
     public static final double kIntakeArmFFGravity = 0;
 
+    public static final double intakeMotorSpeed = 0.5;
+    public static final int limitSwitchDigitalPort = 1;
+
+    public static final double intakePositionStowed = 1.0;
+    public static final double intakePositionDeployed = 1.0;
+
+
+
   }
 
   public static class DebugSettings {

@@ -6,6 +6,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.IntakeMotorSubsystem;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
@@ -15,5 +20,12 @@ public final class Autos {
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
+  }
+
+
+  public static Command IntakeSequence(IntakeArmSubsystem intakeArmSubsystem, IntakeMotorSubsystem intakeMotorSubsystem){
+      return new SequentialCommandGroup(new IntakeArm(intakeArmSubsystem, IntakeConstants.intakePositionDeployed), 
+                                        new IntakeMotor(intakeMotorSubsystem), 
+                                        new IntakeArm(intakeArmSubsystem, IntakeConstants.intakePositionStowed));
   }
 }
