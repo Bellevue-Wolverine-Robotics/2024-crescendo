@@ -34,10 +34,9 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
   private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
-  
+
   private final IntakeArmSubsystem m_intakeArmSubsystem = new IntakeArmSubsystem();
   private final IntakeMotorSubsystem m_intakeMotorSubsystem = new IntakeMotorSubsystem();
-
 
   private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
@@ -68,10 +67,6 @@ public class RobotContainer {
     // intake
     m_operatorController.button(OperatorConstants.kIntakeEnableMotorButton)
         .onTrue(Autos.IntakeSequence(m_intakeArmSubsystem, m_intakeMotorSubsystem));
-   
-
-
-      
   }
 
   public void smartDashBoardBinding() {
