@@ -17,23 +17,25 @@ public class IntakeArmSubsystem extends SubsystemBase {
 	private RelativeEncoder m_intakeArmRelativeEncoder;
 
 	public IntakeArmSubsystem() {
-		m_intakeArm = new CANSparkMax(IntakeConstants.kIntakeArmId, MotorType.kBrushless);
+		// m_intakeArm = new CANSparkMax(IntakeConstants.kIntakeArmId,
+		// MotorType.kBrushless);
 
-		m_intakeArm.restoreFactoryDefaults();
-		m_intakeArm.setIdleMode(IdleMode.kBrake);
-		m_intakeArm.setSmartCurrentLimit(IntakeConstants.kSmartCurrentLimit);
+		// m_intakeArm.restoreFactoryDefaults();
+		// m_intakeArm.setIdleMode(IdleMode.kBrake);
+		// m_intakeArm.setSmartCurrentLimit(IntakeConstants.kSmartCurrentLimit);
 
-		m_intakeArmRelativeEncoder = m_intakeArm.getEncoder();
-		m_intakeArmRelativeEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
-		m_intakeArmRelativeEncoder.setPosition(0);
+		// m_intakeArmRelativeEncoder = m_intakeArm.getEncoder();
+		// m_intakeArmRelativeEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
+		// m_intakeArmRelativeEncoder.setPosition(0);
 
-		m_intakePidController = m_intakeArm.getPIDController();
-		m_intakePidController.setP(IntakeConstants.kIntakeArmP);
-		m_intakePidController.setI(IntakeConstants.kIntakeArmI);
-		m_intakePidController.setD(IntakeConstants.kIntakeArmD);
-		m_intakePidController.setIZone(IntakeConstants.kIntakeArmIZone);
-		m_intakePidController.setFF(IntakeConstants.kIntakeArmFF);
-		m_intakePidController.setOutputRange(IntakeConstants.kIntakeArmMinOutput, IntakeConstants.kIntakeArmMaxOutput);
+		// m_intakePidController = m_intakeArm.getPIDController();
+		// m_intakePidController.setP(IntakeConstants.kIntakeArmP);
+		// m_intakePidController.setI(IntakeConstants.kIntakeArmI);
+		// m_intakePidController.setD(IntakeConstants.kIntakeArmD);
+		// m_intakePidController.setIZone(IntakeConstants.kIntakeArmIZone);
+		// m_intakePidController.setFF(IntakeConstants.kIntakeArmFF);
+		// m_intakePidController.setOutputRange(IntakeConstants.kIntakeArmMinOutput,
+		// IntakeConstants.kIntakeArmMaxOutput);
 	}
 
 	public void setIntakeArm(double speed) {
@@ -53,8 +55,9 @@ public class IntakeArmSubsystem extends SubsystemBase {
 	}
 
 	public Command goToAngle(double setpoint) {
-		double ffTerm = IntakeConstants.kIntakeArmFFGravity * getAngle(); // should be in degrees also should be angel
-																			// taken from horizontal
+		double ffTerm = IntakeConstants.kIntakeArmFFGravity * Math.cos(getAngle()); // should be in degrees also should
+																					// be angel
+		// taken from horizontal
 
 		return this.runOnce(() -> m_intakePidController.setReference(setpoint, ControlType.kPosition, 0, ffTerm));
 	}

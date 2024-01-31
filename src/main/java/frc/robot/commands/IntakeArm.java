@@ -21,6 +21,7 @@ public class IntakeArm extends Command {
 		m_controller = new PIDController(IntakeConstants.kIntakeArmP,
 				IntakeConstants.kIntakeArmI,
 				IntakeConstants.kIntakeArmD);
+		m_controller.setTolerance(0.1);
 
 		m_setpoint = setpoint;
 
@@ -29,6 +30,7 @@ public class IntakeArm extends Command {
 
 	@Override
 	public void execute() {
+		System.out.println("pid voltage at: " + m_controller.calculate(m_intakeArmSubsystem.getAngle(), m_setpoint));
 		m_intakeArmSubsystem.setIntakeArmVoltage(m_controller.calculate(m_intakeArmSubsystem.getAngle(), m_setpoint)
 				+ m_feedForward.calculate(m_intakeArmSubsystem.getAngle(), 0));
 	}

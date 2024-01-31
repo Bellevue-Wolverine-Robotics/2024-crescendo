@@ -58,15 +58,15 @@ public class RobotContainer {
 
     // climber
     m_operatorController.button(OperatorConstants.kClimbToSetpointButton)
-        .onTrue(m_climberSubsystem.climbToPositionSetpointCommand(1));
+        .onTrue(m_climberSubsystem.climbToPositionSetpointCommand(25));
     m_operatorController.button(OperatorConstants.kClimbUpButton)
-        .whileTrue(m_climberSubsystem.climbUpCommand());
+        .whileTrue(m_climberSubsystem.climbUpCommand());   
     m_operatorController.button(OperatorConstants.kClimbDownButton)
         .whileTrue(m_climberSubsystem.climbDownCommand());
 
     // intake
-    m_operatorController.button(OperatorConstants.kIntakeEnableMotorButton)
-        .onTrue(Autos.IntakeSequence(m_intakeArmSubsystem, m_intakeMotorSubsystem));
+    // m_operatorController.button(OperatorConstants.kIntakeEnableMotorButton)
+    // .onTrue(Autos.IntakeSequence(m_intakeArmSubsystem, m_intakeMotorSubsystem));
   }
 
   public void smartDashBoardBinding() {

@@ -13,8 +13,9 @@ public class IntakeMotorSubsystem extends SubsystemBase {
 	private DigitalInput limitSwitch = new DigitalInput(IntakeConstants.limitSwitchDigitalPort);
 
 	public IntakeMotorSubsystem() {
-		m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakeMotorId, MotorType.kBrushless);
-		m_intakeMotor.restoreFactoryDefaults();
+		// m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakeMotorId,
+		// MotorType.kBrushless);
+		// m_intakeMotor.restoreFactoryDefaults();
 	}
 
 	public void setIntakeMotor(double speed) {
@@ -37,9 +38,9 @@ public class IntakeMotorSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		if (limitSwitch.get()) {
-			m_intakeMotor.stopMotor();
-		}
+		// if (limitSwitch.get()) {
+		// m_intakeMotor.stopMotor();
+		// }
 
 	}
 }
