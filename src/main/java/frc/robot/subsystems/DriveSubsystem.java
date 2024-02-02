@@ -40,7 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private Field2d m_field = new Field2d();
     private VisionSubsystem vision = new VisionSubsystem();//NESTED SUBSYSTEMS????
-
+    private Pose2d currPose2d;
 
 
     private final DifferentialDrivePoseEstimator m_poseEstimator =
@@ -106,19 +106,19 @@ public class DriveSubsystem extends SubsystemBase {
          * by passing a true constant after the leader parameter.
          */
 
-        m_odometry = new DifferentialDriveOdometry(
+        /*m_odometry = new DifferentialDriveOdometry(
                 m_imu.getRotation2d(),
                 m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
                 new Pose2d());
         m_odometry.resetPosition(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
-                new Pose2d());
+                new Pose2d());*/
 
         this.debugLogger = debugLogger;
 
     }
 
     public Pose2d getPos() {
-        return m_odometry.getPoseMeters();
+        return currPose2d;
     }
 
     public void tankDrive(double left, double right) {
@@ -139,7 +139,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
+        currPose2d = m_poseEstimator.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
         /*
          * debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() +
          * " rightFront: " + m_rightFront.getOutputCurrent()
@@ -154,12 +154,11 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Left Encoder: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
 
+
         m_field.setRobotPose(m_odometry.getPoseMeters());
         vision.getEstimatedGlobalPose(getPos());
         m_poseEstimator.addVisionMeasurement(vision.getPose2d(), vision.getTimestampSeconds());
     }
     
 
-
-    
 }
