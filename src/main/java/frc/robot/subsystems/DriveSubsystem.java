@@ -1,7 +1,11 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,6 +39,21 @@ public class DriveSubsystem extends SubsystemBase {
     private Debug debugLogger;
 
     private Field2d m_field = new Field2d();
+    private VisionSubsystem vision = new VisionSubsystem();//NESTED SUBSYSTEMS????
+    private Pose2d currPose2d;
+
+
+    private final DifferentialDrivePoseEstimator m_poseEstimator =
+    new DifferentialDrivePoseEstimator(
+        new DifferentialDriveKinematics(0.0),
+        m_imu.getRotation2d(),
+        m_leftEncoder.getPosition(),
+        m_rightEncoder.getPosition(),
+        new Pose2d(),
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+
+
 
     public DriveSubsystem(Debug debugLogger) {
         SmartDashboard.putData("Field", m_field);
@@ -87,19 +106,19 @@ public class DriveSubsystem extends SubsystemBase {
          * by passing a true constant after the leader parameter.
          */
 
-        m_odometry = new DifferentialDriveOdometry(
+        /*m_odometry = new DifferentialDriveOdometry(
                 m_imu.getRotation2d(),
                 m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
                 new Pose2d());
         m_odometry.resetPosition(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
-                new Pose2d());
+                new Pose2d());*/
 
         this.debugLogger = debugLogger;
 
     }
 
     public Pose2d getPos() {
-        return m_odometry.getPoseMeters();
+        return currPose2d;
     }
 
     public void tankDrive(double left, double right) {
@@ -120,7 +139,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
+        currPose2d = m_poseEstimator.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
         /*
          * debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() +
          * " rightFront: " + m_rightFront.getOutputCurrent()
@@ -135,8 +154,11 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Left Encoder: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
 
-        m_field.setRobotPose(m_odometry.getPoseMeters());
 
+        m_field.setRobotPose(m_odometry.getPoseMeters());
+        vision.getEstimatedGlobalPose(getPos());
+        m_poseEstimator.addVisionMeasurement(vision.getPose2d(), vision.getTimestampSeconds());
     }
+    
 
 }
