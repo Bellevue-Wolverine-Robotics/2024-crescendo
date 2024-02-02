@@ -4,29 +4,20 @@
 
 package frc.robot;
 
-import frc.robot.Constants.Climbing;
-import frc.robot.Constants.Drive;
+import frc.robot.Constants.ClimbingConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.Flywheel;
+import frc.robot.Constants.FlywheelConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Enums.Throttles;
 import frc.robot.commands.*;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
-import pabeles.concurrency.IntOperatorTask.Max;
+import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.IntakeMotorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-import java.time.Instant;
-
-import org.apache.commons.io.input.MessageDigestCalculatingInputStream;
-
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -43,9 +34,12 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
   private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+  
+  private final IntakeArmSubsystem m_intakeArmSubsystem = new IntakeArmSubsystem();
+  private final IntakeMotorSubsystem m_intakeMotorSubsystem = new IntakeMotorSubsystem();
 
 
-  private final CommandJoystick m_driverController = new CommandJoystick(DriveConstants.kDriverControllerPort);
+  private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
   public RobotContainer() {
@@ -59,40 +53,46 @@ public class RobotContainer {
 
     m_flywheelSubsystem.setDefaultCommand(
         new InstantCommand(
-            () -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() * Flywheel.kMaxRPM), // TODO:
-            // change
-            // to
-            // constant
+            () -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() *
+                FlywheelConstants.kMaxRPM),
             m_flywheelSubsystem));
-            
-    m_operatorController.button(OperatorConstants.climbButton).whileTrue(new Climb(m_climberSubsystem, Climbing.climbingDistance, true));
-    m_operatorController.button(OperatorConstants.goUpButton).whileTrue(new InstantCommand(m_climberSubsystem::goUp, m_climberSubsystem));
-    m_operatorController.button(OperatorConstants.goDownButton).whileTrue(new InstantCommand(m_climberSubsystem::goUp, m_climberSubsystem));
+
+    // climber
+    m_operatorController.button(OperatorConstants.kClimbToSetpointButton)
+        .onTrue(m_climberSubsystem.climbToPositionSetpointCommand(1));
+    m_operatorController.button(OperatorConstants.kClimbUpButton)
+        .whileTrue(m_climberSubsystem.climbUpCommand());
+    m_operatorController.button(OperatorConstants.kClimbDownButton)
+        .whileTrue(m_climberSubsystem.climbDownCommand());
+
+    // intake
+    m_operatorController.button(OperatorConstants.kIntakeEnableMotorButton)
+        .onTrue(Autos.IntakeSequence(m_intakeArmSubsystem, m_intakeMotorSubsystem));
+   
 
 
+      
   }
 
-
-  public void smartDashBoardBinding(){
+  public void smartDashBoardBinding() {
     SmartDashboard.putData("Save logging info", new DebugClose(debugLogger));
   }
 
-  public void setDriveThrottleSpeed(Throttles throttleSpeed){
-    switch (throttleSpeed){
+  public void setDriveThrottleSpeed(Throttles throttleSpeed) {
+    switch (throttleSpeed) {
       case FAST:
-        m_driveSubsystem.setSpeedLimit(Drive.FAST);
+        m_driveSubsystem.setSpeedLimit(DriveConstants.FAST);
         break;
       case MEDIUM:
-        m_driveSubsystem.setSpeedLimit(Drive.MEDIUM);
+        m_driveSubsystem.setSpeedLimit(DriveConstants.MEDIUM);
         break;
       case SLOW:
-        m_driveSubsystem.setSpeedLimit(Drive.SLOW);
+        m_driveSubsystem.setSpeedLimit(DriveConstants.SLOW);
         break;
       default:
         break;
     }
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

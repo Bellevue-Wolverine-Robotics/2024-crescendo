@@ -6,8 +6,8 @@
  - [ ] PathPlanner [LOW]
 
 ### Intake
- - [ ] Create intake motor [HI]
- - [ ] Bind intake command to joystick button [HI]
+ - [x] Create intake motor [HI]
+ - [x] Bind intake command to joystick button [HI]
 
 ### Climber
  - [x] Create basic climber motor [HI]

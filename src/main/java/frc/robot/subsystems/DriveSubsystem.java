@@ -1,20 +1,14 @@
 package frc.robot.subsystems;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.Object;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.Debug;
-import frc.robot.Constants.Drive;
-
+import frc.robot.Constants.DriveConstants;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -25,10 +19,10 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
-    private CANSparkMax m_leftBack = new CANSparkMax(Drive.backLeftId, MotorType.kBrushless);
-    private CANSparkMax m_leftFront = new CANSparkMax(Drive.frontLeftId, MotorType.kBrushless);
-    private CANSparkMax m_rightFront = new CANSparkMax(Drive.frontRightId, MotorType.kBrushless);
-    private CANSparkMax m_rightBack = new CANSparkMax(Drive.backRightId, MotorType.kBrushless);
+    private CANSparkMax m_leftBack = new CANSparkMax(DriveConstants.backLeftId, MotorType.kBrushless);
+    private CANSparkMax m_leftFront = new CANSparkMax(DriveConstants.frontLeftId, MotorType.kBrushless);
+    private CANSparkMax m_rightFront = new CANSparkMax(DriveConstants.frontRightId, MotorType.kBrushless);
+    private CANSparkMax m_rightBack = new CANSparkMax(DriveConstants.backRightId, MotorType.kBrushless);
 
     private DifferentialDrive m_drive = new DifferentialDrive(m_leftFront, m_rightFront);
 
@@ -67,15 +61,15 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightEncoder.setPosition(0);
 
         m_leftEncoder.setPositionConversionFactor(
-                Drive.WHEEL_CIRCUMFERENCE_METERS / Drive.DRIVE_GEAR_RATIO);
+                DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO);
         m_rightEncoder.setPositionConversionFactor(
-                Drive.WHEEL_CIRCUMFERENCE_METERS / Drive.DRIVE_GEAR_RATIO);
+                DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO);
 
         // WPILIB expects encoder rate to be in M/S while REV returns M/Min
         m_leftEncoder.setVelocityConversionFactor(
-                (Drive.WHEEL_CIRCUMFERENCE_METERS / Drive.DRIVE_GEAR_RATIO) / 60);
+                (DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
         m_rightEncoder.setVelocityConversionFactor(
-                (Drive.WHEEL_CIRCUMFERENCE_METERS / Drive.DRIVE_GEAR_RATIO) / 60);
+                (DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
 
         m_leftFront.setInverted(true);
 
@@ -83,7 +77,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_imu.resetDisplacement();
         m_imu.zeroYaw();
 
-        speedLimit = Drive.limit;
+        speedLimit = DriveConstants.limit;
         /*
          * Only voltage output is mirrored. Settings changed on the leader do not affect
          * the follower.
@@ -116,11 +110,11 @@ public class DriveSubsystem extends SubsystemBase {
         this.m_drive.arcadeDrive(xSpeed * speedLimit, rotation * speedLimit);
     }
 
-    public void setSpeedLimit(double speedLimit){
+    public void setSpeedLimit(double speedLimit) {
         this.speedLimit = speedLimit;
     }
 
-    public double getSpeedLimit(){
+    public double getSpeedLimit() {
         return this.speedLimit;
     }
 
@@ -144,11 +138,5 @@ public class DriveSubsystem extends SubsystemBase {
         m_field.setRobotPose(m_odometry.getPoseMeters());
 
     }
-
-
-    
-
-
-
 
 }
