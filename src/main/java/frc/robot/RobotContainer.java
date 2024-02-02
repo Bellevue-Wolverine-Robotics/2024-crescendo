@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.time.Instant;
 
-import org.apache.commons.io.input.MessageDigestCalculatingInputStream;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
