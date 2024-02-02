@@ -13,7 +13,6 @@ import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeMotorSubsystem;
 import frc.robot.commands.IntakeArm;
 
-
 public final class Autos {
   /** Example static factory for an autonomous command. */
   public static Command exampleAuto() {
@@ -24,10 +23,17 @@ public final class Autos {
     throw new UnsupportedOperationException("This is a utility class!");
   }
 
+  public static Command IntakeSequence(IntakeArmSubsystem m_intakeArmSubsystem,
+      IntakeMotorSubsystem intakeMotorSubsystem) {
+    return null;
 
-  public static Command IntakeSequence(IntakeArmSubsystem m_intakeArmSubsystem, IntakeMotorSubsystem intakeMotorSubsystem){
-      return new SequentialCommandGroup(new IntakeArm(m_intakeArmSubsystem, IntakeConstants.intakePositionDeployed), 
-                                        new IntakeMotor(intakeMotorSubsystem), 
-                                        new IntakeArm(m_intakeArmSubsystem, IntakeConstants.intakePositionStowed));
+    // return new SequentialCommandGroup(new IntakeArm(m_intakeArmSubsystem,
+    // IntakeConstants.intakePositionDeployed),
+    // new IntakeMotor(intakeMotorSubsystem),
+    // new IntakeArm(m_intakeArmSubsystem, IntakeConstants.intakePositionStowed));
+
+    // return new SequentialCommandGroup(m_intakeArmSubsystem.goToAngle(1),
+    // new IntakeMotor(intakeMotorSubsystem),
+    // m_intakeArmSubsystem.goToAngle(0));
   }
 }

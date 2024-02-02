@@ -4,36 +4,28 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeMotorSubsystem;
 
-public class IntakeMotor extends Command{
-    public IntakeMotorSubsystem intakeMotorSubsystem;
-    public boolean finished = false;
+public class IntakeMotor extends Command {
+    public IntakeMotorSubsystem m_intakeMotorSubsystem;
 
-    public IntakeMotor(IntakeMotorSubsystem intakeMotorSubsystem){
-        this.intakeMotorSubsystem = intakeMotorSubsystem;
-        addRequirements(this.intakeMotorSubsystem);
-        
+    public IntakeMotor(IntakeMotorSubsystem intakeMotorSubsystem) {
+        this.m_intakeMotorSubsystem = intakeMotorSubsystem;
+        addRequirements(this.m_intakeMotorSubsystem);
+
     }
 
-	@Override
-	public void execute() {
-        intakeMotorSubsystem.setIntakeMotor(IntakeConstants.intakeMotorSpeed);
-        if(intakeMotorSubsystem.currentlyAcquired()){
-            finished = true;
-        }
+    @Override
+    public void initialize() {
+        m_intakeMotorSubsystem.setIntakeMotor(IntakeConstants.intakeMotorSpeed);
     }
 
+    @Override
+    public boolean isFinished() {
+        return m_intakeMotorSubsystem.currentlyAcquired();
+    }
 
     @Override
-	public boolean isFinished() {
-		return finished;
-	}
-
-    @Override
-	public void end(boolean interrupted) {
-        intakeMotorSubsystem.setIntakeMotor(0.0);
-	}
-
-
-
+    public void end(boolean interrupted) {
+        m_intakeMotorSubsystem.setIntakeMotor(0.0);
+    }
 
 }

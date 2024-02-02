@@ -61,7 +61,7 @@ public final class Constants {
 
     public static final double climberVoltage = 12;
 
-    public static final double kP = 1.0;
+    public static final double kP = 0.01;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kIZone = 0;
@@ -72,7 +72,7 @@ public final class Constants {
     public static final double climbingDistance = 1.0;
     public static final double climbTolerance = (0.05) * climbingDistance;
     public static final double climbRateMax = 1.0;
-    public static final int limitSwitchDigitalPort = 0;
+    public static final int limitSwitchDigitalPort = 1;
 
     public static final double kOperatorClimbSpeed = 0.3;
 
@@ -99,8 +99,8 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
-    public static final int kIntakeMotorId = 6;
-    public static final int kIntakeArmId = 5;
+    public static final int kIntakeMotorId = 7;
+    public static final int kIntakeArmId = 6;
 
     public static final int kSmartCurrentLimit = 30;
 
@@ -114,15 +114,17 @@ public final class Constants {
     public static final double kIntakeArmP = 1.0;
     public static final double kIntakeArmI = 0;
     public static final double kIntakeArmD = 0;
+    public static final double kIntakeArmIZone = 0;
+    public static final double kIntakeArmFF = 0;
+    public static final double kIntakeArmMaxOutput = 1.0;
+    public static final double kIntakeArmMinOutput = -1.0;
     public static final double kIntakeArmFFGravity = 0;
 
     public static final double intakeMotorSpeed = 0.5;
-    public static final int limitSwitchDigitalPort = 1;
+    public static final int limitSwitchDigitalPort = 0;
 
-    public static final double intakePositionStowed = 1.0;
+    public static final double intakePositionStowed = 0.0;
     public static final double intakePositionDeployed = 1.0;
-
-
 
   }
 

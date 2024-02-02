@@ -7,20 +7,21 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeMotorSubsystem;
 
-public class IntakeArm extends Command{
+public class IntakeArm extends Command {
 	private IntakeArmSubsystem m_intakeArmSubsystem;
 	private ArmFeedforward m_feedForward;
 	private PIDController m_controller;
 
 	private double m_setpoint;
 
-	public IntakeArm(IntakeArmSubsystem m_intakeArmSubsystem, double setpoint) {
-		m_intakeArmSubsystem = m_intakeArmSubsystem;
+	public IntakeArm(IntakeArmSubsystem intakeArmSubsystem, double setpoint) {
+		m_intakeArmSubsystem = intakeArmSubsystem;
 
 		m_feedForward = new ArmFeedforward(0.0, IntakeConstants.kIntakeArmFFGravity, 0.0, 0.0);
 		m_controller = new PIDController(IntakeConstants.kIntakeArmP,
 				IntakeConstants.kIntakeArmI,
 				IntakeConstants.kIntakeArmD);
+		m_controller.setTolerance(0.1);
 
 		m_setpoint = setpoint;
 
@@ -29,6 +30,7 @@ public class IntakeArm extends Command{
 
 	@Override
 	public void execute() {
+		System.out.println("pid voltage at: " + m_controller.calculate(m_intakeArmSubsystem.getAngle(), m_setpoint));
 		m_intakeArmSubsystem.setIntakeArmVoltage(m_controller.calculate(m_intakeArmSubsystem.getAngle(), m_setpoint)
 				+ m_feedForward.calculate(m_intakeArmSubsystem.getAngle(), 0));
 	}
@@ -42,6 +44,5 @@ public class IntakeArm extends Command{
 	public void end(boolean interrupted) {
 		m_intakeArmSubsystem.setIntakeArmVoltage(0.0);
 	}
-
 
 }
