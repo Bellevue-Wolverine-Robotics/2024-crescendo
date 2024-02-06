@@ -1,11 +1,17 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import java.util.function.BooleanSupplier;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -99,25 +105,25 @@ public class DriveSubsystem extends SubsystemBase {
         this.debugLogger = debugLogger;
 
 
-
+         BooleanSupplier bsupply = (() -> {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+        });
 
         AutoBuilder.configureRamsete(
-            this.getPose(), // Robot pose supplier
+            this::getPose, // Robot pose supplier
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::, // Current ChassisSpeeds supplier
-            this::arcadeDrive, // Method that will drive the robot given ChassisSpeeds
+            this::getCurrentSpeeds, // Current ChassisSpeeds supplier
+            this::drive, // Method that will drive the robot given ChassisSpeeds
             new ReplanningConfig(), // Default path replanning config. See the API for the options here
-            () -> {
-                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                // This will flip the path being followed to the red side of the field.
-                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-                var alliance = DriverStation.getAlliance();
-                if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-                }
-                return false;
-            },
-            this // Reference to this subsystem to set requirements
+            bsupply::getAsBoolean, // Boolean supplier that controls when the path will be mirrored for the red alliance
+            this); // Reference to this subsystem to set requirements
     }
 
 
@@ -134,8 +140,25 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
 
-    public double getCurrentSpeeds() {
-        return (m_leftEncoder.getVelocity() + m_rightEncoder.getVelocity()) / 2;
+    public ChassisSpeeds getCurrentSpeeds() {
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(27.0);
+
+        // Example differential drive wheel speeds: 2 meters per second
+        // for the left side, 3 meters per second for the right side.
+        var wheelSpeeds = new DifferentialDriveWheelSpeeds(m_leftEncoder.getVelocity(), m_rightEncoder.getVelocity());
+
+        // Convert to chassis speeds.
+        ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
+
+        // Linear velocity
+        double linearVelocity = chassisSpeeds.vxMetersPerSecond;
+
+        // Angular velocity
+        double angularVelocity = chassisSpeeds.omegaRadiansPerSecond;
+
+        return new ChassisSpeeds(linearVelocity, 0.0, angularVelocity);    
+   
+        //return (m_leftEncoder.getVelocity() + m_rightEncoder.getVelocity()) / 2;
     }
 
     public void resetPose () {
@@ -146,8 +169,20 @@ public class DriveSubsystem extends SubsystemBase {
         this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
     }
     
-    public void drive (double left, double right) {
-        this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
+    public void drive (ChassisSpeeds speeds) {
+        
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(27.0);
+        // Convert to wheel speeds
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+
+        // Left velocity
+        double leftVelocity = wheelSpeeds.leftMetersPerSecond;
+
+        // Right velocity
+        double rightVelocity = wheelSpeeds.rightMetersPerSecond;
+
+
+        this.m_drive.tankDrive(leftVelocity * speedLimit, rightVelocity * speedLimit);
     }
     
 
