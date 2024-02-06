@@ -104,41 +104,38 @@ public class DriveSubsystem extends SubsystemBase {
 
         this.debugLogger = debugLogger;
 
-
-         BooleanSupplier bsupply = (() -> {
-            // Boolean supplier that controls when the path will be mirrored for the red alliance
+        BooleanSupplier bsupply = (() -> {
+            // Boolean supplier that controls when the path will be mirrored for the red
+            // alliance
             // This will flip the path being followed to the red side of the field.
             // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
             var alliance = DriverStation.getAlliance();
             if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
+                return alliance.get() == DriverStation.Alliance.Red;
             }
             return false;
         });
 
         AutoBuilder.configureRamsete(
-            this::getPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getCurrentSpeeds, // Current ChassisSpeeds supplier
-            this::drive, // Method that will drive the robot given ChassisSpeeds
-            new ReplanningConfig(), // Default path replanning config. See the API for the options here
-            bsupply::getAsBoolean, // Boolean supplier that controls when the path will be mirrored for the red alliance
-            this); // Reference to this subsystem to set requirements
+                this::getPose, // Robot pose supplier
+                this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getCurrentSpeeds, // Current ChassisSpeeds supplier
+                this::drive, // Method that will drive the robot given ChassisSpeeds
+                new ReplanningConfig(), // Default path replanning config. See the API for the options here
+                bsupply::getAsBoolean, // Boolean supplier that controls when the path will be mirrored for the red
+                         // alliance
+                this); // Reference to this subsystem to set requirements
     }
 
-
-
-
-
- // path planner
+    // path planner
     public Pose2d getPose() {
         return m_odometry.getPoseMeters();
     }
 
     public void resetPose(Pose2d pose) {
-        m_odometry.resetPosition( m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition(), pose);
+        m_odometry.resetPosition(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
+                pose);
     }
-
 
     public ChassisSpeeds getCurrentSpeeds() {
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(27.0);
@@ -156,21 +153,21 @@ public class DriveSubsystem extends SubsystemBase {
         // Angular velocity
         double angularVelocity = chassisSpeeds.omegaRadiansPerSecond;
 
-        return new ChassisSpeeds(linearVelocity, 0.0, angularVelocity);    
-   
-        //return (m_leftEncoder.getVelocity() + m_rightEncoder.getVelocity()) / 2;
+        return new ChassisSpeeds(linearVelocity, 0.0, angularVelocity);
+
+        // return (m_leftEncoder.getVelocity() + m_rightEncoder.getVelocity()) / 2;
     }
 
-    public void resetPose () {
-        this.resetPose (this.getPose ());   
+    public void resetPose() {
+        this.resetPose(this.getPose());
     }
 
     public void tankDrive(double left, double right) {
         this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
     }
-    
-    public void drive (ChassisSpeeds speeds) {
-        
+
+    public void drive(ChassisSpeeds speeds) {
+
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(27.0);
         // Convert to wheel speeds
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
@@ -181,10 +178,8 @@ public class DriveSubsystem extends SubsystemBase {
         // Right velocity
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
-
         this.m_drive.tankDrive(leftVelocity * speedLimit, rightVelocity * speedLimit);
     }
-    
 
     public void arcadeDrive(double xSpeed, double rotation) {
         this.m_drive.arcadeDrive(xSpeed * speedLimit, rotation * speedLimit);
