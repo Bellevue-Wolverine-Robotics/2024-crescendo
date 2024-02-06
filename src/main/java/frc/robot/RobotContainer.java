@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.time.Instant;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -54,28 +55,14 @@ public class RobotContainer {
   private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
 
+
+
   public RobotContainer() {
     configureBindings();
     smartDashBoardBinding();
 
-    AutoBuilder.configureRamsete(
-      this::getPose, // Robot pose supplier
-      this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-      this::getCurrentSpeeds, // Current ChassisSpeeds supplier
-      this::drive, // Method that will drive the robot given ChassisSpeeds
-      new ReplanningConfig(), // Default path replanning config. See the API for the options here
-      () -> {
-        // Boolean supplier that controls when the path will be mirrored for the red alliance
-        // This will flip the path being followed to the red side of the field.
-        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-          return alliance.get() == DriverStation.Alliance.Red;
-        }
-        return false;
-      },
-      this // Reference to this subsystem to set requirements
-);
+    NamedCommands.registerCommand("FollowPath", new PathPlanner());
+
 
   }
 
@@ -102,6 +89,11 @@ public class RobotContainer {
     // .onTrue(Autos.IntakeSequence(m_intakeArmSubsystem, m_intakeMotorSubsystem));
   }
 
+
+
+
+
+
   public void smartDashBoardBinding() {
     SmartDashboard.putData("Save logging info", new DebugClose(debugLogger));
   }
@@ -124,25 +116,7 @@ public class RobotContainer {
   }
 
 
- // AutoBuilder.configureBindings(this);
- /*  AutoBuilder.configureRamsete(
-          this::getPose, // Robot pose supplier
-          this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-          this::getCurrentSpeeds, // Current ChassisSpeeds supplier
-          this::drive, // Method that will drive the robot given ChassisSpeeds
-          new ReplanningConfig(), // Default path replanning config. See the API for the options here
-          () -> {
-            // Boolean supplier that controls when the path will be mirrored for the red alliance
-            // This will flip the path being followed to the red side of the field.
-            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-            var alliance = DriverStation.getAlliance();
-            //if (alliance.isPresent()) {
-              //return alliance.get() == DriverStation.Alliance.Red;
-            //}
-            //return false;
-          },
-          this // Reference to this subsystem to set requirements
-    );*/
+
 
 
 

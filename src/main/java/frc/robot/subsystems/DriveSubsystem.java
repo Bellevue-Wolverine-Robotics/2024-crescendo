@@ -2,10 +2,12 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import frc.robot.Debug;
 import frc.robot.Constants.DriveConstants;
@@ -96,20 +98,58 @@ public class DriveSubsystem extends SubsystemBase {
 
         this.debugLogger = debugLogger;
 
+
+
+
+        AutoBuilder.configureRamsete(
+            this.getPose(), // Robot pose supplier
+            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::, // Current ChassisSpeeds supplier
+            this::arcadeDrive, // Method that will drive the robot given ChassisSpeeds
+            new ReplanningConfig(), // Default path replanning config. See the API for the options here
+            () -> {
+                // Boolean supplier that controls when the path will be mirrored for the red alliance
+                // This will flip the path being followed to the red side of the field.
+                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                var alliance = DriverStation.getAlliance();
+                if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
+            },
+            this // Reference to this subsystem to set requirements
     }
 
 
 
 
 
-
-    public Pose2d getPos() {
+ // path planner
+    public Pose2d getPose() {
         return m_odometry.getPoseMeters();
+    }
+
+    public void resetPose(Pose2d pose) {
+        m_odometry.resetPosition( m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition(), pose);
+    }
+
+
+    public double getCurrentSpeeds() {
+        return (m_leftEncoder.getVelocity() + m_rightEncoder.getVelocity()) / 2;
+    }
+
+    public void resetPose () {
+        this.resetPose (this.getPose ());   
     }
 
     public void tankDrive(double left, double right) {
         this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
     }
+    
+    public void drive (double left, double right) {
+        this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
+    }
+    
 
     public void arcadeDrive(double xSpeed, double rotation) {
         this.m_drive.arcadeDrive(xSpeed * speedLimit, rotation * speedLimit);
@@ -132,9 +172,9 @@ public class DriveSubsystem extends SubsystemBase {
          * + "      |||      leftBack: " + m_leftBack.getOutputCurrent() +
          * "  rightBack: " + m_rightBack.getOutputCurrent());
          */
-        SmartDashboard.putNumber("Current Y position: ", getPos().getY());
-        SmartDashboard.putNumber("Current X position: ", getPos().getX());
-        SmartDashboard.putNumber("Current Heading: ", getPos().getRotation().getDegrees());
+        SmartDashboard.putNumber("Current Y position: ", getPose().getY());
+        SmartDashboard.putNumber("Current X position: ", getPose().getX());
+        SmartDashboard.putNumber("Current Heading: ", getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("m_imu: ", m_imu.getAngle());
 
         SmartDashboard.putNumber("Left Encoder: ", m_leftEncoder.getPosition());
