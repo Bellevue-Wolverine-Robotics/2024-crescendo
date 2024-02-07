@@ -4,6 +4,9 @@
 
 package frc.robot.commands;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
@@ -36,4 +39,13 @@ public final class Autos {
     // new IntakeMotor(intakeMotorSubsystem),
     // m_intakeArmSubsystem.goToAngle(0));
   }
+
+  public static Command getPathPlannerCommand(){
+ // Load the path you want to follow using its name in the GUI
+         PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+
+         // Create a path following command using AutoBuilder. This will also trigger event markers.
+         return AutoBuilder.followPath(path);
+  }
+        
 }

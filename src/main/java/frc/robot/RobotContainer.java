@@ -61,9 +61,6 @@ public class RobotContainer {
     configureBindings();
     smartDashBoardBinding();
 
-    NamedCommands.registerCommand("FollowPath", new PathPlanner());
-
-
   }
 
   private void configureBindings() {
@@ -115,7 +112,10 @@ public class RobotContainer {
 
   }
 
-
+  public Command getAutonomousCommand() {
+    return new DriveStraight(m_driveSubsystem, debugLogger);
+    // An example command will be run in autonomous
+  }
 
 
 
