@@ -139,7 +139,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public ChassisSpeeds getCurrentSpeeds() {
-        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(27.0);
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.635);
 
         // Example differential drive wheel speeds: 2 meters per second
         // for the left side, 3 meters per second for the right side.
