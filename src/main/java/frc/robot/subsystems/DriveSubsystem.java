@@ -149,13 +149,8 @@ public class DriveSubsystem extends SubsystemBase {
         // Convert to chassis speeds.
         ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
 
-        // Linear velocity
-        double linearVelocity = chassisSpeeds.vxMetersPerSecond;
 
-        // Angular velocity
-        double angularVelocity = chassisSpeeds.omegaRadiansPerSecond;
-
-        return new ChassisSpeeds(linearVelocity, 0.0, angularVelocity);
+        return chassisSpeeds;
 
         // return (m_leftEncoder.getVelocity() + m_rightEncoder.getVelocity()) / 2;
     }
@@ -214,6 +209,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
 
         m_field.setRobotPose(m_odometry.getPoseMeters());
+        System.out.println("Odometry Pos: X:" + getPose().getX() + "Y: " + getPose().getY());
 
     }
 

@@ -105,15 +105,6 @@ public class RobotContainer {
 
   }
 
-  public Command followPathCommand() {
-
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
-
-    // Create a path following command using AutoBuilder. This will also trigger
-    // event markers.
-    return AutoBuilder.followPath(path);
-
-  }
 
   public Command getAutonomousCommand() {
     return Autos.getPathPlannerCommand();
