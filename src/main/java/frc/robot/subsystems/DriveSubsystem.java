@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.function.BooleanSupplier;
@@ -181,7 +182,7 @@ public class DriveSubsystem extends SubsystemBase {
         this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
     }
 
-    public void drive2(ChassisSpeeds speeds) {
+    public void drive(ChassisSpeeds speeds) {
 
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
                 Constants.DriveConstants.trackWidthMeters);
@@ -194,7 +195,10 @@ public class DriveSubsystem extends SubsystemBase {
         // Right velocity
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
-        this.m_drive.tankDrive(leftVelocity * speedLimit, rightVelocity * speedLimit);
+        //this.m_drive.tankDrive(leftVelocity/5.0, rightVelocity/5.0);
+        this.m_drive.tankDrive(0.0, 0.0);
+        System.out.println(leftVelocity + " " + rightVelocity);
+
     }
 
 
@@ -208,7 +212,7 @@ public class DriveSubsystem extends SubsystemBase {
         pidController.setOutputRange(ClimbingConstants.kMinOutput, ClimbingConstants.kMaxOutput);
     }
 
-    public void drive(ChassisSpeeds speed){
+    public void drive2(ChassisSpeeds speed){
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
                 Constants.DriveConstants.trackWidthMeters);
         // Convert to wheel speeds
@@ -230,7 +234,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Command testCommand(){
-        System.out.println("t commaqngfdhjilhukgyftghkjhgf");
+        System.out.println("OKAY, THIS IS THE REAL TEST COMMAND");
          double leftVelocity = 4.0;
 
         // Right velocity
@@ -239,10 +243,18 @@ public class DriveSubsystem extends SubsystemBase {
         double encoderLeft = leftVelocity/((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
         double encoderRight = rightVelocity/((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
         
-        return this.runOnce(()->{
+        System.out.println("rpm:" + encoderLeft);
+        return new SequentialCommandGroup(
+               this.runOnce(()->{
             m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
             m_rightPID.setReference(encoderRight, ControlType.kVelocity);
-        });
+        }),
+            this.run(() -> {
+                //System.out.println("WE ARE PRINTING STUFF");
+                m_drive.feed();
+            })
+        );
+  
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {

@@ -25,7 +25,6 @@ import java.time.Instant;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -55,9 +54,13 @@ public class RobotContainer {
   private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
+
+
+
   public RobotContainer() {
     configureBindings();
     smartDashBoardBinding();
+
 
   }
 
@@ -75,7 +78,7 @@ public class RobotContainer {
     m_operatorController.button(OperatorConstants.kClimbToSetpointButton)
         .onTrue(m_climberSubsystem.climbToPositionSetpointCommand(25));
     m_operatorController.button(OperatorConstants.kClimbUpButton)
-        .whileTrue(m_climberSubsystem.climbUpCommand());
+        .whileTrue(m_climberSubsystem.climbUpCommand());   
     m_operatorController.button(OperatorConstants.kClimbDownButton)
         .whileTrue(m_climberSubsystem.climbDownCommand());
 
@@ -83,6 +86,11 @@ public class RobotContainer {
     // m_operatorController.button(OperatorConstants.kIntakeEnableMotorButton)
     // .onTrue(Autos.IntakeSequence(m_intakeArmSubsystem, m_intakeMotorSubsystem));
   }
+
+
+
+
+
 
   public void smartDashBoardBinding() {
     SmartDashboard.putData("Save logging info", new DebugClose(debugLogger));
@@ -105,10 +113,13 @@ public class RobotContainer {
 
   }
 
-
   public Command getAutonomousCommand() {
-    return m_driveSubsystem.testCommand();
+    return Autos.getPathPlannerCommand();
+    // An example command will be run in autonomous
   }
-  // An example command will be run in autonomous
 
+
+
+
+  
 }
