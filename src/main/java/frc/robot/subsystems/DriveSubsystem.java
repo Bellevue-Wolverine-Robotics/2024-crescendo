@@ -125,7 +125,7 @@ public class DriveSubsystem extends SubsystemBase {
                 this::drive, // Method that will drive the robot given ChassisSpeeds
                 new ReplanningConfig(), // Default path replanning config. See the API for the options here
                 bsupply::getAsBoolean, // Boolean supplier that controls when the path will be mirrored for the red
-                         // alliance
+                // alliance
                 this); // Reference to this subsystem to set requirements
     }
 
@@ -170,7 +170,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void drive(ChassisSpeeds speeds) {
 
-        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.DriveConstants.trackWidthMeters);
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
+                Constants.DriveConstants.trackWidthMeters);
         // Convert to wheel speeds
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
