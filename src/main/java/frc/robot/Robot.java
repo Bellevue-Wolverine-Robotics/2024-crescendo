@@ -92,6 +92,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    System.out.println("we are now doing COOL STUFF yippe ::3333");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)

@@ -107,7 +107,7 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    return Autos.getPathPlannerCommand();
+    return m_driveSubsystem.testCommand();
   }
   // An example command will be run in autonomous
 
