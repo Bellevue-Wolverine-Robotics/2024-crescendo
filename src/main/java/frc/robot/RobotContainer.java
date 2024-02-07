@@ -25,6 +25,7 @@ import java.time.Instant;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -112,10 +113,20 @@ public class RobotContainer {
 
   }
 
-  public Command getAutonomousCommand() {
-    return new DriveStraight(m_driveSubsystem, debugLogger);
-    // An example command will be run in autonomous
+  public Command followPathCommand() {
+
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+    return AutoBuilder.followPath(path);
+
   }
+  public Command driveStraightCommand()
+  {
+    return new DriveStraight(m_driveSubsystem, debugLogger);
+  }
+    // An example command will be run in autonomous
+  
 
 
 

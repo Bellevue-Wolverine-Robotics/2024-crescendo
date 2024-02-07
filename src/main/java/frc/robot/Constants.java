@@ -96,6 +96,9 @@ public final class Constants {
     public static final double FAST = 1.0;
     public static final double MEDIUM = 0.65;
     public static final double SLOW = 0.30;
+
+    public static final double trackWidthInches = 22;
+    public static final double trackWidthMeters = Units.inchesToMeters(trackWidthInches);
   }
 
   public static class IntakeConstants {

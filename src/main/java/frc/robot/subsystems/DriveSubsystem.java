@@ -16,6 +16,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import frc.robot.Constants;
 import frc.robot.Debug;
 import frc.robot.Constants.DriveConstants;
 
@@ -169,7 +170,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void drive(ChassisSpeeds speeds) {
 
-        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(27.0);
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.DriveConstants.trackWidthMeters);
         // Convert to wheel speeds
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
