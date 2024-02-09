@@ -134,6 +134,8 @@ public class DriveSubsystem extends SubsystemBase {
         buildPidController(m_leftPID);
         buildPidController(m_rightPID);
 
+        resetPose();
+
         AutoBuilder.configureRamsete(
                 this::getPose, // Robot pose supplier
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -143,8 +145,6 @@ public class DriveSubsystem extends SubsystemBase {
                 bsupply::getAsBoolean, // Boolean supplier that controls when the path will be mirrored for the red
                 // alliance
                 this); // Reference to this subsystem to set requirements
-        System.out.println("t commaqngfdhjilhukgyftghkjhgf");
-
     }
 
     // path planner
@@ -178,6 +178,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void tankDrive(double left, double right) {
         this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
+        // m_drive.feed();
     }
 
     public void drive(ChassisSpeeds speeds) {
@@ -241,7 +242,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Command testCommand() {
-        System.out.println("OKAY, THIS IS THE REAL TEST COMMAND");
+        // System.out.println("OKAY, THIS IS THE REAL TEST COMMAND");
         double leftVelocity = 4.0;
 
         // Right velocity
@@ -252,7 +253,7 @@ public class DriveSubsystem extends SubsystemBase {
         double encoderRight = rightVelocity
                 / ((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
 
-        System.out.println("rpm:" + encoderLeft);
+        // System.out.println("rpm:" + encoderLeft);
         return new SequentialCommandGroup(
                 this.runOnce(() -> {
                     m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
