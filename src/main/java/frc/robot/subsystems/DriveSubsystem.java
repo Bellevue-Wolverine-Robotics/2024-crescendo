@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -16,6 +17,7 @@ import java.util.function.BooleanSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import frc.robot.Constants;
@@ -195,9 +197,12 @@ public class DriveSubsystem extends SubsystemBase {
         // Right velocity
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
-        //this.m_drive.tankDrive(leftVelocity/5.0, rightVelocity/5.0);
-        this.m_drive.tankDrive(0.0, 0.0);
-        System.out.println(leftVelocity + " " + rightVelocity);
+        this.m_drive.tankDrive(leftVelocity/50.0, rightVelocity/50.0);
+        //this.m_drive.tankDrive(0.0, 0.0);
+        //this.m_drive.tankDrive(0.0, 0.0);
+
+
+        System.out.println(leftVelocity + " " + rightVelocity + "        X: " + getPose().getX() + "Y" + getPose().getY());
 
     }
 
@@ -230,6 +235,12 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
         m_rightPID.setReference(encoderRight, ControlType.kVelocity);
+
+    }
+
+    public Command dumbCommand(){
+        this.resetPose();
+        return AutoBuilder.pathfindToPose(new Pose2d(1.0, 0.0, new Rotation2d(0)), new PathConstraints(5, 5, 5, 5));
 
     }
 
