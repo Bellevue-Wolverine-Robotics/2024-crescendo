@@ -14,6 +14,10 @@ public class DriveStraight extends Command{
         addRequirements(driveSubsystem);
     }
 
+    public DriveStraight(DriveSubsystem driveSubsystem, double distance){
+
+    }
+
     @Override
     public void execute(){
         driveSubsystem.tankDrive(0.5, 0.5);
