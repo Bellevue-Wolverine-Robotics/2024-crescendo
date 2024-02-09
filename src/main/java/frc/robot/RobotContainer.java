@@ -8,6 +8,7 @@ import frc.robot.Constants.ClimbingConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FlywheelConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Enums.AutoEnum;
 import frc.robot.Enums.Throttles;
 import frc.robot.commands.*;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -96,6 +97,7 @@ public class RobotContainer {
     SmartDashboard.putData("Save logging info", new DebugClose(debugLogger));
   }
 
+
   public void setDriveThrottleSpeed(Throttles throttleSpeed) {
     switch (throttleSpeed) {
       case FAST:
@@ -113,9 +115,14 @@ public class RobotContainer {
 
   }
 
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand(AutoEnum autoEnum ) {
     //return Autos.getPathPlannerCommand();
-    return m_driveSubsystem.dumbCommand();
+    switch(autoEnum){
+      case FOWARD_TEST:
+        return Autos.forwardTest(m_driveSubsystem);
+      default:
+        return null;
+    }
     // An example command will be run in autonomous
   }
 
