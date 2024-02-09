@@ -27,6 +27,10 @@ public class DriveStraight extends Command{
         addRequirements(driveSubsystem);
     }
 
+    public DriveStraight(DriveSubsystem driveSubsystem, double distance){
+
+    }
+
     @Override
     public void execute() {
         double linearSpeed = MathUtil.clamp(m_pidLinear.calculate(m_driveSubsystem.getPose().getX(), m_targetDistance), -0.7, 0.7);

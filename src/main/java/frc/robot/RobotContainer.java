@@ -55,13 +55,9 @@ public class RobotContainer {
   private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
-
-
-
   public RobotContainer() {
     configureBindings();
     smartDashBoardBinding();
-
 
   }
 
@@ -79,7 +75,7 @@ public class RobotContainer {
     m_operatorController.button(OperatorConstants.kClimbToSetpointButton)
         .onTrue(m_climberSubsystem.climbToPositionSetpointCommand(25));
     m_operatorController.button(OperatorConstants.kClimbUpButton)
-        .whileTrue(m_climberSubsystem.climbUpCommand());   
+        .whileTrue(m_climberSubsystem.climbUpCommand());
     m_operatorController.button(OperatorConstants.kClimbDownButton)
         .whileTrue(m_climberSubsystem.climbDownCommand());
 
@@ -88,15 +84,9 @@ public class RobotContainer {
     // .onTrue(Autos.IntakeSequence(m_intakeArmSubsystem, m_intakeMotorSubsystem));
   }
 
-
-
-
-
-
   public void smartDashBoardBinding() {
     SmartDashboard.putData("Save logging info", new DebugClose(debugLogger));
   }
-
 
   public void setDriveThrottleSpeed(Throttles throttleSpeed) {
     switch (throttleSpeed) {
@@ -115,19 +105,16 @@ public class RobotContainer {
 
   }
 
-  public Command getAutonomousCommand(AutoEnum autoEnum ) {
-    //return Autos.getPathPlannerCommand();
-    switch(autoEnum){
+  public Command getAutonomousCommand(AutoEnum autoEnum) {
+    // return Autos.getPathPlannerCommand();
+    switch (autoEnum) {
       case FOWARD_TEST:
         return Autos.forwardTest(m_driveSubsystem);
+      case CUSTOM_PATH_PLANNER:
+        return Autos.test949PathPlan(m_driveSubsystem);
       default:
         return null;
     }
-    // An example command will be run in autonomous
   }
 
-
-
-
-  
 }

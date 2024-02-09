@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.BackupPathPlanner;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
@@ -60,4 +61,14 @@ public final class Autos {
     );
   }
 
+  public static Command test949PathPlan(DriveSubsystem driveSubsystem) {
+    BackupPathPlanner.OnePoint[] poseList = new BackupPathPlanner.OnePoint[3];
+    Command[] pCommands = {};
+    poseList[0] = new BackupPathPlanner.OnePoint(new BackupPathPlanner.CustomPose(2.0, 0.0, 0.0), pCommands);
+    poseList[1] = new BackupPathPlanner.OnePoint(new BackupPathPlanner.CustomPose(2.0, 4.0, 0.0), pCommands);
+    poseList[2] = new BackupPathPlanner.OnePoint(new BackupPathPlanner.CustomPose(0.0, 0.0, 0.0), pCommands);
+
+    BackupPathPlanner plan = new BackupPathPlanner(poseList, driveSubsystem);
+    return plan.getCommand();
+  }
 }
