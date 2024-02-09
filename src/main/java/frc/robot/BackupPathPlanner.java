@@ -62,7 +62,7 @@ public class BackupPathPlanner {
     }
 
     private double sanitizeAngleRadians(double angleRadians){
-        return angleRadians - ((int)(angleRadians/(2*Math.PI)))*(2*Math.PI);
+        return angleRadians - ((int)(angleRadians/(Math.PI)))*(Math.PI);
     }
     
     /*
@@ -109,7 +109,9 @@ public class BackupPathPlanner {
             ParallelCommandGroup atPointRun = new ParallelCommandGroup();
             atPointRun.addCommands(driveSeq);
             for(Command externCommands: point.doCommands){
-                atPointRun.addCommands(externCommands);
+                if(externCommands != null){
+                    atPointRun.addCommands(externCommands);
+                }
             }
             finalCommand.addCommands(atPointRun);
             prevPos = point.position;
