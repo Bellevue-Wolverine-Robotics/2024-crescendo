@@ -128,15 +128,13 @@ public class DriveSubsystem extends SubsystemBase {
             return false;
         });
 
-
-
         m_leftPID = m_leftFront.getPIDController();
         m_rightPID = m_rightFront.getPIDController();
 
         buildPidController(m_leftPID);
         buildPidController(m_rightPID);
 
-                AutoBuilder.configureRamsete(
+        AutoBuilder.configureRamsete(
                 this::getPose, // Robot pose supplier
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getCurrentSpeeds, // Current ChassisSpeeds supplier
@@ -145,10 +143,9 @@ public class DriveSubsystem extends SubsystemBase {
                 bsupply::getAsBoolean, // Boolean supplier that controls when the path will be mirrored for the red
                 // alliance
                 this); // Reference to this subsystem to set requirements
-                        System.out.println("t commaqngfdhjilhukgyftghkjhgf");
+        System.out.println("t commaqngfdhjilhukgyftghkjhgf");
 
     }
-
 
     // path planner
     public Pose2d getPose() {
@@ -169,7 +166,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         // Convert to chassis speeds.
         ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
-
 
         return chassisSpeeds;
 
@@ -197,16 +193,15 @@ public class DriveSubsystem extends SubsystemBase {
         // Right velocity
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
-        this.m_drive.tankDrive(leftVelocity/50.0, rightVelocity/50.0);
-        //this.m_drive.tankDrive(0.0, 0.0);
-        //this.m_drive.tankDrive(0.0, 0.0);
+        this.m_drive.tankDrive(leftVelocity / 50.0, rightVelocity / 50.0);
+        // this.m_drive.tankDrive(0.0, 0.0);
+        // this.m_drive.tankDrive(0.0, 0.0);
 
-
-        System.out.println(leftVelocity + " " + rightVelocity + "        X: " + getPose().getX() + "Y" + getPose().getY());
+        m_drive.feed();
+        // System.out.println(leftVelocity + " " + rightVelocity + " X: " +
+        // getPose().getX() + "Y" + getPose().getY());
 
     }
-
-
 
     private void buildPidController(SparkPIDController pidController) {
         pidController.setP(1e-6);
@@ -217,7 +212,7 @@ public class DriveSubsystem extends SubsystemBase {
         pidController.setOutputRange(ClimbingConstants.kMinOutput, ClimbingConstants.kMaxOutput);
     }
 
-    public void drive2(ChassisSpeeds speed){
+    public void drive2(ChassisSpeeds speed) {
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
                 Constants.DriveConstants.trackWidthMeters);
         // Convert to wheel speeds
@@ -229,43 +224,45 @@ public class DriveSubsystem extends SubsystemBase {
         // Right velocity
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
-        double encoderLeft = leftVelocity/((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
-        double encoderRight = rightVelocity/((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
-
+        double encoderLeft = leftVelocity
+                / ((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
+        double encoderRight = rightVelocity
+                / ((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
 
         m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
         m_rightPID.setReference(encoderRight, ControlType.kVelocity);
 
     }
 
-    public Command dumbCommand(){
+    public Command dumbCommand() {
         this.resetPose();
         return AutoBuilder.pathfindToPose(new Pose2d(1.0, 0.0, new Rotation2d(0)), new PathConstraints(5, 5, 5, 5));
 
     }
 
-    public Command testCommand(){
+    public Command testCommand() {
         System.out.println("OKAY, THIS IS THE REAL TEST COMMAND");
-         double leftVelocity = 4.0;
+        double leftVelocity = 4.0;
 
         // Right velocity
         double rightVelocity = 4.0;
 
-        double encoderLeft = leftVelocity/((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
-        double encoderRight = rightVelocity/((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
-        
+        double encoderLeft = leftVelocity
+                / ((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
+        double encoderRight = rightVelocity
+                / ((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
+
         System.out.println("rpm:" + encoderLeft);
         return new SequentialCommandGroup(
-               this.runOnce(()->{
-            m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
-            m_rightPID.setReference(encoderRight, ControlType.kVelocity);
-        }),
-            this.run(() -> {
-                //System.out.println("WE ARE PRINTING STUFF");
-                m_drive.feed();
-            })
-        );
-  
+                this.runOnce(() -> {
+                    m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
+                    m_rightPID.setReference(encoderRight, ControlType.kVelocity);
+                }),
+                this.run(() -> {
+                    // System.out.println("WE ARE PRINTING STUFF");
+                    m_drive.feed();
+                }));
+
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {
@@ -278,6 +275,14 @@ public class DriveSubsystem extends SubsystemBase {
 
     public double getSpeedLimit() {
         return this.speedLimit;
+    }
+
+    public double getYaw() {
+        return m_imu.getYaw();
+    }
+
+    public void stopDriveTrain() {
+        m_drive.tankDrive(0, 0);
     }
 
     @Override
@@ -298,7 +303,8 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
 
         m_field.setRobotPose(m_odometry.getPoseMeters());
-        //System.out.println("Odometry Pos: X:" + getPose().getX() + "Y: " + getPose().getY());
+        // System.out.println("Odometry Pos: X:" + getPose().getX() + "Y: " +
+        // getPose().getY());
 
     }
 

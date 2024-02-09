@@ -75,7 +75,7 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public double getPosition() {
-        return m_leftClimbRelativeEncoder.getPosition(); // ideally returns both
+        return (m_leftClimbRelativeEncoder.getPosition() + m_rightClimbRelativeEncoder.getPosition())/2; // ideally returns both
     }
 
     public void setSpeed(double speed)

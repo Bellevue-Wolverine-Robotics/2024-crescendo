@@ -97,6 +97,14 @@ public final class Constants {
     public static final double MEDIUM = 0.65;
     public static final double SLOW = 0.30;
 
+    public static final double kPTurn = 0.01;
+    public static final double kITurn = 0.0;
+    public static final double kDTurn = 0.0;
+
+    public static final double kPStraight = 2;
+    public static final double kIStraight = 0.0;
+    public static final double kDStraight = 0.0;
+
     public static final double trackWidthInches = 22;
     public static final double trackWidthMeters = Units.inchesToMeters(trackWidthInches);
   }

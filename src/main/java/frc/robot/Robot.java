@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Enums.AutoEnum;
 import frc.robot.Enums.Throttles;
 
 /**
@@ -23,6 +24,7 @@ import frc.robot.Enums.Throttles;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  SendableChooser<AutoEnum> m_autoChooser = new SendableChooser<>();
 
   private RobotContainer m_robotContainer;
   private SendableChooser<Throttles> throttleSelection;
@@ -46,6 +48,9 @@ public class Robot extends TimedRobot {
     throttleSelection.addOption("Slow", Throttles.SLOW);
     SmartDashboard.putData("Max Speed", throttleSelection);
     this.prevThrottle = throttleSelection.getSelected();
+
+    m_autoChooser.setDefaultOption("Testing going forward", AutoEnum.FOWARD_TEST);
+    SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
   }
 
@@ -92,8 +97,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    System.out.println("we are now doing COOL STUFF yippe ::3333");
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // System.out.println("we are now doing COOL STUFF yippe ::3333");
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_autoChooser.getSelected());
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
