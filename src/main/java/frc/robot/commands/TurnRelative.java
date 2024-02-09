@@ -7,17 +7,17 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class TurnRelative extends Command {
 	private DriveSubsystem m_driveSubsystem;
-	private int setPoint;
+	private double setPoint;
 	private PIDController m_pid = new PIDController(DriveConstants.kPTurn, DriveConstants.kITurn,
-            DriveConstants.kDTurn);
+			DriveConstants.kDTurn);
 
-	public TurnRelative(int radians, DriveSubsystem driveSubsystem) {
+	public TurnRelative(double radians, DriveSubsystem driveSubsystem) {
 		m_driveSubsystem = driveSubsystem;
 		setPoint = radians;
 	}
 
 	@Override
 	public void execute() {
-		
+
 	}
 }

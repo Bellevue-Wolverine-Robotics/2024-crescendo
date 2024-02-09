@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveStraight;
 import frc.robot.commands.TurnAbsoluteDegrees;
+import frc.robot.commands.TurnRelative;
+import frc.robot.commands.TurnRelativeRadians;
 import frc.robot.subsystems.DriveSubsystem;
 
 import java.lang.Math;
@@ -57,6 +59,10 @@ public class BackupPathPlanner {
         Command[] doCommands;
     }
 
+    private double sanitizeAngleRadians(double angleRadians) {
+        return angleRadians - ((int) (angleRadians / (2 * Math.PI))) * (2 * Math.PI);
+    }
+
     /*
      * stopPoints: all points the robot will pass excluding startpoint
      * These points are on a coordinate position where everything is relative to
@@ -70,6 +76,7 @@ public class BackupPathPlanner {
     SequentialCommandGroup finalCommand = new SequentialCommandGroup();
 
     public BackupPathPlanner(OnePoint[] points, DriveSubsystem driveSubsystem) {
+
         CustomPose prevPos = new CustomPose(0, 0, 0);
         // 1. Rotate until heading towards dest
         // 2. drive to dests
@@ -87,10 +94,16 @@ public class BackupPathPlanner {
 
             SequentialCommandGroup driveSeq = new SequentialCommandGroup();
 
-            driveSeq.addCommands(new TurnAbsoluteDegrees(headingAngle, driveSubsystem));
+            driveSeq.addCommands(new TurnRelative(sanitizeAngleRadians(headingAngle), driveSubsystem));
             driveSeq.addCommands(new DriveStraight(driveSubsystem,
                     Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2))));
-            driveSeq.addCommands(new TurnAbsoluteDegrees(point.position.rad - headingAngle, driveSubsystem));
+            driveSeq.addCommands(
+                    new TurnRelative(sanitizeAngleRadians(point.position.rad - headingAngle), driveSubsystem));
+
+            driveSeq.addCommands(new TurnRelativeRadians(sanitizeAngleRadians(headingAngle)));
+            driveSeq.addCommands(new DriveStraight(driveSubsystem,
+                    Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2))));
+            driveSeq.addCommands(new TurnRelativeRadians(sanitizeAngleRadians(point.position.rad - headingAngle)));
 
             ParallelCommandGroup atPointRun = new ParallelCommandGroup();
             atPointRun.addCommands(driveSeq);
