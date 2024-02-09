@@ -54,9 +54,9 @@ public final class Autos {
 
   public static Command forwardTest(DriveSubsystem driveSubsystem) {
     return new SequentialCommandGroup(
-        // new DriveStraight(driveSubsystem, null, 5),
-        // new WaitCommand(2),
-        new TurnAbsoluteDegrees(360, driveSubsystem)
+        new DriveStraight(driveSubsystem, null, 5),
+        new WaitCommand(2),
+        new TurnRelative(1, driveSubsystem)
 
     );
   }
