@@ -51,7 +51,11 @@ public class BackupPathPlanner {
 
 
 
-    public static class onePoint{
+    public static class OnePoint{
+        public OnePoint(CustomPose pos, Command[] commands){
+            this.position = pos;
+            this.doCommands = commands;
+        }
         //struct
         CustomPose position;
         Command[] doCommands;    
@@ -59,20 +63,21 @@ public class BackupPathPlanner {
     
     /*
      * stopPoints: all points the robot will pass excluding startpoint
-     *              These points are on a coordinate position where everything is relative to (0,0 0 deg)
-     *              If robot starts executing command at (x, y), the entire path will be shifted up x, right y.
+     *             These points are on a coordinate position where everything is relative to (0,0 0 deg)
+     *             If robot starts executing command at (x, y), the entire path will be shifted up x, right y.
+     *              
      * 
      */
 
     SequentialCommandGroup finalCommand = new SequentialCommandGroup();
 
-    public BackupPathPlanner(onePoint[] points, DriveSubsystem driveSubsystem){
+    public BackupPathPlanner(OnePoint[] points, DriveSubsystem driveSubsystem){
         CustomPose prevPos = new CustomPose(0, 0, 0);
         //1. Rotate until heading towards dest
         //2. drive to dests
         //3. correct direction
         
-        for(onePoint point: points){
+        for(OnePoint point: points){
             double deltaX = point.position.x - prevPos.x;
             double deltaY = point.position.y - prevPos.y;
             double headingAngle = Math.atan(deltaY/deltaX);

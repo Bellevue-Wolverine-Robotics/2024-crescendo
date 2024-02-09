@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.BackupPathPlanner;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeMotorSubsystem;
 import frc.robot.commands.IntakeArm;
@@ -47,5 +49,16 @@ public final class Autos {
          // Create a path following command using AutoBuilder. This will also trigger event markers.
          return AutoBuilder.followPath(path);
   }
-        
+  public static Command test949PathPlan(DriveSubsystem driveSubsystem){
+    BackupPathPlanner.OnePoint[] poseList = new BackupPathPlanner.OnePoint[3];
+    Command[] pCommands = {};
+    poseList[0] = new BackupPathPlanner.OnePoint(new BackupPathPlanner.CustomPose(2.0, 0.0, 0.0), pCommands);
+    poseList[1] = new BackupPathPlanner.OnePoint(new BackupPathPlanner.CustomPose(2.0, 4.0, 0.0), pCommands);
+    poseList[2] = new BackupPathPlanner.OnePoint(new BackupPathPlanner.CustomPose(0.0, 0.0, 0.0), pCommands);
+
+
+    BackupPathPlanner plan = new BackupPathPlanner(poseList, driveSubsystem);
+    return plan.getCommand();
+  }      
+
 }
