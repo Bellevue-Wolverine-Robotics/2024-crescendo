@@ -83,10 +83,6 @@ public class BackupPathPlanner {
             driveSeq.addCommands(
                     new TurnRelative(sanitizeAngleRadians(point.position.rad - headingAngle), driveSubsystem));
 
-            driveSeq.addCommands(new TurnRelativeRadians(sanitizeAngleRadians(headingAngle)));
-            driveSeq.addCommands(new DriveStraight(driveSubsystem,
-                    Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2))));
-            driveSeq.addCommands(new TurnRelativeRadians(sanitizeAngleRadians(point.position.rad - headingAngle)));
 
             ParallelCommandGroup atPointRun = new ParallelCommandGroup();
             atPointRun.addCommands(driveSeq);
