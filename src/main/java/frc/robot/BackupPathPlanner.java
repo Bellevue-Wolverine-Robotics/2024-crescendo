@@ -15,27 +15,6 @@ import frc.robot.subsystems.DriveSubsystem;
 import java.lang.Math; 
 
 
-
-class one949Parallel{
-    private ParallelCommandGroup commands;
-    public one949Parallel(){
-        commands = new ParallelCommandGroup();
-    }
-
-    public void addCommands(Command newCommand){
-        commands.addCommands(newCommand);
-    }
-
-    public Command getFullParallel(){
-        return commands;
-        
-    }
-    
-
-}
-
-
-
 public class BackupPathPlanner {
     //DO NOT SWAP WITH POSE2d, proved program corectness based off of CustomePose
     public static class CustomPose{
@@ -62,7 +41,7 @@ public class BackupPathPlanner {
     }
 
     private double sanitizeAngleRadians(double angleRadians){
-        return angleRadians - ((int)(angleRadians/(Math.PI)))*(Math.PI);
+        return angleRadians - ((int)(angleRadians/(Math.PI)))*(Math.PI); 
     }
     
     /*
@@ -95,9 +74,6 @@ public class BackupPathPlanner {
 
             SequentialCommandGroup driveSeq = new SequentialCommandGroup();
 
-
-
-
             driveSeq.addCommands(new TurnRelativeRadians(sanitizeAngleRadians(headingAngle)));
             driveSeq.addCommands(new DriveStraight(driveSubsystem, 
                 Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2))
@@ -112,6 +88,7 @@ public class BackupPathPlanner {
                 if(externCommands != null){
                     atPointRun.addCommands(externCommands);
                 }
+                //else should assert
             }
             finalCommand.addCommands(atPointRun);
             prevPos = point.position;
