@@ -1,14 +1,20 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,6 +30,7 @@ import frc.robot.Constants;
 import frc.robot.Debug;
 import frc.robot.Constants.ClimbingConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.EmpiricalConstants;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -45,6 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private RelativeEncoder m_leftEncoder = m_leftFront.getEncoder();
     private RelativeEncoder m_rightEncoder = m_rightFront.getEncoder();
+
     private DifferentialDriveOdometry m_odometry;
 
     private SparkPIDController m_leftPID;
@@ -55,6 +63,23 @@ public class DriveSubsystem extends SubsystemBase {
     private Debug debugLogger;
 
     private Field2d m_field = new Field2d();
+
+    // TODO: update these to reflect actual values using SysId
+    // https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/drivesim-tutorial/drivetrain-model.html
+    DifferentialDrivetrainSim m_driveSim = new DifferentialDrivetrainSim(
+            DCMotor.getNEO(2), // 2 NEO motors on each side of the drivetrain.
+            7.29, // 7.29:1 gearing reduction.
+            7.5, // MOI of 7.5 kg m^2 (from CAD model).
+            60.0, // The mass of the robot is 60 kg.
+            Units.inchesToMeters(3), // The robot uses 3" radius wheels.
+            0.7112, // The track width is 0.7112 meters.
+
+            // The standard deviations for measurement noise:
+            // x and y: 0.001 m
+            // heading: 0.001 rad
+            // l and r velocity: 0.1 m/s
+            // l and r position: 0.005 m
+            VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
 
     public DriveSubsystem(Debug debugLogger) {
         SmartDashboard.putData("Field", m_field);
@@ -182,7 +207,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void drive(ChassisSpeeds speeds) {
-
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
                 Constants.DriveConstants.trackWidthMeters);
         // Convert to wheel speeds
@@ -303,10 +327,36 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Left Encoder: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
 
-        m_field.setRobotPose(m_odometry.getPoseMeters());
-        // System.out.println("Odometry Pos: X:" + getPose().getX() + "Y: " +
-        // getPose().getY());
+        SmartDashboard.putNumber("Front Left Duty Cycle: ", m_leftFront.get());
+        SmartDashboard.putNumber("Front Left Distance: ", m_leftEncoder.getPosition());
+        SmartDashboard.putNumber("Front Left Rate: ", m_leftEncoder.getVelocity());
 
+        SmartDashboard.putNumber("Sim Y position: ", m_driveSim.getPose().getY());
+        SmartDashboard.putNumber("Sim X position: ", m_driveSim.getPose().getX());
+
+        m_field.setRobotPose(m_odometry.getPoseMeters());
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        m_driveSim.setInputs(m_leftFront.get() * EmpiricalConstants.kInputVoltage,
+                m_rightFront.get() * EmpiricalConstants.kInputVoltage);
+
+        System.out.println(m_leftFront.get());
+
+        m_driveSim.update(0.02);
+
+        int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+        SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+        angle.set(-m_driveSim.getHeading().getDegrees());
+    }
+
+    /**
+     * Returns CanSparkMax array in format of
+     * [frontLeft, frontRight, backLeft, backRight]
+     */
+    public CANSparkMax[] getDriveMotorControllers() {
+        return new CANSparkMax[] { m_leftFront, m_rightFront, m_leftBack, m_rightBack };
     }
 
 }

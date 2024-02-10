@@ -27,6 +27,14 @@ import edu.wpi.first.math.util.Units;
  */
 
 public final class Constants {
+  public static class EmpiricalConstants { // not really sure how to name this
+    public static final double kNEOStallTorque = 2.6;
+    public static final double kNEOFreeSpeed = 5676;
+    public static final double kInputVoltage = 12; // technically not an empirical constant but i need to put this
+                                                   // somewhere
+
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
