@@ -4,12 +4,18 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
+
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.EmpiricalConstants;
+import frc.robot.Enums.AutoEnum;
 import frc.robot.Enums.Throttles;
 
 /**
@@ -23,6 +29,7 @@ import frc.robot.Enums.Throttles;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  SendableChooser<AutoEnum> m_autoChooser = new SendableChooser<>();
 
   private RobotContainer m_robotContainer;
   private SendableChooser<Throttles> throttleSelection;
@@ -40,12 +47,17 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    throttleSelection = new SendableChooser<Throttles> ();
+    throttleSelection = new SendableChooser<Throttles>();
     throttleSelection.setDefaultOption("Fast", Throttles.FAST);
     throttleSelection.addOption("Medium", Throttles.MEDIUM);
     throttleSelection.addOption("Slow", Throttles.SLOW);
     SmartDashboard.putData("Max Speed", throttleSelection);
     this.prevThrottle = throttleSelection.getSelected();
+
+    m_autoChooser.setDefaultOption("Testing going forward", AutoEnum.FOWARD_TEST);
+    m_autoChooser.addOption("Custom Path Planner", AutoEnum.CUSTOM_PATH_PLANNER);
+    m_autoChooser.addOption("Path Planner", AutoEnum.PATH_PLANNER);
+    SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
   }
 
@@ -70,7 +82,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    if(throttleSelection.getSelected() != prevThrottle){
+    if (throttleSelection.getSelected() != prevThrottle) {
       prevThrottle = throttleSelection.getSelected();
       m_robotContainer.setDriveThrottleSpeed(throttleSelection.getSelected());
     }
@@ -92,7 +104,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // System.out.println("we are now doing COOL STUFF yippe ::3333");
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_autoChooser.getSelected());
+    System.out.println("Calling Simulation Periodic");
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -135,10 +149,17 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
+    CANSparkMax[] motorControllers = m_robotContainer.getDriveSubsystem().getDriveMotorControllers();
+
+    for (CANSparkMax motorController : motorControllers) {
+      REVPhysicsSim.getInstance().addSparkMax(motorController, DCMotor.getNEO(1));
+    }
+
   }
 
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
+    REVPhysicsSim.getInstance().run();
   }
 }

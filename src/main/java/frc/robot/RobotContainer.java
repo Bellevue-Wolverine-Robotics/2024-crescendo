@@ -8,6 +8,7 @@ import frc.robot.Constants.ClimbingConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FlywheelConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Enums.AutoEnum;
 import frc.robot.Enums.Throttles;
 import frc.robot.commands.*;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -23,7 +24,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.time.Instant;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -51,11 +58,12 @@ public class RobotContainer {
   public RobotContainer() {
     configureBindings();
     smartDashBoardBinding();
+
   }
 
   private void configureBindings() {
     m_driveSubsystem.setDefaultCommand(
-        new ArcadeDrive(m_driveSubsystem, () -> m_driverController.getY(), () -> m_driverController.getX()));
+        new ArcadeDrive(m_driveSubsystem, () -> -m_driverController.getY(), () -> -m_driverController.getX()));
 
     m_flywheelSubsystem.setDefaultCommand(
         new InstantCommand(
@@ -67,7 +75,7 @@ public class RobotContainer {
     m_operatorController.button(OperatorConstants.kClimbToSetpointButton)
         .onTrue(m_climberSubsystem.climbToPositionSetpointCommand(25));
     m_operatorController.button(OperatorConstants.kClimbUpButton)
-        .whileTrue(m_climberSubsystem.climbUpCommand());   
+        .whileTrue(m_climberSubsystem.climbUpCommand());
     m_operatorController.button(OperatorConstants.kClimbDownButton)
         .whileTrue(m_climberSubsystem.climbDownCommand());
 
@@ -94,15 +102,25 @@ public class RobotContainer {
       default:
         break;
     }
+
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return new DriveStraight(m_driveSubsystem, debugLogger);
-    // An example command will be run in autonomous
+  public Command getAutonomousCommand(AutoEnum autoEnum) {
+    // return Autos.getPathPlannerCommand();
+    switch (autoEnum) {
+      case FOWARD_TEST:
+        return Autos.forwardTest(m_driveSubsystem);
+      case CUSTOM_PATH_PLANNER:
+        return Autos.test949PathPlan(m_driveSubsystem);
+      case PATH_PLANNER:
+        return Autos.getPathPlannerCommand();
+      default:
+        return null;
+    }
   }
+
+  public DriveSubsystem getDriveSubsystem() {
+    return m_driveSubsystem;
+  }
+
 }
