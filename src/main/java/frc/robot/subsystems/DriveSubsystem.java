@@ -1,13 +1,17 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -65,6 +69,21 @@ public class DriveSubsystem extends SubsystemBase {
     private Debug debugLogger;
 
     private Field2d m_field = new Field2d();
+    private VisionSubsystem vision = new VisionSubsystem();//NESTED SUBSYSTEMS????
+    private Pose2d currPose2d;
+
+
+    private final DifferentialDrivePoseEstimator m_poseEstimator =
+    new DifferentialDrivePoseEstimator(
+        new DifferentialDriveKinematics(0.0),
+        m_imu.getRotation2d(),
+        m_leftEncoder.getPosition(),
+        m_rightEncoder.getPosition(),
+        new Pose2d(),
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+
+
 
     // TODO: update these to reflect actual values using SysId
     // https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/drivesim-tutorial/drivetrain-model.html
@@ -135,12 +154,12 @@ public class DriveSubsystem extends SubsystemBase {
          * by passing a true constant after the leader parameter.
          */
 
-        m_odometry = new DifferentialDriveOdometry(
+        /*m_odometry = new DifferentialDriveOdometry(
                 m_imu.getRotation2d(),
                 m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
                 new Pose2d());
         m_odometry.resetPosition(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
-                new Pose2d());
+                new Pose2d());*/
 
         this.debugLogger = debugLogger;
 
@@ -324,7 +343,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
+        currPose2d = m_poseEstimator.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
         /*
          * debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() +
          * " rightFront: " + m_rightFront.getOutputCurrent()
@@ -338,6 +357,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Left Encoder: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
+
 
         SmartDashboard.putNumber("Front Left Duty Cycle: ", m_leftFront.get());
         SmartDashboard.putNumber("Front Left Distance: ", m_leftEncoder.getPosition());
@@ -369,7 +389,9 @@ public class DriveSubsystem extends SubsystemBase {
      * [frontLeft, frontRight, backLeft, backRight]
      */
     public CANSparkMax[] getDriveMotorControllers() {
-        return new CANSparkMax[] { m_leftFront, m_rightFront, m_leftBack, m_rightBack };
+        return new CANSparkMax[] { m_leftFront, m_rightFront, m_leftBack, m_rightBack };        vision.getEstimatedGlobalPose(getPos());
+        m_poseEstimator.addVisionMeasurement(vision.getPose2d(), vision.getTimestampSeconds());
     }
+    
 
 }
