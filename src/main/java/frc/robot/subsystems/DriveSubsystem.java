@@ -55,8 +55,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     private DifferentialDriveOdometry m_odometry;
 
-    private SparkPIDController m_leftPID;
-    private SparkPIDController m_rightPID;
+    private SparkPIDController m_frontLeftPID;
+    private SparkPIDController m_frontRightPID;
+    private SparkPIDController m_backLeftPID;
+    private SparkPIDController m_backRightPID;
 
     private double speedLimit;
     private AHRS m_imu = new AHRS(SPI.Port.kMXP);
@@ -116,7 +118,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightEncoder.setVelocityConversionFactor(
                 (DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
 
-        m_leftFront.setInverted(true);
+        // m_leftFront.setInverted(true);
+        m_rightFront.setInverted(true);
 
         m_imu.reset();
         m_imu.resetDisplacement();
@@ -153,11 +156,15 @@ public class DriveSubsystem extends SubsystemBase {
             return false;
         });
 
-        m_leftPID = m_leftFront.getPIDController();
-        m_rightPID = m_rightFront.getPIDController();
+        m_frontLeftPID = m_leftFront.getPIDController();
+        m_frontRightPID = m_rightFront.getPIDController();
+        m_backLeftPID = m_leftBack.getPIDController();
+        m_backRightPID = m_rightBack.getPIDController();
 
-        buildPidController(m_leftPID);
-        buildPidController(m_rightPID);
+        buildPidController(m_frontLeftPID);
+        buildPidController(m_frontRightPID);
+        buildPidController(m_backLeftPID);
+        buildPidController(m_backRightPID);
 
         resetPose();
 
@@ -183,18 +190,13 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public ChassisSpeeds getCurrentSpeeds() {
-        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.635);
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(DriveConstants.trackWidthMeters);
 
-        // Example differential drive wheel speeds: 2 meters per second
-        // for the left side, 3 meters per second for the right side.
         var wheelSpeeds = new DifferentialDriveWheelSpeeds(m_leftEncoder.getVelocity(), m_rightEncoder.getVelocity());
 
-        // Convert to chassis speeds.
         ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
 
         return chassisSpeeds;
-
-        // return (m_leftEncoder.getVelocity() + m_rightEncoder.getVelocity()) / 2;
     }
 
     public void resetPose() {
@@ -218,23 +220,33 @@ public class DriveSubsystem extends SubsystemBase {
         // Right velocity
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
-        this.m_drive.tankDrive(leftVelocity / 50.0, rightVelocity / 50.0);
+        System.out.println("Left: " + leftVelocity);
+        System.out.println("Right: " + rightVelocity);
+
+        m_frontLeftPID.setReference(leftVelocity, ControlType.kVelocity);
+        // m_backLeftPID.setReference(leftVelocity, ControlType.kVelocity);
+
+        m_frontRightPID.setReference(rightVelocity, ControlType.kVelocity);
+        // m_backRightPID.setReference(rightVelocity, ControlType.kVelocity);
+
+        m_drive.feed();
+
+        // this.m_drive.tankDrive(leftVelocity / 50.0, rightVelocity / 50.0);
         // this.m_drive.tankDrive(0.0, 0.0);
         // this.m_drive.tankDrive(0.0, 0.0);
 
-        m_drive.feed();
         // System.out.println(leftVelocity + " " + rightVelocity + " X: " +
         // getPose().getX() + "Y" + getPose().getY());
 
     }
 
     private void buildPidController(SparkPIDController pidController) {
-        pidController.setP(1e-6);
-        pidController.setI(ClimbingConstants.kI);
-        pidController.setD(ClimbingConstants.kD);
-        pidController.setIZone(ClimbingConstants.kIZone);
-        pidController.setFF(ClimbingConstants.kFF);
-        pidController.setOutputRange(ClimbingConstants.kMinOutput, ClimbingConstants.kMaxOutput);
+        pidController.setP(9e-5);
+        pidController.setI(0);
+        pidController.setD(0);
+        pidController.setIZone(0);
+        pidController.setFF((1 / 5.4));
+        pidController.setOutputRange(-1, 1);
     }
 
     public void drive2(ChassisSpeeds speed) {
@@ -254,8 +266,8 @@ public class DriveSubsystem extends SubsystemBase {
         double encoderRight = rightVelocity
                 / ((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
 
-        m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
-        m_rightPID.setReference(encoderRight, ControlType.kVelocity);
+        // m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
+        // m_rightPID.setReference(encoderRight, ControlType.kVelocity);
 
     }
 
@@ -280,8 +292,8 @@ public class DriveSubsystem extends SubsystemBase {
         // System.out.println("rpm:" + encoderLeft);
         return new SequentialCommandGroup(
                 this.runOnce(() -> {
-                    m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
-                    m_rightPID.setReference(encoderRight, ControlType.kVelocity);
+                    // m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
+                    // m_rightPID.setReference(encoderRight, ControlType.kVelocity);
                 }),
                 this.run(() -> {
                     // System.out.println("WE ARE PRINTING STUFF");
@@ -330,11 +342,12 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Front Left Duty Cycle: ", m_leftFront.get());
         SmartDashboard.putNumber("Front Left Distance: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Front Left Rate: ", m_leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Back Left Rate: ", m_leftBack.getEncoder().getVelocity());
 
         SmartDashboard.putNumber("Sim Y position: ", m_driveSim.getPose().getY());
         SmartDashboard.putNumber("Sim X position: ", m_driveSim.getPose().getX());
 
-        m_field.setRobotPose(m_odometry.getPoseMeters());
+        m_field.setRobotPose(getPose());
     }
 
     @Override
