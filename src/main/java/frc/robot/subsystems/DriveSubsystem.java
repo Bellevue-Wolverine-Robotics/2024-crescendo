@@ -4,17 +4,14 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -69,21 +66,17 @@ public class DriveSubsystem extends SubsystemBase {
     private Debug debugLogger;
 
     private Field2d m_field = new Field2d();
-    private VisionSubsystem vision = new VisionSubsystem();//NESTED SUBSYSTEMS????
+    private VisionSubsystem vision = new VisionSubsystem();// NESTED SUBSYSTEMS????
     private Pose2d currPose2d;
 
-
-    private final DifferentialDrivePoseEstimator m_poseEstimator =
-    new DifferentialDrivePoseEstimator(
-        new DifferentialDriveKinematics(0.0),
-        m_imu.getRotation2d(),
-        m_leftEncoder.getPosition(),
-        m_rightEncoder.getPosition(),
-        new Pose2d(),
-        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
-
-
+    private final DifferentialDrivePoseEstimator m_poseEstimator = new DifferentialDrivePoseEstimator(
+            new DifferentialDriveKinematics(0.0),
+            m_imu.getRotation2d(),
+            m_leftEncoder.getPosition(),
+            m_rightEncoder.getPosition(),
+            new Pose2d(),
+            VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+            VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
     // TODO: update these to reflect actual values using SysId
     // https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/drivesim-tutorial/drivetrain-model.html
@@ -137,7 +130,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightEncoder.setVelocityConversionFactor(
                 (DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
 
-        // m_leftFront.setInverted(true);
         m_rightFront.setInverted(true);
 
         m_imu.reset();
@@ -145,21 +137,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_imu.zeroYaw();
 
         speedLimit = DriveConstants.limit;
-        /*
-         * Only voltage output is mirrored. Settings changed on the leader do not affect
-         * the follower.
-         */
-        /*
-         * The motor will spin in the same direction as the leader. This can be changed
-         * by passing a true constant after the leader parameter.
-         */
-
-        /*m_odometry = new DifferentialDriveOdometry(
-                m_imu.getRotation2d(),
-                m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
-                new Pose2d());
-        m_odometry.resetPosition(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition(),
-                new Pose2d());*/
 
         this.debugLogger = debugLogger;
 
@@ -224,7 +201,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void tankDrive(double left, double right) {
         this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
-        // m_drive.feed();
     }
 
     public void drive(ChassisSpeeds speeds) {
@@ -239,23 +215,12 @@ public class DriveSubsystem extends SubsystemBase {
         // Right velocity
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
-        System.out.println("Left: " + leftVelocity);
-        System.out.println("Right: " + rightVelocity);
-
+        // TODO: TEST IF WE NEED TO APPLY THESE TO THE BACK MOTORCONTROLLER PIDS TOO
         m_frontLeftPID.setReference(leftVelocity, ControlType.kVelocity);
-        // m_backLeftPID.setReference(leftVelocity, ControlType.kVelocity);
 
         m_frontRightPID.setReference(rightVelocity, ControlType.kVelocity);
-        // m_backRightPID.setReference(rightVelocity, ControlType.kVelocity);
 
         m_drive.feed();
-
-        // this.m_drive.tankDrive(leftVelocity / 50.0, rightVelocity / 50.0);
-        // this.m_drive.tankDrive(0.0, 0.0);
-        // this.m_drive.tankDrive(0.0, 0.0);
-
-        // System.out.println(leftVelocity + " " + rightVelocity + " X: " +
-        // getPose().getX() + "Y" + getPose().getY());
 
     }
 
@@ -266,59 +231,6 @@ public class DriveSubsystem extends SubsystemBase {
         pidController.setIZone(0);
         pidController.setFF((1 / 5.4));
         pidController.setOutputRange(-1, 1);
-    }
-
-    public void drive2(ChassisSpeeds speed) {
-        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
-                Constants.DriveConstants.trackWidthMeters);
-        // Convert to wheel speeds
-        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speed);
-
-        // Left velocity
-        double leftVelocity = wheelSpeeds.leftMetersPerSecond;
-
-        // Right velocity
-        double rightVelocity = wheelSpeeds.rightMetersPerSecond;
-
-        double encoderLeft = leftVelocity
-                / ((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
-        double encoderRight = rightVelocity
-                / ((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
-
-        // m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
-        // m_rightPID.setReference(encoderRight, ControlType.kVelocity);
-
-    }
-
-    public Command dumbCommand() {
-        this.resetPose();
-        return AutoBuilder.pathfindToPose(new Pose2d(1.0, 0.0, new Rotation2d(0)), new PathConstraints(5, 5, 5, 5));
-
-    }
-
-    public Command testCommand() {
-        // System.out.println("OKAY, THIS IS THE REAL TEST COMMAND");
-        double leftVelocity = 4.0;
-
-        // Right velocity
-        double rightVelocity = 4.0;
-
-        double encoderLeft = leftVelocity
-                / ((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
-        double encoderRight = rightVelocity
-                / ((DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
-
-        // System.out.println("rpm:" + encoderLeft);
-        return new SequentialCommandGroup(
-                this.runOnce(() -> {
-                    // m_leftPID.setReference(encoderLeft, ControlType.kVelocity);
-                    // m_rightPID.setReference(encoderRight, ControlType.kVelocity);
-                }),
-                this.run(() -> {
-                    // System.out.println("WE ARE PRINTING STUFF");
-                    m_drive.feed();
-                }));
-
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {
@@ -343,7 +255,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        currPose2d = m_poseEstimator.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
+        currPose2d = m_poseEstimator.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(),
+                m_rightEncoder.getPosition());
         /*
          * debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() +
          * " rightFront: " + m_rightFront.getOutputCurrent()
@@ -357,7 +270,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Left Encoder: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
-
 
         SmartDashboard.putNumber("Front Left Duty Cycle: ", m_leftFront.get());
         SmartDashboard.putNumber("Front Left Distance: ", m_leftEncoder.getPosition());
@@ -389,9 +301,13 @@ public class DriveSubsystem extends SubsystemBase {
      * [frontLeft, frontRight, backLeft, backRight]
      */
     public CANSparkMax[] getDriveMotorControllers() {
-        return new CANSparkMax[] { m_leftFront, m_rightFront, m_leftBack, m_rightBack };        vision.getEstimatedGlobalPose(getPos());
-        m_poseEstimator.addVisionMeasurement(vision.getPose2d(), vision.getTimestampSeconds());
+        return new CANSparkMax[] { m_leftFront, m_rightFront, m_leftBack, m_rightBack };
+
+        // andrew i was trying to resolve a merge conflict here idk what this code does
+
+        // vision.getEstimatedGlobalPose(getPose());
+        // m_poseEstimator.addVisionMeasurement(vision.getPose2d(),
+        // vision.getTimestampSeconds());
     }
-    
 
 }
