@@ -43,6 +43,32 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+
+
+/*
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * Unhandled exception: java.lang.UnsatisfiedLinkError: 'long org.opencv.core.Mat.n_Mat()'
+Error at org.opencv.core.Mat.n_Mat(Native Method): Unhandled exception: java.lang.UnsatisfiedLinkError: 'long org.opencv.core.Mat.n_Mat()'
+at org.opencv.core.Mat.n_Mat(Native Method)
+at org.opencv.core.Mat.<init>(Mat.java:23)
+The robot program quit unexpectedly. This is usually due to a code error.
+The above stacktrace can help determine where the error occurred.
+See https://wpilib.org/stacktrace for more information.
+at frc.robot.subsystems.VisionRoborioSubsystem.<init>(VisionRoborioSubsystem.java:19)
+at frc.robot.subsystems.DriveSubsystem.<init>(DriveSubsystem.java:43)
+The startCompetition() method (or methods called by it) should have handled the exception above.
+at frc.robot.RobotContainer.<init>(RobotContainer.java:41)
+at frc.robot.Robot.robotInit(Robot.java:42)
+at edu.wpi.first.wpilibj.TimedRobot.startCompetition(TimedRobot.java:107)
+at edu.wpi.first.wpilibj.RobotBase.runRobot(RobotBase.java:366)
+at edu.wpi.first.wpilibj.RobotBase.startRobot(RobotBase.java:458)
+at frc.robot.Main.main(Main.java:23)
+ */
 public class DriveSubsystem extends SubsystemBase {
     private CANSparkMax m_leftBack = new CANSparkMax(DriveConstants.backLeftId, MotorType.kBrushless);
     private CANSparkMax m_leftFront = new CANSparkMax(DriveConstants.frontLeftId, MotorType.kBrushless);
@@ -97,6 +123,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public DriveSubsystem(Debug debugLogger) {
         SmartDashboard.putData("Field", m_field);
+        
 
         this.m_leftFront.restoreFactoryDefaults();
         this.m_leftBack.restoreFactoryDefaults();
@@ -276,6 +303,12 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Front Left Rate: ", m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Back Left Rate: ", m_leftBack.getEncoder().getVelocity());
 
+        // m_field.setRobotPose(getPos());
+        // vision.getEstimatedGlobalPose(getPos());
+        //m_poseEstimator.addVisionMeasurement(vision.getPose2d(), vision.getTimestampSeconds());
+        
+        //System.out.println("Current position Y:" + getPos().getY() + " X: " + getPos().getX());
+ 
         SmartDashboard.putNumber("Sim Y position: ", m_driveSim.getPose().getY());
         SmartDashboard.putNumber("Sim X position: ", m_driveSim.getPose().getX());
 
