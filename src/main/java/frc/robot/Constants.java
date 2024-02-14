@@ -77,10 +77,10 @@ public final class Constants {
     public static final double kMinOutput = -1.0;
     public static final double kMaxOutput = 1.0;
 
-    public static final double climbingDistance = 1.0;
-    public static final double climbTolerance = (0.05) * climbingDistance;
+    public static final double kClimbUpSetpoint = 1.0;
+    public static final double climbTolerance = (0.05) * kClimbUpSetpoint;
     public static final double climbRateMax = 1.0;
-    public static final int limitSwitchDigitalPort = 1;
+    public static final int kLimitSwitchDIOPort = 1;
 
     public static final double kOperatorClimbSpeed = 0.3;
 
@@ -116,7 +116,8 @@ public final class Constants {
     public static final double trackWidthInches = 22;
     public static final double trackWidthMeters = Units.inchesToMeters(trackWidthInches);
 
-    // TODO: modify this value when we change the wheels and stuff because THIS NUMBER WILL CHANGE
+    // TODO: modify this value when we change the wheels and stuff because THIS
+    // NUMBER WILL CHANGE
     public static final double kMaxVelocity = 5.4;
 
     public static final double kP = 9e-5;

@@ -8,6 +8,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,17 +24,15 @@ public class ClimberSubsystem extends SubsystemBase {
     private RelativeEncoder m_leftClimbRelativeEncoder;
     private RelativeEncoder m_rightClimbRelativeEncoder;
 
-    private DigitalInput limitSwitch = new DigitalInput(ClimbingConstants.limitSwitchDigitalPort);
+    private DigitalInput m_limitSwitch = new DigitalInput(ClimbingConstants.kLimitSwitchDIOPort);
 
-    private boolean limitSwitchEnabled = true;
+    private boolean m_limitSwitchEnabled = true;
 
     public ClimberSubsystem() {
         m_leftClimbMotor = new CANSparkMax(ClimbingConstants.kLeftClimbMotorId,
                 MotorType.kBrushless);
         m_rightClimbMotor = new CANSparkMax(ClimbingConstants.kRightClimbMotorId,
                 MotorType.kBrushless);
-
-        // m_rightClimbMotor.follow(m_leftClimbMotor, true); // THIS DOESN'T WORK RN
 
         m_leftClimbRelativeEncoder = m_leftClimbMotor.getEncoder();
         m_rightClimbRelativeEncoder = m_rightClimbMotor.getEncoder();
@@ -74,8 +73,8 @@ public class ClimberSubsystem extends SubsystemBase {
         pidController.setOutputRange(ClimbingConstants.kMinOutput, ClimbingConstants.kMaxOutput);
     }
 
-    public double getPosition() {
-        return (m_leftClimbRelativeEncoder.getPosition() + m_rightClimbRelativeEncoder.getPosition())/2; // ideally returns both
+    public Pair<Double, Double> getPosition() {
+        return new Pair<>(m_leftClimbRelativeEncoder.getPosition(), m_rightClimbRelativeEncoder.getPosition());
     }
 
     public void setSpeed(double speed)
@@ -90,41 +89,19 @@ public class ClimberSubsystem extends SubsystemBase {
         m_rightClimbMotor.setVoltage(rawVoltage);
     }
 
-    public Command climbUpCommand() {
-        return climbToPositionSetpointCommand(25.0);
-    
-        //return this.runOnce(() -> m_rightClimbPidController.setReference(ClimbingConstants.climbingDistance,
-        //        ControlType.kPosition));
-        // this.startEnd(() -> setSpeed(ClimbingConstants.kOperatorClimbSpeed), () ->
-        // stopMotors());
-        // return this.startEnd(() -> setVoltageRaw(1), () -> stopMotors());
-    }
-
-
-    public Command climbDownCommand() {
-        return climbToPositionSetpointCommand(0.0);
-        //this.startEnd(() -> setSpeed(-ClimbingConstants.kOperatorClimbSpeed), () -> stopMotors());
-        // return this.startEnd(() -> setVoltageRaw(-1), () -> stopMotors());
-    }
-
-
-    public Command climbToPositionSetpointCommand(double setpoint) {
-        return this.runOnce(() -> {
-            m_leftClimbPidController.setReference(setpoint, ControlType.kPosition);
+    public void setClimbPIDSetpoint(double setpoint) {
+        m_leftClimbPidController.setReference(setpoint, ControlType.kPosition);
         m_rightClimbPidController.setReference(setpoint, ControlType.kPosition);
-        });
     }
 
     public void stopMotors() {
         m_leftClimbMotor.stopMotor();
         m_rightClimbMotor.stopMotor();
-        m_leftClimbPidController.setReference(getPosition(), ControlType.kPosition);
-        m_rightClimbPidController.setReference(getPosition(), ControlType.kPosition);
     }
 
     @Override
     public void periodic() {
-        if (limitSwitchEnabled && limitSwitch.get()) {
+        if (m_limitSwitchEnabled && m_limitSwitch.get()) {
             m_leftClimbMotor.stopMotor();
             m_rightClimbMotor.stopMotor();
         }
