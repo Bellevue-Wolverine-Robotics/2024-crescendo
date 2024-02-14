@@ -1,9 +1,10 @@
-package frc.robot.commands;
+// TODO: considering removing this command + DriveStraight.java because we can just use PathPlanner
+
+package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -14,8 +15,7 @@ public class TurnAbsoluteDegrees extends Command {
             DriveConstants.kDTurn);
 
     public TurnAbsoluteDegrees(double absoluteDegrees, DriveSubsystem driveSubsystem) {
-        driveSubsystem.resetPose();
-        absoluteDegrees *=  0.9;
+        absoluteDegrees *= 0.9;
 
         m_driveSubsystem = driveSubsystem;
         m_targetAngle = absoluteDegrees;

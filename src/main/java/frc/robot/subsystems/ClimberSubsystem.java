@@ -7,10 +7,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbingConstants;
 
@@ -94,16 +92,40 @@ public class ClimberSubsystem extends SubsystemBase {
         m_rightClimbPidController.setReference(setpoint, ControlType.kPosition);
     }
 
+    public void retract() {
+        setClimbPIDSetpoint(ClimbingConstants.kClimbRetractedSetpoint);
+    }
+
+    public void extend() {
+        setClimbPIDSetpoint(ClimbingConstants.kClimbExtendedSetpoint);
+    }
+
+    public boolean atSetpoint(double setpoint) {
+        return m_leftClimbRelativeEncoder.getPosition() - setpoint < ClimbingConstants.kClimbTolerance &&
+                m_rightClimbRelativeEncoder.getPosition() - setpoint < ClimbingConstants.kClimbTolerance;
+    }
+
+    public boolean isExtended() {
+        return atSetpoint(ClimbingConstants.kClimbExtendedSetpoint);
+    }
+
+    public boolean isRetracted() {
+        return atSetpoint(ClimbingConstants.kClimbRetractedSetpoint);
+    }
+
     public void stopMotors() {
         m_leftClimbMotor.stopMotor();
         m_rightClimbMotor.stopMotor();
     }
 
+    public void holdPosition() {
+        setClimbPIDSetpoint(m_leftClimbRelativeEncoder.getPosition());
+    }
+
     @Override
     public void periodic() {
         if (m_limitSwitchEnabled && m_limitSwitch.get()) {
-            m_leftClimbMotor.stopMotor();
-            m_rightClimbMotor.stopMotor();
+            this.stopMotors();
         }
     }
 }

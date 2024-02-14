@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -6,8 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Debug;
 import frc.robot.subsystems.DriveSubsystem;
-
-
 
 /*
  * 
@@ -30,7 +28,6 @@ public class DriveStraight extends Command {
     Debug debugLogger;
 
     public DriveStraight(DriveSubsystem driveSubsystem, Debug debugLogger, double distance) {
-        driveSubsystem.resetPose();
         this.driveSubsystem = driveSubsystem;
         this.debugLogger = debugLogger;
         m_driveSubsystem = driveSubsystem;
@@ -41,7 +38,6 @@ public class DriveStraight extends Command {
     }
 
     public DriveStraight(DriveSubsystem driveSubsystem, double distance) {
-        driveSubsystem.resetPose();
         this.driveSubsystem = driveSubsystem;
         m_driveSubsystem = driveSubsystem;
         m_targetDistance = -distance;
@@ -56,7 +52,6 @@ public class DriveStraight extends Command {
         double linearSpeed = MathUtil.clamp(m_pidLinear.calculate(m_driveSubsystem.getPose().getX(), m_targetDistance),
                 -0.7, 0.7);
 
-        
         m_driveSubsystem.tankDrive(linearSpeed, linearSpeed);
     }
 

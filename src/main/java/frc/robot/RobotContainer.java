@@ -11,12 +11,13 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Enums.AutoEnum;
 import frc.robot.Enums.Throttles;
 import frc.robot.commands.*;
+import frc.robot.commands.climber.ClimberExtendCommand;
+import frc.robot.commands.climber.ClimberRetractCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
-import frc.robot.subsystems.IntakeArmSubsystem;
-import frc.robot.subsystems.IntakeMotorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -50,8 +51,7 @@ public class RobotContainer {
   private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
 
-  private final IntakeArmSubsystem m_intakeArmSubsystem = new IntakeArmSubsystem();
-  private final IntakeMotorSubsystem m_intakeMotorSubsystem = new IntakeMotorSubsystem();
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
@@ -73,12 +73,10 @@ public class RobotContainer {
             m_flywheelSubsystem));
 
     // climber
-    m_operatorController.button(OperatorConstants.kClimbToSetpointButton)
-        .onTrue(m_climberSubsystem.climbToPositionSetpointCommand(25));
     m_operatorController.button(OperatorConstants.kClimbUpButton)
-        .whileTrue(m_climberSubsystem.climbUpCommand());
+        .whileTrue(new ClimberExtendCommand(m_climberSubsystem));
     m_operatorController.button(OperatorConstants.kClimbDownButton)
-        .whileTrue(m_climberSubsystem.climbDownCommand());
+        .whileTrue(new ClimberRetractCommand(m_climberSubsystem));
 
     // intake
     // m_operatorController.button(OperatorConstants.kIntakeEnableMotorButton)

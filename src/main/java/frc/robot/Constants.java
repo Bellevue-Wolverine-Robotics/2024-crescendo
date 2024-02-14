@@ -77,8 +77,9 @@ public final class Constants {
     public static final double kMinOutput = -1.0;
     public static final double kMaxOutput = 1.0;
 
-    public static final double kClimbUpSetpoint = 1.0;
-    public static final double climbTolerance = (0.05) * kClimbUpSetpoint;
+    public static final double kClimbExtendedSetpoint = 1.0;
+    public static final double kClimbRetractedSetpoint = 0.0;
+    public static final double kClimbTolerance = (0.05) * kClimbRetractedSetpoint;
     public static final double climbRateMax = 1.0;
     public static final int kLimitSwitchDIOPort = 1;
 
@@ -141,8 +142,7 @@ public final class Constants {
     public static final double kIntakeSpeed = 0.3;
 
     public static final double kIntakeArmSpeed = 0.3;
-    public static final double kIntakeArmDistance = 1.0;
-    public static final double kIntakeArmTolerance = (0.05) * kIntakeArmDistance;
+    public static final double kIntakeArmTolerance = 0.1;
     public static final double kIntakeArmP = 1.0;
     public static final double kIntakeArmI = 0;
     public static final double kIntakeArmD = 0;
@@ -150,7 +150,13 @@ public final class Constants {
     public static final double kIntakeArmFF = 0;
     public static final double kIntakeArmMaxOutput = 1.0;
     public static final double kIntakeArmMinOutput = -1.0;
+    public static final double kIntakeArmSetpointStow = 0.0;
+    public static final double kIntakeArmSetpointDeploy = 1.0;
+
     public static final double kIntakeArmFFGravity = 0;
+    public static final double kIntakeArmFFStatic = 0;
+    public static final double kIntakeArmFFVelocity = 0;
+    public static final double kIntakeArmFFAcceleration = 0;
 
     public static final double intakeMotorSpeed = 0.5;
     public static final int limitSwitchDigitalPort = 0;

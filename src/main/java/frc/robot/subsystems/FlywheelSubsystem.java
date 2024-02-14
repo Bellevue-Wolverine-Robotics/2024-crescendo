@@ -16,7 +16,8 @@ public class FlywheelSubsystem extends SubsystemBase {
 	private RelativeEncoder m_flywheelEncoder;
 
 	public FlywheelSubsystem() {
-		// m_flywheelMotor = new CANSparkMax(FlywheelConstants.kFlywheelId, MotorType.kBrushless);
+		// m_flywheelMotor = new CANSparkMax(FlywheelConstants.kFlywheelId,
+		// MotorType.kBrushless);
 
 		// m_flywheelMotor.restoreFactoryDefaults();
 
@@ -28,15 +29,26 @@ public class FlywheelSubsystem extends SubsystemBase {
 		// m_flywheelPidController.setD(FlywheelConstants.kD);
 		// m_flywheelPidController.setIZone(FlywheelConstants.kIZone);
 		// m_flywheelPidController.setFF(FlywheelConstants.kFF);
-		// m_flywheelPidController.setOutputRange(FlywheelConstants.kMinOutput, FlywheelConstants.kMaxOutput);
+		// m_flywheelPidController.setOutputRange(FlywheelConstants.kMinOutput,
+		// FlywheelConstants.kMaxOutput);
 	}
 
 	public void setFlywheelVelocity(double setpoint) {
 		// SmartDashboard.putNumber("Setpoint", setpoint);
-		// SmartDashboard.putNumber("Flywheel Velocity", m_flywheelEncoder.getVelocity());
-		// SmartDashboard.putNumber("Error", setpoint - m_flywheelEncoder.getVelocity());
+		// SmartDashboard.putNumber("Flywheel Velocity",
+		// m_flywheelEncoder.getVelocity());
+		// SmartDashboard.putNumber("Error", setpoint -
+		// m_flywheelEncoder.getVelocity());
 
 		// m_flywheelPidController.setReference(setpoint, ControlType.kVelocity);
+	}
+
+	public void StartFlywheel() {
+		m_flywheelMotor.set(1);
+	}
+
+	public void StopFlywheel() {
+		m_flywheelMotor.set(0);
 	}
 
 	@Override

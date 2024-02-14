@@ -8,10 +8,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.DriveStraight;
-import frc.robot.commands.TurnAbsoluteDegrees;
 import frc.robot.commands.TurnRelative;
-import frc.robot.commands.TurnRelativeRadians;
+import frc.robot.commands.drivetrain.DriveStraight;
+import frc.robot.commands.drivetrain.TurnAbsoluteDegrees;
 import frc.robot.subsystems.DriveSubsystem;
 
 import java.lang.Math;
@@ -42,33 +41,31 @@ public class BackupPathPlanner {
     }
 
     private double convertToCoordinateSystem(double angleRadians)
-    //ensures valid angle 
-    //\result < 2*Math.PI && \result <= 2*Math.PI
+    // ensures valid angle
+    // \result < 2*Math.PI && \result <= 2*Math.PI
     {
-        if(angleRadians < 0){
-            angleRadians = Math.ceil(angleRadians/(2*Math.PI))*(2*Math.PI) + angleRadians;
+        if (angleRadians < 0) {
+            angleRadians = Math.ceil(angleRadians / (2 * Math.PI)) * (2 * Math.PI) + angleRadians;
         }
-        angleRadians -= ((int)(angleRadians/(2*Math.PI)))*(2*Math.PI);
+        angleRadians -= ((int) (angleRadians / (2 * Math.PI))) * (2 * Math.PI);
         return angleRadians;
     }
-    
+
     private double optomizeTurnAngle(double angleRadians)
-    //requires -2PI <= \result && \result <= 2PI
-    //ensures -PI <= \result && \result <= PI
+    // requires -2PI <= \result && \result <= 2PI
+    // ensures -PI <= \result && \result <= PI
     {
-        if(angleRadians > Math.PI){
-            //@assert angleToTurn > 0;
-            angleRadians -= 2*Math.PI;
+        if (angleRadians > Math.PI) {
+            // @assert angleToTurn > 0;
+            angleRadians -= 2 * Math.PI;
         }
-        if(angleRadians < -Math.PI){
-            //@assert angleToTurn < 0;
-            angleRadians += 2*Math.PI;
+        if (angleRadians < -Math.PI) {
+            // @assert angleToTurn < 0;
+            angleRadians += 2 * Math.PI;
         }
         return angleRadians;
-        
+
     }
-
-
 
     /*
      * stopPoints: all points the robot will pass excluding startpoint
@@ -89,33 +86,34 @@ public class BackupPathPlanner {
         // 2. drive to dests
         // 3. correct direction
 
-        /*STRICT COORDINATE SYSTEM, similar to unit circle
-        The robot initially points towards 0 radians, +X direction
-        Robot angular position/heading strictly less than 2π radians; Angular position resets at 2π to 0 radians    
-        */
+        /*
+         * STRICT COORDINATE SYSTEM, similar to unit circle
+         * The robot initially points towards 0 radians, +X direction
+         * Robot angular position/heading strictly less than 2π radians; Angular
+         * position resets at 2π to 0 radians
+         */
 
-        for (OnePoint point : points) { 
+        for (OnePoint point : points) {
             point.position.rad = convertToCoordinateSystem(point.position.rad);
-            //Point is now valid in struct coordinate system.
+            // Point is now valid in struct coordinate system.
 
             double deltaX = point.position.x - prevPos.x;
             double deltaY = point.position.y - prevPos.y;
             double headingAngle = Math.atan(deltaY / deltaX);
             if (deltaX < 0) {
                 headingAngle += Math.PI;
-            } 
-            else if(headingAngle < 0){
-                headingAngle = 2*Math.PI + headingAngle;
+            } else if (headingAngle < 0) {
+                headingAngle = 2 * Math.PI + headingAngle;
             }
-            //headingAngle is strictly following coordinate system at this point.
+            // headingAngle is strictly following coordinate system at this point.
 
-            //@assert 0 < headingAngle < 2π
-            //@assert 0 < prevPos.rad < 2π
+            // @assert 0 < headingAngle < 2π
+            // @assert 0 < prevPos.rad < 2π
             double angleToTurn = headingAngle - prevPos.rad;
-            //@assert -2π < angleToTurn < 2π
+            // @assert -2π < angleToTurn < 2π
 
             angleToTurn = optomizeTurnAngle(angleToTurn);
-            //angleToTurn is optomized at this point.
+            // angleToTurn is optomized at this point.
             SequentialCommandGroup driveSeq = new SequentialCommandGroup();
 
             driveSeq.addCommands(new TurnRelative(angleToTurn, driveSubsystem));
@@ -124,23 +122,22 @@ public class BackupPathPlanner {
 
             double correctHeading = point.position.rad - headingAngle;
             correctHeading = optomizeTurnAngle(correctHeading);
-            //correctHeading is optomized at this point.
-            
+            // correctHeading is optomized at this point.
+
             driveSeq.addCommands(
                     new TurnRelative(correctHeading, driveSubsystem));
-
 
             ParallelCommandGroup atPointRun = new ParallelCommandGroup();
             atPointRun.addCommands(driveSeq);
 
-            for(Command externCommands: point.doCommands){
-                if(externCommands != null){
+            for (Command externCommands : point.doCommands) {
+                if (externCommands != null) {
                     atPointRun.addCommands(externCommands);
                 }
-                //else should assert
+                // else should assert
             }
             finalCommand.addCommands(atPointRun);
-            prevPos = point.position; 
+            prevPos = point.position;
         }
 
     }
