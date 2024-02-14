@@ -1,47 +1,39 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.hal.SimDouble;
-import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import java.util.function.BooleanSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.ReplanningConfig;
-
-import frc.robot.Constants;
-import frc.robot.Debug;
-import frc.robot.Constants.ClimbingConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.EmpiricalConstants;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.EmpiricalConstants;
+import frc.robot.Debug;
 
 public class DriveSubsystem extends SubsystemBase {
     private CANSparkMax m_leftBack = new CANSparkMax(DriveConstants.backLeftId, MotorType.kBrushless);
@@ -66,8 +58,9 @@ public class DriveSubsystem extends SubsystemBase {
     private Debug debugLogger;
 
     private Field2d m_field = new Field2d();
-    private VisionSubsystem vision = new VisionSubsystem();// NESTED SUBSYSTEMS????
-    private Pose2d currPose2d;
+    // private VisionSubsystem vision = new VisionSubsystem();// NESTED
+    // SUBSYSTEMS????
+    // private Pose2d currPose2d;
 
     private final DifferentialDrivePoseEstimator m_poseEstimator = new DifferentialDrivePoseEstimator(
             new DifferentialDriveKinematics(0.0),
@@ -162,20 +155,17 @@ public class DriveSubsystem extends SubsystemBase {
         buildPidController(m_backLeftPID);
         buildPidController(m_backRightPID);
 
-        resetPose();
-
         AutoBuilder.configureRamsete(
-                this::getPose, // Robot pose supplier
-                this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getCurrentSpeeds, // Current ChassisSpeeds supplier
-                this::drive, // Method that will drive the robot given ChassisSpeeds
+                this::getPose,
+                this::resetPose,
+                this::getCurrentSpeeds,
+                this::drive,
                 new ReplanningConfig(), // Default path replanning config. See the API for the options here
                 bsupply::getAsBoolean, // Boolean supplier that controls when the path will be mirrored for the red
                 // alliance
-                this); // Reference to this subsystem to set requirements
+                this);
     }
 
-    // path planner
     public Pose2d getPose() {
         return m_odometry.getPoseMeters();
     }
@@ -195,10 +185,6 @@ public class DriveSubsystem extends SubsystemBase {
         return chassisSpeeds;
     }
 
-    public void resetPose() {
-        this.resetPose(this.getPose());
-    }
-
     public void tankDrive(double left, double right) {
         this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
     }
@@ -206,31 +192,26 @@ public class DriveSubsystem extends SubsystemBase {
     public void drive(ChassisSpeeds speeds) {
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
                 Constants.DriveConstants.trackWidthMeters);
-        // Convert to wheel speeds
+
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
-        // Left velocity
         double leftVelocity = wheelSpeeds.leftMetersPerSecond;
-
-        // Right velocity
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
         // TODO: TEST IF WE NEED TO APPLY THESE TO THE BACK MOTORCONTROLLER PIDS TOO
         m_frontLeftPID.setReference(leftVelocity, ControlType.kVelocity);
-
         m_frontRightPID.setReference(rightVelocity, ControlType.kVelocity);
 
         m_drive.feed();
-
     }
 
     private void buildPidController(SparkPIDController pidController) {
-        pidController.setP(9e-5);
-        pidController.setI(0);
-        pidController.setD(0);
-        pidController.setIZone(0);
-        pidController.setFF((1 / 5.4));
-        pidController.setOutputRange(-1, 1);
+        pidController.setP(DriveConstants.kP);
+        pidController.setI(DriveConstants.kI);
+        pidController.setD(DriveConstants.kD);
+        pidController.setIZone(DriveConstants.kIZone);
+        pidController.setFF(DriveConstants.kFF);
+        pidController.setOutputRange(DriveConstants.kMinOutput, DriveConstants.kMaxOutput);
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {
@@ -250,13 +231,13 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void stopDriveTrain() {
-        m_drive.tankDrive(0, 0);
+        m_drive.stopMotor();
     }
 
     @Override
     public void periodic() {
-        currPose2d = m_poseEstimator.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(),
-                m_rightEncoder.getPosition());
+        // currPose2d = m_poseEstimator.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(),
+        //         m_rightEncoder.getPosition());
         /*
          * debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() +
          * " rightFront: " + m_rightFront.getOutputCurrent()

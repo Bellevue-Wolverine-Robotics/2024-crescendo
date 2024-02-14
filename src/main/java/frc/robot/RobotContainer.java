@@ -11,6 +11,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Enums.AutoEnum;
 import frc.robot.Enums.Throttles;
 import frc.robot.commands.*;
+import frc.robot.commands.drivetrain.ArcadeDriveCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
@@ -63,7 +64,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     m_driveSubsystem.setDefaultCommand(
-        new ArcadeDrive(m_driveSubsystem, () -> -m_driverController.getY(), () -> -m_driverController.getX()));
+        new ArcadeDriveCommand(m_driveSubsystem, () -> -m_driverController.getY(), () -> -m_driverController.getX()));
 
     m_flywheelSubsystem.setDefaultCommand(
         new InstantCommand(

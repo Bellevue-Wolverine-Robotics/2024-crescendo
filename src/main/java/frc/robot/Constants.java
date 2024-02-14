@@ -115,6 +115,18 @@ public final class Constants {
 
     public static final double trackWidthInches = 22;
     public static final double trackWidthMeters = Units.inchesToMeters(trackWidthInches);
+
+    // TODO: modify this value when we change the wheels and stuff because THIS NUMBER WILL CHANGE
+    public static final double kMaxVelocity = 5.4;
+
+    public static final double kP = 9e-5;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kIZone = 0;
+    public static final double kFF = 1 / kMaxVelocity;
+    public static final double kMinOutput = -1;
+    public static final double kMaxOutput = 1;
+
   }
 
   public static class IntakeConstants {
