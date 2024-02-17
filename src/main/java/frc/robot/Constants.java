@@ -39,6 +39,10 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
 
+    // Driving
+    public static final int kDriveSpeedPreset1 = 8;
+    public static final int kDriveSpeedPreset2 = 9;
+
     // Climbing
     public static final int kClimbToSetpointButton = 2;// I HAVE NO CLUE WHICH BUTTON THIS IS LMAO FIX THIS
     public static final int kClimbUpButton = 3;
@@ -91,10 +95,18 @@ public final class Constants {
   }
 
   public static class DriveConstants {
+    // CAN IDs
     public static final int frontLeftId = 1;
     public static final int frontRightId = 3;
     public static final int backLeftId = 2;
     public static final int backRightId = 4;
+
+    // Speed Presets
+    public static final double kThrottlePreset1 = 0.5;
+    public static final double kRotationPreset1 = 0.3;
+
+    public static final double kThrottlePreset2 = 0.2;
+    public static final double kRotationPreset2 = 0.2;
 
     public static final double DRIVE_GEAR_RATIO = 8.45;
     public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;

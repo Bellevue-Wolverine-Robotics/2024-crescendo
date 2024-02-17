@@ -53,7 +53,6 @@ public class DriveSubsystem extends SubsystemBase {
     private SparkPIDController m_backLeftPID;
     private SparkPIDController m_backRightPID;
 
-    private double speedLimit;
     private AHRS m_imu = new AHRS(SPI.Port.kMXP);
     private Debug debugLogger;
 
@@ -129,8 +128,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_imu.resetDisplacement();
         m_imu.zeroYaw();
 
-        speedLimit = DriveConstants.limit;
-
         this.debugLogger = debugLogger;
 
         BooleanSupplier bsupply = (() -> {
@@ -186,7 +183,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void tankDrive(double left, double right) {
-        this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
+        this.m_drive.tankDrive(left, right);
     }
 
     public void drive(ChassisSpeeds speeds) {
@@ -215,15 +212,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {
-        this.m_drive.arcadeDrive(xSpeed * speedLimit, rotation * speedLimit);
-    }
-
-    public void setSpeedLimit(double speedLimit) {
-        this.speedLimit = speedLimit;
-    }
-
-    public double getSpeedLimit() {
-        return this.speedLimit;
+        this.m_drive.arcadeDrive(xSpeed, rotation);
     }
 
     public double getYaw() {
@@ -236,8 +225,9 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // currPose2d = m_poseEstimator.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(),
-        //         m_rightEncoder.getPosition());
+        // currPose2d = m_poseEstimator.update(m_imu.getRotation2d(),
+        // m_leftEncoder.getPosition(),
+        // m_rightEncoder.getPosition());
         /*
          * debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() +
          * " rightFront: " + m_rightFront.getOutputCurrent()

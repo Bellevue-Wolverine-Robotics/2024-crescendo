@@ -32,7 +32,6 @@ public class Robot extends TimedRobot {
   SendableChooser<AutoEnum> m_autoChooser = new SendableChooser<>();
 
   private RobotContainer m_robotContainer;
-  private SendableChooser<Throttles> throttleSelection;
   private Throttles prevThrottle;
 
   /**
@@ -46,13 +45,6 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    throttleSelection = new SendableChooser<Throttles>();
-    throttleSelection.setDefaultOption("Fast", Throttles.FAST);
-    throttleSelection.addOption("Medium", Throttles.MEDIUM);
-    throttleSelection.addOption("Slow", Throttles.SLOW);
-    SmartDashboard.putData("Max Speed", throttleSelection);
-    this.prevThrottle = throttleSelection.getSelected();
 
     m_autoChooser.setDefaultOption("Testing going forward", AutoEnum.FOWARD_TEST);
     m_autoChooser.addOption("Custom Path Planner", AutoEnum.CUSTOM_PATH_PLANNER);
@@ -81,12 +73,6 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
-    if (throttleSelection.getSelected() != prevThrottle) {
-      prevThrottle = throttleSelection.getSelected();
-      m_robotContainer.setDriveThrottleSpeed(throttleSelection.getSelected());
-    }
-
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
