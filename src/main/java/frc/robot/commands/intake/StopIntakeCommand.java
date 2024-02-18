@@ -17,13 +17,4 @@ public class StopIntakeCommand extends Command {
 		m_intakeSubsystem.stopIntakeMotor();
 		m_intakeSubsystem.stowIntakeArm();
 	}
-
-	@Override
-	public boolean isFinished() {
-		return true;
-	}
-
-	@Override
-	public void end(boolean interrupted) {
-	}
 }
