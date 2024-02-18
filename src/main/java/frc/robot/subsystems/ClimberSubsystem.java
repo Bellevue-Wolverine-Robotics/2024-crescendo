@@ -75,29 +75,29 @@ public class ClimberSubsystem extends SubsystemBase {
         return new Pair<>(m_leftClimbRelativeEncoder.getPosition(), m_rightClimbRelativeEncoder.getPosition());
     }
 
-    public void setSpeed(double speed)
-    // @requires 0.0 <= speed && speed <= 1.0;
+    public void setDutyCycle(double dutyCycle)
+    // @requires 0.0 <= dutyCycle && dutyCycle <= 1.0;
     {
-        m_leftClimbMotor.set(speed);
-        m_rightClimbMotor.set(speed);
+        m_leftClimbMotor.set(dutyCycle);
+        m_rightClimbMotor.set(dutyCycle);
     }
 
-    public void setVoltageRaw(double rawVoltage) {
-        m_leftClimbMotor.setVoltage(rawVoltage);
-        m_rightClimbMotor.setVoltage(rawVoltage);
+    public void setVoltage(double voltage) {
+        m_leftClimbMotor.setVoltage(voltage);
+        m_rightClimbMotor.setVoltage(voltage);
     }
 
-    public void setClimbPIDSetpoint(double setpoint) {
-        m_leftClimbPidController.setReference(setpoint, ControlType.kPosition);
-        m_rightClimbPidController.setReference(setpoint, ControlType.kPosition);
+    public void setClimbPIDPositionSetpoint(double positionSetpoint) {
+        m_leftClimbPidController.setReference(positionSetpoint, ControlType.kPosition);
+        m_rightClimbPidController.setReference(positionSetpoint, ControlType.kPosition);
     }
 
     public void retract() {
-        setClimbPIDSetpoint(ClimbingConstants.kClimbRetractedSetpoint);
+        setClimbPIDPositionSetpoint(ClimbingConstants.kClimbRetractedSetpoint);
     }
 
     public void extend() {
-        setClimbPIDSetpoint(ClimbingConstants.kClimbExtendedSetpoint);
+        setClimbPIDPositionSetpoint(ClimbingConstants.kClimbExtendedSetpoint);
     }
 
     public boolean atSetpoint(double setpoint) {
@@ -119,7 +119,7 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void holdPosition() {
-        setClimbPIDSetpoint(m_leftClimbRelativeEncoder.getPosition());
+        setClimbPIDPositionSetpoint(m_leftClimbRelativeEncoder.getPosition());
     }
 
     @Override
