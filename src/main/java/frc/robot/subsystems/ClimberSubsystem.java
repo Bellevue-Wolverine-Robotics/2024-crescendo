@@ -101,8 +101,8 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public boolean atSetpoint(double setpoint) {
-        return m_leftClimbRelativeEncoder.getPosition() - setpoint < ClimbingConstants.kClimbTolerance &&
-                m_rightClimbRelativeEncoder.getPosition() - setpoint < ClimbingConstants.kClimbTolerance;
+        return Math.abs(m_leftClimbRelativeEncoder.getPosition() - setpoint) < ClimbingConstants.kClimbTolerance &&
+                Math.abs(m_rightClimbRelativeEncoder.getPosition() - setpoint) < ClimbingConstants.kClimbTolerance;
     }
 
     public boolean isExtended() {

@@ -13,10 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants.EmpiricalConstants;
 import frc.robot.Enums.AutoEnum;
-import frc.robot.Enums.Throttles;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,7 +29,6 @@ public class Robot extends TimedRobot {
   SendableChooser<AutoEnum> m_autoChooser = new SendableChooser<>();
 
   private RobotContainer m_robotContainer;
-  private Throttles prevThrottle;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -50,7 +46,6 @@ public class Robot extends TimedRobot {
     m_autoChooser.addOption("Custom Path Planner", AutoEnum.CUSTOM_PATH_PLANNER);
     m_autoChooser.addOption("Path Planner", AutoEnum.PATH_PLANNER);
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
-
   }
 
   /**
@@ -90,9 +85,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // System.out.println("we are now doing COOL STUFF yippe ::3333");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_autoChooser.getSelected());
-    System.out.println("Calling Simulation Periodic");
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

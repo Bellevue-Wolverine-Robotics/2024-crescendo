@@ -225,15 +225,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // currPose2d = m_poseEstimator.update(m_imu.getRotation2d(),
-        // m_leftEncoder.getPosition(),
-        // m_rightEncoder.getPosition());
-        /*
-         * debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() +
-         * " rightFront: " + m_rightFront.getOutputCurrent()
-         * + "      |||      leftBack: " + m_leftBack.getOutputCurrent() +
-         * "  rightBack: " + m_rightBack.getOutputCurrent());
-         */
         SmartDashboard.putNumber("Current Y position: ", getPose().getY());
         SmartDashboard.putNumber("Current X position: ", getPose().getX());
         SmartDashboard.putNumber("Current Heading: ", getPose().getRotation().getDegrees());

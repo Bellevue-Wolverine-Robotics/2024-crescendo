@@ -99,11 +99,12 @@ public class RobotContainer {
     double xSpeed = -m_driverController.getY();
     double zRotation = -m_driverController.getX();
 
-    if (DriverStation.getStickButton(OperatorConstants.kDriverControllerPort, OperatorConstants.kDriveSpeedPreset1)) {
+    if (DriverStation.getStickButton(OperatorConstants.kDriverControllerPort,
+        OperatorConstants.kDriveSpeedPreset1Button)) {
       xSpeed *= DriveConstants.kThrottlePreset1;
       zRotation *= DriveConstants.kRotationPreset1;
     } else if (DriverStation.getStickButton(OperatorConstants.kDriverControllerPort,
-        OperatorConstants.kDriveSpeedPreset2)) {
+        OperatorConstants.kDriveSpeedPreset2Button)) {
       xSpeed *= DriveConstants.kThrottlePreset2;
       zRotation *= DriveConstants.kRotationPreset2;
     }
