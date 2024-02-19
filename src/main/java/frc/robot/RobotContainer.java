@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FlywheelConstants;
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.IOConstants;
+import frc.robot.Constants.IOConstants.DriverButtonConstants;
+import frc.robot.Constants.IOConstants.OperatorButtonConstants;
 import frc.robot.Enums.AutoEnum;
 import frc.robot.Enums.Throttles;
 import frc.robot.commands.Autos;
@@ -42,8 +44,8 @@ public class RobotContainer {
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
-  private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
-  private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
+  private final CommandJoystick m_driverController = new CommandJoystick(IOConstants.kDriverControllerPort);
+  private final CommandJoystick m_operatorController = new CommandJoystick(IOConstants.kOperatorControllerPort);
 
   public RobotContainer() {
     configureBindings();
@@ -62,9 +64,9 @@ public class RobotContainer {
             m_flywheelSubsystem));
 
     // climber
-    m_operatorController.button(OperatorConstants.kClimbUpButton)
+    m_operatorController.button(OperatorButtonConstants.kClimbUpButton)
         .whileTrue(new ClimberExtendCommand(m_climberSubsystem));
-    m_operatorController.button(OperatorConstants.kClimbDownButton)
+    m_operatorController.button(OperatorButtonConstants.kClimbDownButton)
         .whileTrue(new ClimberRetractCommand(m_climberSubsystem));
 
     // intake
@@ -99,12 +101,12 @@ public class RobotContainer {
     double xSpeed = -m_driverController.getY();
     double zRotation = -m_driverController.getX();
 
-    if (DriverStation.getStickButton(OperatorConstants.kDriverControllerPort,
-        OperatorConstants.kDriveSpeedPreset1Button)) {
+    if (DriverStation.getStickButton(IOConstants.kDriverControllerPort,
+        DriverButtonConstants.kDriveSpeedPreset1Button)) {
       xSpeed *= DriveConstants.kThrottlePreset1;
       zRotation *= DriveConstants.kRotationPreset1;
-    } else if (DriverStation.getStickButton(OperatorConstants.kDriverControllerPort,
-        OperatorConstants.kDriveSpeedPreset2Button)) {
+    } else if (DriverStation.getStickButton(IOConstants.kDriverControllerPort,
+        DriverButtonConstants.kDriveSpeedPreset2Button)) {
       xSpeed *= DriveConstants.kThrottlePreset2;
       zRotation *= DriveConstants.kRotationPreset2;
     }

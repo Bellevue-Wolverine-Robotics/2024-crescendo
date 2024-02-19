@@ -15,22 +15,30 @@ public final class Constants {
 
   }
 
-  public static class OperatorConstants {
+  public static class IOConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
 
-    // Driving
-    public static final int kDriveSpeedPreset1Button = 8;
-    public static final int kDriveSpeedPreset2Button = 9;
+    public static class DriverButtonConstants {
+      public static final int kDriveSpeedPreset1Button = 8;
+      public static final int kDriveSpeedPreset2Button = 9;
+    }
 
-    // Climbing
-    public static final int kClimbToSetpointButton = 2;// I HAVE NO CLUE WHICH BUTTON THIS IS LMAO FIX THIS
-    public static final int kClimbUpButton = 3;
-    public static final int kClimbDownButton = 4;
+    public static class OperatorButtonConstants {
+      // Flywheel
+      public static final int kShootNoteButton = 1;
+      public static final int kAimAtStageButton = 2;
+      public static final int kAimAtTrapButton = 3;
 
-    // Intake
-    public static final int kIntakeEnableMotorButton = 6;
-    public static final int kIntakeDisableMotorButton = 7;
+      // Climbing
+      public static final int kClimbUpButton = 4;
+      public static final int kClimbDownButton = 5;
+
+      // Intake
+      public static final int kStartIntakeButton = 6;
+      public static final int kStopIntakeButton = 7;
+    }
+
   }
 
   public static class FlywheelConstants {
