@@ -1,8 +1,6 @@
 package frc.robot.constants;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.utils.PIDUtils;
-import frc.utils.SparkPIDParams;
 
 public final class FlywheelConstants {
 	public static final double kShooterMaxRPM = 5828; // used for calculating FF

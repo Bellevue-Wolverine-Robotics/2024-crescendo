@@ -8,15 +8,12 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.FlywheelConstants;
 import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.IOConstants.DriverButtonConstants;
 import frc.robot.Constants.IOConstants.OperatorButtonConstants;
 import frc.robot.Enums.AutoEnum;
-import frc.robot.Enums.Throttles;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DebugClose;
 import frc.robot.commands.climber.ClimberExtendCommand;
@@ -56,12 +53,6 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(
         new ArcadeDriveCommand(m_driveSubsystem, () -> getArcadeDriveSpeeds().getFirst(),
             () -> getArcadeDriveSpeeds().getSecond()));
-
-    m_flywheelSubsystem.setDefaultCommand(
-        new InstantCommand(
-            () -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() *
-                FlywheelConstants.kMaxRPM),
-            m_flywheelSubsystem));
 
     // climber
     m_operatorController.button(OperatorButtonConstants.kClimbUpButton)
