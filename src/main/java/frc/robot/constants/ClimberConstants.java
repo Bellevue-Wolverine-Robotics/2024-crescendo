@@ -8,9 +8,9 @@ public final class ClimberConstants {
 
 	public static final int kLimitSwitchDIOPort = 1;
 
-	public static final SparkPIDParams kClimbPidParams = new SparkPIDParams(0.01, 0, 0, 0, 0, -1, 1);
+	public static final SparkPIDParams kClimbPidParams = new SparkPIDParams(1, 0, 0, 0, 0, -1, 1);
 
-	public static final double kClimbExtendedSetpoint = 1.0;
+	public static final double kClimbExtendedSetpoint = 0.1;
 	public static final double kClimbRetractedSetpoint = 0.0;
 	public static final double kClimbTolerance = (0.05) * kClimbRetractedSetpoint;
 

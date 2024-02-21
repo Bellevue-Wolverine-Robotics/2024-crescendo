@@ -6,10 +6,10 @@ import frc.utils.PIDUtils.WPIPidParams;
 
 public final class DriveConstants {
 	// CAN IDs
-	public static final int frontLeftId = 1;
-	public static final int frontRightId = 3;
-	public static final int backLeftId = 2;
-	public static final int backRightId = 4;
+	public static final int kFrontLeftMotorId = 1;
+	public static final int kFrontRightMotorId = 3;
+	public static final int kBackLeftMotorId = 2;
+	public static final int kBackRightMotorId = 4;
 
 	// Speed Presets
 	public static final double kThrottlePreset1 = 0.5;
@@ -18,9 +18,9 @@ public final class DriveConstants {
 	public static final double kThrottlePreset2 = 0.2;
 	public static final double kRotationPreset2 = 0.2;
 
-	public static final double DRIVE_GEAR_RATIO = 8.45;
-	public static final double WHEEEL_CIRCUMFERENCE_INCHES = 18.875;
-	public static final double WHEEL_CIRCUMFERENCE_METERS = Units.inchesToMeters(WHEEEL_CIRCUMFERENCE_INCHES);
+	public static final double kDriveGearRatio = 8.45;
+	public static final double kWheelCircumferenceInches = 18.875;
+	public static final double kWheelCircumferenceMeters = Units.inchesToMeters(kWheelCircumferenceInches);
 
 	public static final WPIPidParams kTurnPidParams = new WPIPidParams(0.01, 0, 0);
 	public static final WPIPidParams kStraightPidParams = new WPIPidParams(2, 0, 0);

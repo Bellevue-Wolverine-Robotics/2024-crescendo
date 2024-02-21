@@ -36,15 +36,15 @@ import frc.utils.PIDUtils;
 import frc.robot.Debug;
 
 public class DriveSubsystem extends SubsystemBase {
-    private CANSparkMax m_leftBack = new CANSparkMax(DriveConstants.backLeftId, MotorType.kBrushless);
-    private CANSparkMax m_leftFront = new CANSparkMax(DriveConstants.frontLeftId, MotorType.kBrushless);
-    private CANSparkMax m_rightFront = new CANSparkMax(DriveConstants.frontRightId, MotorType.kBrushless);
-    private CANSparkMax m_rightBack = new CANSparkMax(DriveConstants.backRightId, MotorType.kBrushless);
+    private CANSparkMax m_backLeftMotor = new CANSparkMax(DriveConstants.kBackLeftMotorId, MotorType.kBrushless);
+    private CANSparkMax m_frontLeftMotor = new CANSparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
+    private CANSparkMax m_frontRightMotor = new CANSparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
+    private CANSparkMax m_backRightMotor = new CANSparkMax(DriveConstants.kBackRightMotorId, MotorType.kBrushless);
 
-    private DifferentialDrive m_drive = new DifferentialDrive(m_leftFront, m_rightFront);
+    private DifferentialDrive m_drive = new DifferentialDrive(m_frontLeftMotor, m_frontRightMotor);
 
-    private RelativeEncoder m_leftEncoder = m_leftFront.getEncoder();
-    private RelativeEncoder m_rightEncoder = m_rightFront.getEncoder();
+    private RelativeEncoder m_leftEncoder = m_frontLeftMotor.getEncoder();
+    private RelativeEncoder m_rightEncoder = m_frontRightMotor.getEncoder();
 
     private DifferentialDriveOdometry m_odometry;
 
@@ -90,39 +90,39 @@ public class DriveSubsystem extends SubsystemBase {
     public DriveSubsystem(Debug debugLogger) {
         SmartDashboard.putData("Field", m_field);
 
-        this.m_leftFront.restoreFactoryDefaults();
-        this.m_leftBack.restoreFactoryDefaults();
-        this.m_rightFront.restoreFactoryDefaults();
-        this.m_rightBack.restoreFactoryDefaults();
+        this.m_frontLeftMotor.restoreFactoryDefaults();
+        this.m_backLeftMotor.restoreFactoryDefaults();
+        this.m_frontRightMotor.restoreFactoryDefaults();
+        this.m_backRightMotor.restoreFactoryDefaults();
 
-        m_leftFront.setSmartCurrentLimit(30);
-        m_rightFront.setSmartCurrentLimit(30);
-        m_leftBack.setSmartCurrentLimit(30);
-        m_rightBack.setSmartCurrentLimit(30);
+        m_frontLeftMotor.setSmartCurrentLimit(30);
+        m_frontRightMotor.setSmartCurrentLimit(30);
+        m_backLeftMotor.setSmartCurrentLimit(30);
+        m_backRightMotor.setSmartCurrentLimit(30);
 
-        m_leftFront.setIdleMode(IdleMode.kBrake);
-        m_leftBack.setIdleMode(IdleMode.kBrake);
-        m_rightFront.setIdleMode(IdleMode.kBrake);
-        m_rightBack.setIdleMode(IdleMode.kBrake);
+        m_frontLeftMotor.setIdleMode(IdleMode.kBrake);
+        m_backLeftMotor.setIdleMode(IdleMode.kBrake);
+        m_frontRightMotor.setIdleMode(IdleMode.kBrake);
+        m_backRightMotor.setIdleMode(IdleMode.kBrake);
 
-        m_leftBack.follow(m_leftFront);
-        m_rightBack.follow(m_rightFront);
+        m_backLeftMotor.follow(m_frontLeftMotor);
+        m_backRightMotor.follow(m_frontRightMotor);
 
         m_leftEncoder.setPosition(0);
         m_rightEncoder.setPosition(0);
 
         m_leftEncoder.setPositionConversionFactor(
-                DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO);
+                DriveConstants.kWheelCircumferenceMeters / DriveConstants.kDriveGearRatio);
         m_rightEncoder.setPositionConversionFactor(
-                DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO);
+                DriveConstants.kWheelCircumferenceMeters / DriveConstants.kDriveGearRatio);
 
         // WPILIB expects encoder rate to be in M/S while REV returns M/Min
         m_leftEncoder.setVelocityConversionFactor(
-                (DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
+                (DriveConstants.kWheelCircumferenceMeters / DriveConstants.kDriveGearRatio) / 60);
         m_rightEncoder.setVelocityConversionFactor(
-                (DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
+                (DriveConstants.kWheelCircumferenceMeters / DriveConstants.kDriveGearRatio) / 60);
 
-        m_rightFront.setInverted(true);
+        m_frontRightMotor.setInverted(true);
 
         m_imu.reset();
         m_imu.resetDisplacement();
@@ -142,10 +142,10 @@ public class DriveSubsystem extends SubsystemBase {
             return false;
         });
 
-        m_frontLeftPID = m_leftFront.getPIDController();
-        m_frontRightPID = m_rightFront.getPIDController();
-        m_backLeftPID = m_leftBack.getPIDController();
-        m_backRightPID = m_rightBack.getPIDController();
+        m_frontLeftPID = m_frontLeftMotor.getPIDController();
+        m_frontRightPID = m_frontRightMotor.getPIDController();
+        m_backLeftPID = m_backLeftMotor.getPIDController();
+        m_backRightPID = m_backRightMotor.getPIDController();
 
         PIDUtils.setPIDConstants(m_frontLeftPID, DriveConstants.kDriveVelocityPIDParams);
         PIDUtils.setPIDConstants(m_frontRightPID, DriveConstants.kDriveVelocityPIDParams);
@@ -224,10 +224,10 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Left Encoder: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
 
-        SmartDashboard.putNumber("Front Left Duty Cycle: ", m_leftFront.get());
+        SmartDashboard.putNumber("Front Left Duty Cycle: ", m_frontLeftMotor.get());
         SmartDashboard.putNumber("Front Left Distance: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Front Left Rate: ", m_leftEncoder.getVelocity());
-        SmartDashboard.putNumber("Back Left Rate: ", m_leftBack.getEncoder().getVelocity());
+        SmartDashboard.putNumber("Back Left Rate: ", m_backLeftMotor.getEncoder().getVelocity());
 
         SmartDashboard.putNumber("Sim Y position: ", m_driveSim.getPose().getY());
         SmartDashboard.putNumber("Sim X position: ", m_driveSim.getPose().getX());
@@ -237,10 +237,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        m_driveSim.setInputs(m_leftFront.get() * DriveConstants.kMaxSimInputVoltage,
-                m_rightFront.get() * DriveConstants.kMaxSimInputVoltage);
+        m_driveSim.setInputs(m_frontLeftMotor.get() * DriveConstants.kMaxSimInputVoltage,
+                m_frontRightMotor.get() * DriveConstants.kMaxSimInputVoltage);
 
-        System.out.println(m_leftFront.get());
+        System.out.println(m_frontLeftMotor.get());
 
         m_driveSim.update(0.02);
 
@@ -254,7 +254,7 @@ public class DriveSubsystem extends SubsystemBase {
      * [frontLeft, frontRight, backLeft, backRight]
      */
     public CANSparkMax[] getDriveMotorControllers() {
-        return new CANSparkMax[] { m_leftFront, m_rightFront, m_leftBack, m_rightBack };
+        return new CANSparkMax[] { m_frontLeftMotor, m_frontRightMotor, m_backLeftMotor, m_backRightMotor };
 
         // andrew i was trying to resolve a merge conflict here idk what this code does
 
