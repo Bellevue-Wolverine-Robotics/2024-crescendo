@@ -1,5 +1,6 @@
 package frc.utils;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.SparkPIDController;
 
 public class PIDUtils {
@@ -24,25 +25,19 @@ public class PIDUtils {
 		}
 	}
 
-	public class TalonPIDParams {
-		private double kP;
+	public static class TalonPIDParams {
+		public final double kP;
+		public final double kI;
+		public final double kD;
+		public final double kIZone;
+		public final double kFF;
 
-		private double kI;
-		private double kD;
-		private double kIZone;
-		private double kFF;
-		private double kMinOutput;
-		private double kMaxOutput;
-
-		public TalonPIDParams(double kP, double kI, double kD, double kIZone, double kFF, double kMinOutput,
-				double kMaxOutput) {
+		public TalonPIDParams(double kP, double kI, double kD, double kIZone, double kFF) {
 			this.kP = kP;
 			this.kI = kI;
 			this.kD = kD;
 			this.kIZone = kIZone;
 			this.kFF = kFF;
-			this.kMinOutput = kMinOutput;
-			this.kMaxOutput = kMaxOutput;
 		}
 	}
 
@@ -63,6 +58,14 @@ public class PIDUtils {
 		pidController.setIZone(kIZone);
 		pidController.setFF(kFF);
 		pidController.setOutputRange(kMinOutput, kMaxOutput);
+	}
+
+	public static void setPIDConstants(WPI_TalonSRX talon, TalonPIDParams pidParams) {
+		talon.config_kP(0, pidParams.kP);
+		talon.config_kI(0, pidParams.kI);
+		talon.config_kD(0, pidParams.kD);
+		talon.config_IntegralZone(0, pidParams.kIZone);
+		talon.config_kF(0, pidParams.kFF);
 	}
 
 	public static boolean atSetpoint(double measurement, double setpoint, double tolerance) {

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -13,8 +14,8 @@ import frc.robot.constants.FlywheelConstants;
 import frc.utils.PIDUtils;
 
 public class FlywheelSubsystem extends SubsystemBase {
-	private TalonSRX m_shooterMotorLeader;
-	private TalonSRX m_shooterMotorFollower;
+	private WPI_TalonSRX m_shooterMotorLeader;
+	private WPI_TalonSRX m_shooterMotorFollower;
 
 	private SparkPIDController m_shooterPidController;
 	private RelativeEncoder m_shooterEncoder;
@@ -29,12 +30,12 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 	public FlywheelSubsystem() {
 		// Shooter Init
-		m_shooterMotorLeader = new TalonSRX(FlywheelConstants.kShooterLeaderId);
-		m_shooterMotorFollower = new TalonSRX(FlywheelConstants.kShooterFollowerId);
+		m_shooterMotorLeader = new WPI_TalonSRX(FlywheelConstants.kShooterLeaderId);
+		m_shooterMotorFollower = new WPI_TalonSRX(FlywheelConstants.kShooterFollowerId);
 
 		m_shooterMotorFollower.follow(m_shooterMotorLeader);
 
-		// TODO: Set up PID for Talon
+		PIDUtils.setPIDConstants(m_shooterMotorFollower, FlywheelConstants.kShooterVelocityPid);
 
 		// Arm Init
 		m_armShoulderMotor = new CANSparkMax(FlywheelConstants.kArmShoulderId, MotorType.kBrushless);
@@ -51,7 +52,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 	}
 
 	public void setShooterVelocity(double setpoint) {
-		// TODO: Implement this method
+		m_shooterMotorLeader.set(TalonSRXControlMode.Velocity, setpoint);
 	}
 
 	public void setShooterDutyCycle(double dutyCycle) {
