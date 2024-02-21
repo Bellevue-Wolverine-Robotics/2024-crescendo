@@ -5,20 +5,31 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FlywheelConstants;
 
 public class FlywheelSubsystem extends SubsystemBase {
-	private CANSparkMax m_flywheelMotor;
+	private TalonSRX m_flywheelLeft;
+	private TalonSRX m_flywheelRight;
 	private SparkPIDController m_flywheelPidController;
+	private Spark
 	private RelativeEncoder m_flywheelEncoder;
 
-	public FlywheelSubsystem() {
-		// m_flywheelMotor = new CANSparkMax(FlywheelConstants.kFlywheelId, MotorType.kBrushless);
+	public flyWheelSpeed (int speed) {
+		//set speed of both flywheels
+	}
 
-		// m_flywheelMotor.restoreFactoryDefaults();
+	public 
+
+	public FlywheelSubsystem() {
+
+		m_flywheelLeft = new TalonSRX (Constants.ArmConstants.FlyWheel.leftNumber);
+		m_flywheelRight = new TalonSRX (Constants.ArmConstants.FlyWheel.rightNumber);
+
+		
 
 		// m_flywheelPidController = m_flywheelMotor.getPIDController();
 		// m_flywheelEncoder = m_flywheelMotor.getEncoder();
