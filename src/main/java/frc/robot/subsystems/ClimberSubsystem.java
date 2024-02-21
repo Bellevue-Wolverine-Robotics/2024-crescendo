@@ -9,6 +9,7 @@ import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ClimberConstants;
 import frc.utils.PIDUtils;
@@ -93,8 +94,10 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public boolean atSetpoint(double setpoint) {
-        return Math.abs(m_leftClimbRelativeEncoder.getPosition() - setpoint) < ClimberConstants.kClimbTolerance &&
-                Math.abs(m_rightClimbRelativeEncoder.getPosition() - setpoint) < ClimberConstants.kClimbTolerance;
+        return PIDUtils.atSetpoint(m_leftClimbRelativeEncoder.getPosition(), setpoint,
+                ClimberConstants.kClimbTolerance)
+                && PIDUtils.atSetpoint(m_rightClimbRelativeEncoder.getPosition(), setpoint,
+                        ClimberConstants.kClimbTolerance);
     }
 
     public boolean isExtended() {
@@ -111,11 +114,13 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void holdPosition() {
-        setClimbPIDPositionSetpoint(m_leftClimbRelativeEncoder.getPosition());
+        setClimbPIDPositionSetpoint(m_rightClimbRelativeEncoder.getPosition());
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Climber Position", getPosition().getFirst());
+
         if (m_limitSwitchEnabled && m_limitSwitch.get()) {
             this.stopMotors();
         }

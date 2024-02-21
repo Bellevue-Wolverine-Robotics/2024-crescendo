@@ -10,7 +10,7 @@ public final class ClimberConstants {
 
 	public static final SparkPIDParams kClimbPidParams = new SparkPIDParams(1, 0, 0, 0, 0, -1, 1);
 
-	public static final double kClimbExtendedSetpoint = 0.1;
+	public static final double kClimbExtendedSetpoint = 40.0;
 	public static final double kClimbRetractedSetpoint = 0.0;
 	public static final double kClimbTolerance = (0.05) * kClimbRetractedSetpoint;
 
