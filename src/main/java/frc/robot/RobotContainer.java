@@ -36,10 +36,12 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class RobotContainer {
   private final Debug debugLogger = new Debug("DebugDriveSubsystem.txt");
 
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
-  private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
+  // private final DriveSubsystem m_driveSubsystem = new
+  // DriveSubsystem(debugLogger);
+  // private final FlywheelSubsystem m_flywheelSubsystem = new
+  // FlywheelSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
-  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  // private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   private final CommandJoystick m_driverController = new CommandJoystick(JoystickPortConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(
@@ -51,9 +53,10 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    m_driveSubsystem.setDefaultCommand(
-        new ArcadeDriveCommand(m_driveSubsystem, () -> getArcadeDriveSpeeds().getFirst(),
-            () -> getArcadeDriveSpeeds().getSecond()));
+    // m_driveSubsystem.setDefaultCommand(
+    // new ArcadeDriveCommand(m_driveSubsystem, () ->
+    // getArcadeDriveSpeeds().getFirst(),
+    // () -> getArcadeDriveSpeeds().getSecond()));
 
     // climber
     m_operatorController.button(OperatorButtonConstants.kClimbUpButton)
@@ -73,10 +76,10 @@ public class RobotContainer {
   public Command getAutonomousCommand(AutoEnum autoEnum) {
     // return Autos.getPathPlannerCommand();
     switch (autoEnum) {
-      case FOWARD_TEST:
-        return Autos.forwardTest(m_driveSubsystem);
-      case CUSTOM_PATH_PLANNER:
-        return Autos.test949PathPlan(m_driveSubsystem);
+      // case FOWARD_TEST:
+      // return Autos.forwardTest(m_driveSubsystem);
+      // case CUSTOM_PATH_PLANNER:
+      // return Autos.test949PathPlan(m_driveSubsystem);
       case PATH_PLANNER:
         return Autos.getPathPlannerCommand();
       default:
@@ -109,6 +112,7 @@ public class RobotContainer {
   }
 
   public DriveSubsystem getDriveSubsystem() {
-    return m_driveSubsystem;
+    return null;
+    // return m_driveSubsystem;
   }
 }
