@@ -30,9 +30,9 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.EmpiricalConstants;
+import frc.robot.DebugSettings;
+import frc.robot.constants.DriveConstants;
+import frc.utils.PIDUtils;
 import frc.robot.Debug;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -147,10 +147,10 @@ public class DriveSubsystem extends SubsystemBase {
         m_backLeftPID = m_leftBack.getPIDController();
         m_backRightPID = m_rightBack.getPIDController();
 
-        buildPidController(m_frontLeftPID);
-        buildPidController(m_frontRightPID);
-        buildPidController(m_backLeftPID);
-        buildPidController(m_backRightPID);
+        PIDUtils.setPIDConstants(m_frontLeftPID, DriveConstants.kDriveVelocityPIDParams);
+        PIDUtils.setPIDConstants(m_frontRightPID, DriveConstants.kDriveVelocityPIDParams);
+        PIDUtils.setPIDConstants(m_backLeftPID, DriveConstants.kDriveVelocityPIDParams);
+        PIDUtils.setPIDConstants(m_backRightPID, DriveConstants.kDriveVelocityPIDParams);
 
         AutoBuilder.configureRamsete(
                 this::getPose,
@@ -173,7 +173,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public ChassisSpeeds getCurrentSpeeds() {
-        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(DriveConstants.trackWidthMeters);
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(DriveConstants.kTrackWidthMeters);
 
         var wheelSpeeds = new DifferentialDriveWheelSpeeds(m_leftEncoder.getVelocity(), m_rightEncoder.getVelocity());
 
@@ -188,7 +188,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void drive(ChassisSpeeds speeds) {
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
-                Constants.DriveConstants.trackWidthMeters);
+                DriveConstants.kTrackWidthMeters);
 
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
@@ -200,15 +200,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_frontRightPID.setReference(rightVelocity, ControlType.kVelocity);
 
         m_drive.feed();
-    }
-
-    private void buildPidController(SparkPIDController pidController) {
-        pidController.setP(DriveConstants.kP);
-        pidController.setI(DriveConstants.kI);
-        pidController.setD(DriveConstants.kD);
-        pidController.setIZone(DriveConstants.kIZone);
-        pidController.setFF(DriveConstants.kFF);
-        pidController.setOutputRange(DriveConstants.kMinOutput, DriveConstants.kMaxOutput);
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {
@@ -246,8 +237,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        m_driveSim.setInputs(m_leftFront.get() * EmpiricalConstants.kInputVoltage,
-                m_rightFront.get() * EmpiricalConstants.kInputVoltage);
+        m_driveSim.setInputs(m_leftFront.get() * DriveConstants.kMaxSimInputVoltage,
+                m_rightFront.get() * DriveConstants.kMaxSimInputVoltage);
 
         System.out.println(m_leftFront.get());
 

@@ -14,7 +14,7 @@ public final class FlywheelConstants {
 	// PID
 
 	public static final PIDUtils.TalonPIDParams kShooterVelocityPid = new PIDUtils.TalonPIDParams(6e-4, 0, 0, 0,
-			1023 / kShooterMaxRPM);
+			MotorConstants.kTalonClosedLoopFullOutput / kShooterMaxRPM);
 
 	public static final PIDUtils.SparkPIDParams kArmShoulderPid = new PIDUtils.SparkPIDParams(0, 0, 0, 0, 0, -1, 1);
 	public static final PIDUtils.SparkPIDParams kArmElbowPid = new PIDUtils.SparkPIDParams(0, 0, 0, 0, 0, -1, 1);

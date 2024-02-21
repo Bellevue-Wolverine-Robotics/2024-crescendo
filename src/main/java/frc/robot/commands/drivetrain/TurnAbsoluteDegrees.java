@@ -5,14 +5,13 @@ package frc.robot.commands.drivetrain;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.utils.PIDUtils;
 
 public class TurnAbsoluteDegrees extends Command {
     private DriveSubsystem m_driveSubsystem;
     private double m_targetAngle;
-    private PIDController m_pid = new PIDController(DriveConstants.kPTurn, DriveConstants.kITurn,
-            DriveConstants.kDTurn);
+    private PIDController m_pid = PIDUtils.createPIDController(frc.robot.constants.DriveConstants.kTurnPidParams);
 
     public TurnAbsoluteDegrees(double absoluteDegrees, DriveSubsystem driveSubsystem) {
         absoluteDegrees *= 0.9;

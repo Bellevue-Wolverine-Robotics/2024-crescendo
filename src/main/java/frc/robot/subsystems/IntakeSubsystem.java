@@ -10,19 +10,21 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeConstants;
+import frc.robot.constants.IntakeConstants;
+import frc.utils.PIDUtils;
+import frc.utils.PIDUtils.ArmFFParams;
 
 public class IntakeSubsystem extends SubsystemBase {
 	private CANSparkMax m_intakeArm;
-	private SparkPIDController m_intakePidController;
+	private SparkPIDController m_armPidController;
 	private RelativeEncoder m_intakeArmRelativeEncoder;
 	private ArmFeedforward m_armFeedforward;
 
 	private CANSparkMax m_intakeMotor;
-	private DigitalInput limitSwitch = new DigitalInput(IntakeConstants.limitSwitchDigitalPort);
+	private DigitalInput limitSwitch = new DigitalInput(IntakeConstants.kNoteSwitchDIOPort);
 
 	public IntakeSubsystem() {
-		m_intakeArm = new CANSparkMax(IntakeConstants.kIntakeArmId,
+		m_intakeArm = new CANSparkMax(IntakeConstants.kArmMotorId,
 				MotorType.kBrushless);
 
 		m_intakeArm.restoreFactoryDefaults();
@@ -30,20 +32,13 @@ public class IntakeSubsystem extends SubsystemBase {
 		m_intakeArm.setSmartCurrentLimit(IntakeConstants.kSmartCurrentLimit);
 
 		m_intakeArmRelativeEncoder = m_intakeArm.getEncoder();
-		m_intakeArmRelativeEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
+		m_intakeArmRelativeEncoder.setPositionConversionFactor(IntakeConstants.kArmPositionConversionFactor);
 		m_intakeArmRelativeEncoder.setPosition(0);
 
-		m_intakePidController = m_intakeArm.getPIDController();
-		m_intakePidController.setP(IntakeConstants.kIntakeArmP);
-		m_intakePidController.setI(IntakeConstants.kIntakeArmI);
-		m_intakePidController.setD(IntakeConstants.kIntakeArmD);
-		m_intakePidController.setIZone(IntakeConstants.kIntakeArmIZone);
-		m_intakePidController.setFF(IntakeConstants.kIntakeArmFF);
-		m_intakePidController.setOutputRange(IntakeConstants.kIntakeArmMinOutput,
-				IntakeConstants.kIntakeArmMaxOutput);
+		m_armPidController = m_intakeArm.getPIDController();
+		PIDUtils.setPIDConstants(m_armPidController, IntakeConstants.kIntakeArmPIDParams);
 
-		m_armFeedforward = new ArmFeedforward(IntakeConstants.kIntakeArmFFStatic, IntakeConstants.kIntakeArmFFGravity,
-				IntakeConstants.kIntakeArmFFVelocity, IntakeConstants.kIntakeArmFFAcceleration);
+		m_armFeedforward = PIDUtils.createArmFeedforward(IntakeConstants.kIntakeArmFFParams);
 	}
 
 	// -- Intake Arm -- //
@@ -54,7 +49,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	public void setIntakeArmPIDSetpoint(double setpoint) {
 		double gravityFFTerm = m_armFeedforward.calculate(setpoint, 0, 0); // should be in degrees also should
 
-		m_intakePidController.setReference(setpoint, ControlType.kPosition, 0, gravityFFTerm);
+		m_armPidController.setReference(setpoint, ControlType.kPosition, 0, gravityFFTerm);
 	}
 
 	public void deployIntakeArm() {
@@ -73,7 +68,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void startIntakeMotor() {
-		setIntakeMotorSpeed(IntakeConstants.intakeMotorSpeed);
+		setIntakeMotorSpeed(IntakeConstants.kFeederDutyCycle);
 	}
 
 	public void stopIntakeMotor() {

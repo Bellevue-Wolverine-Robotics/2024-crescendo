@@ -3,9 +3,10 @@ package frc.robot.commands.drivetrain;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Debug;
+import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.utils.PIDUtils;
 
 /*
  * 
@@ -18,9 +19,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
  */
 public class DriveStraight extends Command {
-    private PIDController m_pidLinear = new PIDController(DriveConstants.kPStraight, DriveConstants.kIStraight,
-            DriveConstants.kDStraight);
-
+    private PIDController m_pidLinear = PIDUtils.createPIDController(DriveConstants.kStraightPidParams);
     private DriveSubsystem m_driveSubsystem;
 
     private double m_targetDistance;

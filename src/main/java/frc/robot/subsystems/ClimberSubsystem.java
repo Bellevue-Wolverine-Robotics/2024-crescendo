@@ -10,7 +10,8 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ClimbingConstants;
+import frc.robot.constants.ClimberConstants;
+import frc.utils.PIDUtils;
 
 public class ClimberSubsystem extends SubsystemBase {
     private CANSparkMax m_leftClimbMotor;
@@ -22,14 +23,14 @@ public class ClimberSubsystem extends SubsystemBase {
     private RelativeEncoder m_leftClimbRelativeEncoder;
     private RelativeEncoder m_rightClimbRelativeEncoder;
 
-    private DigitalInput m_limitSwitch = new DigitalInput(ClimbingConstants.kLimitSwitchDIOPort);
+    private DigitalInput m_limitSwitch = new DigitalInput(ClimberConstants.kLimitSwitchDIOPort);
 
     private boolean m_limitSwitchEnabled = true;
 
     public ClimberSubsystem() {
-        m_leftClimbMotor = new CANSparkMax(ClimbingConstants.kLeftClimbMotorId,
+        m_leftClimbMotor = new CANSparkMax(ClimberConstants.kLeftClimbMotorId,
                 MotorType.kBrushless);
-        m_rightClimbMotor = new CANSparkMax(ClimbingConstants.kRightClimbMotorId,
+        m_rightClimbMotor = new CANSparkMax(ClimberConstants.kRightClimbMotorId,
                 MotorType.kBrushless);
 
         m_leftClimbRelativeEncoder = m_leftClimbMotor.getEncoder();
@@ -44,8 +45,8 @@ public class ClimberSubsystem extends SubsystemBase {
         buildRelativeEncoder(m_leftClimbRelativeEncoder, false);
         buildRelativeEncoder(m_rightClimbRelativeEncoder, true);
 
-        buildPidController(m_leftClimbPidController);
-        buildPidController(m_rightClimbPidController);
+        PIDUtils.setPIDConstants(m_leftClimbPidController, ClimberConstants.kClimbPidParams);
+        PIDUtils.setPIDConstants(m_rightClimbPidController, ClimberConstants.kClimbPidParams);
     }
 
     private void buildMotor(CANSparkMax motor, boolean inverted) {
@@ -53,22 +54,13 @@ public class ClimberSubsystem extends SubsystemBase {
 
         motor.setInverted(inverted);
         motor.setIdleMode(IdleMode.kBrake);
-        motor.setSmartCurrentLimit(ClimbingConstants.kSmartCurrentLimit);
+        motor.setSmartCurrentLimit(ClimberConstants.kSmartCurrentLimit);
     }
 
     private void buildRelativeEncoder(RelativeEncoder encoder, boolean inverted) {
         encoder.setPosition(0.0);
         encoder.setPositionConversionFactor(
-                inverted ? ClimbingConstants.kPositionConversionFactor : -ClimbingConstants.kPositionConversionFactor);
-    }
-
-    private void buildPidController(SparkPIDController pidController) {
-        pidController.setP(ClimbingConstants.kP);
-        pidController.setI(ClimbingConstants.kI);
-        pidController.setD(ClimbingConstants.kD);
-        pidController.setIZone(ClimbingConstants.kIZone);
-        pidController.setFF(ClimbingConstants.kFF);
-        pidController.setOutputRange(ClimbingConstants.kMinOutput, ClimbingConstants.kMaxOutput);
+                inverted ? ClimberConstants.kPositionConversionFactor : -ClimberConstants.kPositionConversionFactor);
     }
 
     public Pair<Double, Double> getPosition() {
@@ -93,24 +85,24 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void retract() {
-        setClimbPIDPositionSetpoint(ClimbingConstants.kClimbRetractedSetpoint);
+        setClimbPIDPositionSetpoint(ClimberConstants.kClimbRetractedSetpoint);
     }
 
     public void extend() {
-        setClimbPIDPositionSetpoint(ClimbingConstants.kClimbExtendedSetpoint);
+        setClimbPIDPositionSetpoint(ClimberConstants.kClimbExtendedSetpoint);
     }
 
     public boolean atSetpoint(double setpoint) {
-        return Math.abs(m_leftClimbRelativeEncoder.getPosition() - setpoint) < ClimbingConstants.kClimbTolerance &&
-                Math.abs(m_rightClimbRelativeEncoder.getPosition() - setpoint) < ClimbingConstants.kClimbTolerance;
+        return Math.abs(m_leftClimbRelativeEncoder.getPosition() - setpoint) < ClimberConstants.kClimbTolerance &&
+                Math.abs(m_rightClimbRelativeEncoder.getPosition() - setpoint) < ClimberConstants.kClimbTolerance;
     }
 
     public boolean isExtended() {
-        return atSetpoint(ClimbingConstants.kClimbExtendedSetpoint);
+        return atSetpoint(ClimberConstants.kClimbExtendedSetpoint);
     }
 
     public boolean isRetracted() {
-        return atSetpoint(ClimbingConstants.kClimbRetractedSetpoint);
+        return atSetpoint(ClimberConstants.kClimbRetractedSetpoint);
     }
 
     public void stopMotors() {

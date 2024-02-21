@@ -3,7 +3,37 @@ package frc.utils;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+
 public class PIDUtils {
+	public static class ArmFFParams {
+		public final double kGravity;
+		public final double kStatic;
+		public final double kVelocity;
+		public final double kAcceleration;
+
+		public ArmFFParams(double kGravity, double kStatic, double kVelocity, double kAcceleration) {
+			this.kGravity = kGravity;
+			this.kStatic = kStatic;
+			this.kVelocity = kVelocity;
+			this.kAcceleration = kAcceleration;
+		}
+
+	}
+
+	public static class WPIPidParams {
+		public final double kP;
+		public final double kI;
+		public final double kD;
+
+		public WPIPidParams(double kP, double kI, double kD) {
+			this.kP = kP;
+			this.kI = kI;
+			this.kD = kD;
+		}
+	}
+
 	public static class SparkPIDParams {
 		public final double kP;
 		public final double kI;
@@ -70,5 +100,13 @@ public class PIDUtils {
 
 	public static boolean atSetpoint(double measurement, double setpoint, double tolerance) {
 		return Math.abs(measurement - setpoint) < tolerance;
+	}
+
+	public static ArmFeedforward createArmFeedforward(ArmFFParams ffParams) {
+		return new ArmFeedforward(ffParams.kGravity, ffParams.kStatic, ffParams.kVelocity, ffParams.kAcceleration);
+	}
+
+	public static PIDController createPIDController(WPIPidParams pidParams) {
+		return new PIDController(pidParams.kP, pidParams.kI, pidParams.kD);
 	}
 }
