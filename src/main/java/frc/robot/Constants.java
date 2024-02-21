@@ -12,7 +12,6 @@ public final class Constants {
     public static final double kNEOFreeSpeed = 5676;
     public static final double kInputVoltage = 12; // technically not an empirical constant but i need to put this
                                                    // somewhere
-
   }
 
   public static class IOConstants {
@@ -39,20 +38,6 @@ public final class Constants {
       public static final int kStopIntakeButton = 7;
     }
 
-  }
-
-  public static class FlywheelConstants {
-    public static final double kMaxRPM = 5828;
-
-    public static final int kFlywheelId = 5;
-
-    public static final double kP = 6e-4;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    public static final double kIZone = 0;
-    public static final double kFF = 1 / kMaxRPM;
-    public static final double kMinOutput = -1;
-    public static final double kMaxOutput = 1;
   }
 
   public static class ClimbingConstants {
@@ -169,5 +154,4 @@ public final class Constants {
   public static class DebugSettings {
     public static final boolean enableLogging = false;
   }
-
 }

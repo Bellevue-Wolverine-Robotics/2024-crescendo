@@ -3,62 +3,86 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.FlywheelConstants;
+import frc.robot.constants.FlywheelConstants;
+import frc.utils.PIDUtils;
 
 public class FlywheelSubsystem extends SubsystemBase {
-	private TalonSRX m_flywheelLeft;
-	private TalonSRX m_flywheelRight;
-	private SparkPIDController m_flywheelPidController;
-	private Spark
-	private RelativeEncoder m_flywheelEncoder;
+	private TalonSRX m_shooterMotorLeader;
+	private TalonSRX m_shooterMotorFollower;
 
-	public flyWheelSpeed (int speed) {
-		//set speed of both flywheels
-	}
+	private SparkPIDController m_shooterPidController;
+	private RelativeEncoder m_shooterEncoder;
 
-	public 
+	private CANSparkMax m_armShoulderMotor;
+	private CANSparkMax m_armElbowMotor;
+
+	private SparkPIDController m_armShoulderPidController;
+	private SparkPIDController m_armElbowPidController;
+
+	private TalonSRX m_feederMotor; // this is a motor that collects the note from the intake
 
 	public FlywheelSubsystem() {
+		// Shooter Init
+		m_shooterMotorLeader = new TalonSRX(FlywheelConstants.kShooterLeaderId);
+		m_shooterMotorFollower = new TalonSRX(FlywheelConstants.kShooterFollowerId);
 
-		m_flywheelLeft = new TalonSRX (Constants.ArmConstants.FlyWheel.leftNumber);
-		m_flywheelRight = new TalonSRX (Constants.ArmConstants.FlyWheel.rightNumber);
+		m_shooterMotorFollower.follow(m_shooterMotorLeader);
 
-		
+		// TODO: Set up PID for Talon
 
-		// m_flywheelPidController = m_flywheelMotor.getPIDController();
-		// m_flywheelEncoder = m_flywheelMotor.getEncoder();
+		// Arm Init
+		m_armShoulderMotor = new CANSparkMax(FlywheelConstants.kArmShoulderId, MotorType.kBrushless);
+		m_armElbowMotor = new CANSparkMax(FlywheelConstants.kArmElbowId, MotorType.kBrushless);
 
-		// m_flywheelPidController.setP(FlywheelConstants.kP);
-		// m_flywheelPidController.setI(FlywheelConstants.kI);
-		// m_flywheelPidController.setD(FlywheelConstants.kD);
-		// m_flywheelPidController.setIZone(FlywheelConstants.kIZone);
-		// m_flywheelPidController.setFF(FlywheelConstants.kFF);
-		// m_flywheelPidController.setOutputRange(FlywheelConstants.kMinOutput,
-		// FlywheelConstants.kMaxOutput);
+		m_armShoulderMotor.restoreFactoryDefaults();
+		m_armElbowMotor.restoreFactoryDefaults();
+
+		m_armShoulderPidController = m_armShoulderMotor.getPIDController();
+		m_armElbowPidController = m_armElbowMotor.getPIDController();
+
+		PIDUtils.setPIDConstants(m_armShoulderPidController, FlywheelConstants.kArmShoulderPid);
+		PIDUtils.setPIDConstants(m_armElbowPidController, FlywheelConstants.kArmElbowPid);
 	}
 
-	public void setFlywheelVelocity(double setpoint) {
-		// SmartDashboard.putNumber("Setpoint", setpoint);
-		// SmartDashboard.putNumber("Flywheel Velocity",
-		// m_flywheelEncoder.getVelocity());
-		// SmartDashboard.putNumber("Error", setpoint -
-		// m_flywheelEncoder.getVelocity());
-
-		// m_flywheelPidController.setReference(setpoint, ControlType.kVelocity);
+	public void setShooterVelocity(double setpoint) {
+		// TODO: Implement this method
 	}
 
-	public void StartFlywheel() {
-		m_flywheelMotor.set(1);
+	public void setShooterDutyCycle(double dutyCycle) {
+		m_shooterMotorLeader.set(TalonSRXControlMode.PercentOutput, dutyCycle);
 	}
 
-	public void StopFlywheel() {
-		m_flywheelMotor.set(0);
+	public void startShooter() {
+		setShooterDutyCycle(FlywheelConstants.kShootStageDutyCycleSetpoint);
+	}
+
+	public void stopShooter() {
+		setShooterDutyCycle(0);
+	}
+
+	public void setArmSetpoint(double shoulderSetpoint, double elbowSetpoint) {
+		m_armShoulderPidController.setReference(shoulderSetpoint, ControlType.kPosition);
+		m_armElbowPidController.setReference(elbowSetpoint, ControlType.kPosition);
+	}
+
+	public void aimArmToStage() {
+		setArmSetpoint(FlywheelConstants.kStageShoulderSetpoint, FlywheelConstants.kStageElbowSetpoint);
+	}
+
+	public void aimArmToAmp() {
+		setArmSetpoint(FlywheelConstants.kAmpShoulderSetpoint, FlywheelConstants.kAmpElbowSetpoint);
+	}
+
+	public void feedIntoShooter() {
+		m_feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
 	}
 
 	@Override

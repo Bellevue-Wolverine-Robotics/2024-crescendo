@@ -13,7 +13,7 @@ public class FlywheelShootCommand extends Command {
 
 	@Override
 	public void initialize() {
-		m_flywheelSubsystem.StartFlywheel();
+		m_flywheelSubsystem.startShooter();
 	}
 
 	@Override
@@ -23,6 +23,6 @@ public class FlywheelShootCommand extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		m_flywheelSubsystem.StopFlywheel();
+		m_flywheelSubsystem.stopShooter();
 	}
 }
