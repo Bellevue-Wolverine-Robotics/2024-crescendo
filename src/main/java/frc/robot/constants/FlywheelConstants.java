@@ -6,10 +6,11 @@ public final class FlywheelConstants {
 	public static final double kShooterMaxRPM = 5828; // used for calculating FF
 
 	// CAN IDs
-	public static final int kShooterLeaderId = 5;
-	public static final int kShooterFollowerId = 6;
-	public static final int kArmShoulderId = 7;
-	public static final int kArmElbowId = 8;
+	public static final int kArmShoulderId = 9;
+	public static final int kArmElbowId = 10;
+	public static final int kShooterLeaderId = 11;
+	public static final int kShooterFollowerId = 12;
+	public static final int kFeederId = 13;
 
 	// PID
 

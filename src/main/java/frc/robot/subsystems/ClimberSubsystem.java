@@ -26,7 +26,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
     private DigitalInput m_limitSwitch = new DigitalInput(ClimberConstants.kLimitSwitchDIOPort);
 
-    private boolean m_limitSwitchEnabled = true;
+    private boolean m_limitSwitchEnabled = false;
 
     public ClimberSubsystem() {
         m_leftClimbMotor = new CANSparkMax(ClimberConstants.kLeftClimbMotorId,
@@ -43,8 +43,8 @@ public class ClimberSubsystem extends SubsystemBase {
         buildMotor(m_leftClimbMotor, false);
         buildMotor(m_rightClimbMotor, true);
 
-        buildRelativeEncoder(m_leftClimbRelativeEncoder, false);
-        buildRelativeEncoder(m_rightClimbRelativeEncoder, true);
+        m_leftClimbRelativeEncoder.setPosition(0);
+        m_rightClimbRelativeEncoder.setPosition(0);
 
         PIDUtils.setPIDConstants(m_leftClimbPidController, ClimberConstants.kClimbPidParams);
         PIDUtils.setPIDConstants(m_rightClimbPidController, ClimberConstants.kClimbPidParams);
@@ -56,12 +56,6 @@ public class ClimberSubsystem extends SubsystemBase {
         motor.setInverted(inverted);
         motor.setIdleMode(IdleMode.kBrake);
         motor.setSmartCurrentLimit(ClimberConstants.kSmartCurrentLimit);
-    }
-
-    private void buildRelativeEncoder(RelativeEncoder encoder, boolean inverted) {
-        encoder.setPosition(0.0);
-        encoder.setPositionConversionFactor(
-                inverted ? ClimberConstants.kPositionConversionFactor : -ClimberConstants.kPositionConversionFactor);
     }
 
     public Pair<Double, Double> getPosition() {

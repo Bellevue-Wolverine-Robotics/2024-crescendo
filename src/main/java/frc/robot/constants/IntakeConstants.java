@@ -4,8 +4,8 @@ import frc.utils.PIDUtils.ArmFFParams;
 import frc.utils.PIDUtils.SparkPIDParams;
 
 public final class IntakeConstants {
-	public static final int kFeederMotorId = 7;
-	public static final int kArmMotorId = 6;
+	public static final int kFeederMotorId = 8;
+	public static final int kArmMotorId = 7;
 
 	public static final int kSmartCurrentLimit = 30;
 
