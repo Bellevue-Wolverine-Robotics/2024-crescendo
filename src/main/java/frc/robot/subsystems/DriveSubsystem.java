@@ -17,6 +17,8 @@ import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -128,6 +130,9 @@ public class DriveSubsystem extends SubsystemBase {
         m_imu.resetDisplacement();
         m_imu.zeroYaw();
 
+        m_odometry = new DifferentialDriveOdometry(m_imu.getRotation2d(), m_leftEncoder.getPosition(),
+                m_rightEncoder.getPosition());
+
         this.debugLogger = debugLogger;
 
         BooleanSupplier bsupply = (() -> {
@@ -195,6 +200,9 @@ public class DriveSubsystem extends SubsystemBase {
         double leftVelocity = wheelSpeeds.leftMetersPerSecond;
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
+        System.out.println("Setpoints: " + leftVelocity + ", " + rightVelocity);
+        System.out.println("Velocity: " + m_leftEncoder.getVelocity() + ", " + m_rightEncoder.getVelocity());
+
         // TODO: TEST IF WE NEED TO APPLY THESE TO THE BACK MOTORCONTROLLER PIDS TOO
         m_frontLeftPID.setReference(leftVelocity, ControlType.kVelocity);
         m_frontRightPID.setReference(rightVelocity, ControlType.kVelocity);
@@ -232,6 +240,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Sim Y position: ", m_driveSim.getPose().getY());
         SmartDashboard.putNumber("Sim X position: ", m_driveSim.getPose().getX());
 
+        m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
         m_field.setRobotPose(getPose());
     }
 

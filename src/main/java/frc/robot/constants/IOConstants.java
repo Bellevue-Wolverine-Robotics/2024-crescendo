@@ -9,6 +9,8 @@ public final class IOConstants {
 	public static class DriverButtonConstants {
 		public static final int kDriveSpeedPreset1Button = 8;
 		public static final int kDriveSpeedPreset2Button = 9;
+
+		public static final int kTestPathfindingButton = 1;
 	}
 
 	public static class OperatorButtonConstants {

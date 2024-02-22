@@ -56,6 +56,8 @@ public class RobotContainer {
         new ArcadeDriveCommand(m_driveSubsystem, () -> getArcadeDriveSpeeds().getFirst(),
             () -> getArcadeDriveSpeeds().getSecond()));
 
+    m_driverController.button(DriverButtonConstants.kTestPathfindingButton).whileTrue(Autos.pathfindToStartCommand());
+
     // climber
     m_operatorController.button(OperatorButtonConstants.kClimbUpButton)
         .whileTrue(new ClimberExtendCommand(m_climberSubsystem));
