@@ -43,12 +43,21 @@ public final class Autos {
     // m_intakeArmSubsystem.goToAngle(0));
   }
 
+  public static Command square300InchesCommand() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Square300Inches.path");
+
+    return AutoBuilder.followPath(path);
+  }
+
+  public static Command straight300InchesCommand() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Straight300Inches.path");
+
+    return AutoBuilder.followPath(path);
+  }
+
   public static Command getPathPlannerCommand() {
-    // Load the path you want to follow using its name in the GUI
     PathPlannerPath path = PathPlannerPath.fromPathFile("TestPath");
 
-    // Create a path following command using AutoBuilder. This will also trigger
-    // event markers.
     return AutoBuilder.followPath(path);
   }
 
