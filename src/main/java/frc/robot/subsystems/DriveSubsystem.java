@@ -4,6 +4,7 @@ import java.util.function.BooleanSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DebugSettings;
 import frc.robot.constants.DriveConstants;
@@ -272,4 +274,21 @@ public class DriveSubsystem extends SubsystemBase {
         // vision.getTimestampSeconds());
     }
 
+    public Command pathfindToStartCommand() {
+        Pose2d targetPose = new Pose2d(0, 8, Rotation2d.fromDegrees(0));
+
+        PathConstraints constraints = new PathConstraints(
+                3.0, 4.0,
+                Units.degreesToRadians(540), Units.degreesToRadians(720));
+
+        Command pathfindingCommand = AutoBuilder.pathfindToPose(
+                targetPose,
+                constraints,
+                0.0, // Goal end velocity in meters/sec
+                0.0 // Rotation delay distance in meters. This is how far the robot should travel
+                    // before attempting to rotate.
+        );
+
+        return pathfindingCommand;
+    }
 }

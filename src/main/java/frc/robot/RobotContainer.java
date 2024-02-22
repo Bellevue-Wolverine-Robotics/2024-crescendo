@@ -56,8 +56,6 @@ public class RobotContainer {
         new ArcadeDriveCommand(m_driveSubsystem, () -> getArcadeDriveSpeeds().getFirst(),
             () -> getArcadeDriveSpeeds().getSecond()));
 
-    m_driverController.button(DriverButtonConstants.kTestPathfindingButton).whileTrue(Autos.pathfindToStartCommand());
-
     // climber
     m_operatorController.button(OperatorButtonConstants.kClimbUpButton)
         .whileTrue(new ClimberExtendCommand(m_climberSubsystem));
@@ -84,8 +82,6 @@ public class RobotContainer {
         return Autos.square300InchesCommand();
       case STRAIGHT_300_INCHES:
         return Autos.straight300InchesCommand();
-      case PATH_PLANNER:
-        return Autos.getPathPlannerCommand();
       default:
         return null;
     }
