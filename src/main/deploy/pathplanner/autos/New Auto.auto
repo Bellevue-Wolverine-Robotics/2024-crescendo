@@ -6,15 +6,21 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "StartTopTop"
+            "waitTime": 0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TopShoot"
+            "pathName": "one_way_amp_far_to_amp_note_far"
           }
         }
       ]

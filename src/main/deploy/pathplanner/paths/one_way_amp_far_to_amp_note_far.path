@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.4229570277322372,
+        "y": 4.0953194633662
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.1039554806382337,
+        "y": 4.067333225575543
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.4304615881959033,
+        "y": 4.0953194633662
+      },
+      "prevControl": {
+        "x": 1.8427505945920983,
+        "y": 4.085990717435981
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -5.710593137499535,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Alliance Notes",
+  "previewStartingState": {
+    "rotation": 1.1233027140755112,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
