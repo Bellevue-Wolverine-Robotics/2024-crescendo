@@ -36,8 +36,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class RobotContainer {
   private final Debug debugLogger = new Debug("DebugDriveSubsystem.txt");
 
-  // private final DriveSubsystem m_driveSubsystem = new
-  // DriveSubsystem(debugLogger);
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
   // private final FlywheelSubsystem m_flywheelSubsystem = new
   // FlywheelSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
@@ -53,10 +52,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // m_driveSubsystem.setDefaultCommand(
-    // new ArcadeDriveCommand(m_driveSubsystem, () ->
-    // getArcadeDriveSpeeds().getFirst(),
-    // () -> getArcadeDriveSpeeds().getSecond()));
+    m_driveSubsystem.setDefaultCommand(
+        new ArcadeDriveCommand(m_driveSubsystem, () -> getArcadeDriveSpeeds().getFirst(),
+            () -> getArcadeDriveSpeeds().getSecond()));
 
     // climber
     m_operatorController.button(OperatorButtonConstants.kClimbUpButton)
@@ -112,7 +110,6 @@ public class RobotContainer {
   }
 
   public DriveSubsystem getDriveSubsystem() {
-    return null;
-    // return m_driveSubsystem;
+    return m_driveSubsystem;
   }
 }
