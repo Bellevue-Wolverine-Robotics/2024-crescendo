@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.BackupPathPlanner;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeArmSubsystem;
-import frc.robot.subsystems.IntakeMotorSubsystem;
-import frc.robot.commands.IntakeArm;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.commands.drivetrain.DriveStraight;
+import frc.robot.commands.intake.SetArmAngleCommand;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
@@ -29,8 +29,8 @@ public final class Autos {
     throw new UnsupportedOperationException("This is a utility class!");
   }
 
-  public static Command IntakeSequence(IntakeArmSubsystem m_intakeArmSubsystem,
-      IntakeMotorSubsystem intakeMotorSubsystem) {
+  public static Command IntakeSequence(IntakeSubsystem m_intakeArmSubsystem,
+      IntakeSubsystem intakeMotorSubsystem) {
     return null;
 
     // return new SequentialCommandGroup(new IntakeArm(m_intakeArmSubsystem,

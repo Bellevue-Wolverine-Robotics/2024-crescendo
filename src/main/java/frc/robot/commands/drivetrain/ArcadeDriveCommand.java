@@ -1,16 +1,16 @@
-package frc.robot.commands;
+package frc.robot.commands.drivetrain;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class ArcadeDrive extends Command {
+public class ArcadeDriveCommand extends Command {
     private DriveSubsystem m_driveSubsystem;
     private DoubleSupplier m_xSpeedSupplier;
     private DoubleSupplier m_zRotSupplier;
 
-    public ArcadeDrive(DriveSubsystem drivesystem, DoubleSupplier xSpeedSupplier, DoubleSupplier zRotSupplier){
+    public ArcadeDriveCommand(DriveSubsystem drivesystem, DoubleSupplier xSpeedSupplier, DoubleSupplier zRotSupplier){
         this.m_driveSubsystem = drivesystem;
 
         m_xSpeedSupplier = xSpeedSupplier;

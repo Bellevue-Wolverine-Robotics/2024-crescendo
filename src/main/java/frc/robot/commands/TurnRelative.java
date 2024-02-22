@@ -2,14 +2,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.utils.PIDUtils;
 
 public class TurnRelative extends Command {
 	private DriveSubsystem m_driveSubsystem;
 	private double setPoint;
-	private PIDController m_pid = new PIDController(DriveConstants.kPTurn, DriveConstants.kITurn,
-			DriveConstants.kDTurn);
+	private PIDController m_pid = PIDUtils.createPIDController(frc.robot.constants.DriveConstants.kTurnPidParams);
 
 	public TurnRelative(double radians, DriveSubsystem driveSubsystem)
 	// @requires -Math.PI <= radians && radians <= Math.PI
@@ -36,7 +35,7 @@ public class TurnRelative extends Command {
 	}
 
 	@Override
-	public void end(boolean interrupted	) {
+	public void end(boolean interrupted) {
 		m_driveSubsystem.stopDriveTrain();
 	}
 }

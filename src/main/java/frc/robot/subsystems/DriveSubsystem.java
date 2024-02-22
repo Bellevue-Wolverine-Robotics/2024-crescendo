@@ -1,58 +1,50 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.hal.SimDouble;
-import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import java.util.function.BooleanSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.ReplanningConfig;
-
-import frc.robot.Constants;
-import frc.robot.Debug;
-import frc.robot.Constants.ClimbingConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.EmpiricalConstants;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.DebugSettings;
+import frc.robot.constants.DriveConstants;
+import frc.utils.PIDUtils;
+import frc.robot.Debug;
 
 public class DriveSubsystem extends SubsystemBase {
-    private CANSparkMax m_leftBack = new CANSparkMax(DriveConstants.backLeftId, MotorType.kBrushless);
-    private CANSparkMax m_leftFront = new CANSparkMax(DriveConstants.frontLeftId, MotorType.kBrushless);
-    private CANSparkMax m_rightFront = new CANSparkMax(DriveConstants.frontRightId, MotorType.kBrushless);
-    private CANSparkMax m_rightBack = new CANSparkMax(DriveConstants.backRightId, MotorType.kBrushless);
+    private CANSparkMax m_backLeftMotor = new CANSparkMax(DriveConstants.kBackLeftMotorId, MotorType.kBrushless);
+    private CANSparkMax m_frontLeftMotor = new CANSparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
+    private CANSparkMax m_frontRightMotor = new CANSparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
+    private CANSparkMax m_backRightMotor = new CANSparkMax(DriveConstants.kBackRightMotorId, MotorType.kBrushless);
 
-    private DifferentialDrive m_drive = new DifferentialDrive(m_leftFront, m_rightFront);
+    private DifferentialDrive m_drive = new DifferentialDrive(m_frontLeftMotor, m_frontRightMotor);
 
-    private RelativeEncoder m_leftEncoder = m_leftFront.getEncoder();
-    private RelativeEncoder m_rightEncoder = m_rightFront.getEncoder();
+    private RelativeEncoder m_leftEncoder = m_frontLeftMotor.getEncoder();
+    private RelativeEncoder m_rightEncoder = m_frontRightMotor.getEncoder();
 
     private DifferentialDriveOdometry m_odometry;
 
@@ -61,13 +53,13 @@ public class DriveSubsystem extends SubsystemBase {
     private SparkPIDController m_backLeftPID;
     private SparkPIDController m_backRightPID;
 
-    private double speedLimit;
     private AHRS m_imu = new AHRS(SPI.Port.kMXP);
     private Debug debugLogger;
 
     private Field2d m_field = new Field2d();
-    private VisionSubsystem vision = new VisionSubsystem();// NESTED SUBSYSTEMS????
-    private Pose2d currPose2d;
+    // private VisionSubsystem vision = new VisionSubsystem();// NESTED
+    // SUBSYSTEMS????
+    // private Pose2d currPose2d;
 
     private final DifferentialDrivePoseEstimator m_poseEstimator = new DifferentialDrivePoseEstimator(
             new DifferentialDriveKinematics(0.0),
@@ -98,45 +90,43 @@ public class DriveSubsystem extends SubsystemBase {
     public DriveSubsystem(Debug debugLogger) {
         SmartDashboard.putData("Field", m_field);
 
-        this.m_leftFront.restoreFactoryDefaults();
-        this.m_leftBack.restoreFactoryDefaults();
-        this.m_rightFront.restoreFactoryDefaults();
-        this.m_rightBack.restoreFactoryDefaults();
+        this.m_frontLeftMotor.restoreFactoryDefaults();
+        this.m_backLeftMotor.restoreFactoryDefaults();
+        this.m_frontRightMotor.restoreFactoryDefaults();
+        this.m_backRightMotor.restoreFactoryDefaults();
 
-        m_leftFront.setSmartCurrentLimit(30);
-        m_rightFront.setSmartCurrentLimit(30);
-        m_leftBack.setSmartCurrentLimit(30);
-        m_rightBack.setSmartCurrentLimit(30);
+        m_frontLeftMotor.setSmartCurrentLimit(30);
+        m_frontRightMotor.setSmartCurrentLimit(30);
+        m_backLeftMotor.setSmartCurrentLimit(30);
+        m_backRightMotor.setSmartCurrentLimit(30);
 
-        m_leftFront.setIdleMode(IdleMode.kBrake);
-        m_leftBack.setIdleMode(IdleMode.kBrake);
-        m_rightFront.setIdleMode(IdleMode.kBrake);
-        m_rightBack.setIdleMode(IdleMode.kBrake);
+        m_frontLeftMotor.setIdleMode(IdleMode.kBrake);
+        m_backLeftMotor.setIdleMode(IdleMode.kBrake);
+        m_frontRightMotor.setIdleMode(IdleMode.kBrake);
+        m_backRightMotor.setIdleMode(IdleMode.kBrake);
 
-        m_leftBack.follow(m_leftFront);
-        m_rightBack.follow(m_rightFront);
+        m_backLeftMotor.follow(m_frontLeftMotor);
+        m_backRightMotor.follow(m_frontRightMotor);
 
         m_leftEncoder.setPosition(0);
         m_rightEncoder.setPosition(0);
 
         m_leftEncoder.setPositionConversionFactor(
-                DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO);
+                DriveConstants.kWheelCircumferenceMeters / DriveConstants.kDriveGearRatio);
         m_rightEncoder.setPositionConversionFactor(
-                DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO);
+                DriveConstants.kWheelCircumferenceMeters / DriveConstants.kDriveGearRatio);
 
         // WPILIB expects encoder rate to be in M/S while REV returns M/Min
         m_leftEncoder.setVelocityConversionFactor(
-                (DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
+                (DriveConstants.kWheelCircumferenceMeters / DriveConstants.kDriveGearRatio) / 60);
         m_rightEncoder.setVelocityConversionFactor(
-                (DriveConstants.WHEEL_CIRCUMFERENCE_METERS / DriveConstants.DRIVE_GEAR_RATIO) / 60);
+                (DriveConstants.kWheelCircumferenceMeters / DriveConstants.kDriveGearRatio) / 60);
 
-        m_rightFront.setInverted(true);
+        m_frontRightMotor.setInverted(true);
 
         m_imu.reset();
         m_imu.resetDisplacement();
         m_imu.zeroYaw();
-
-        speedLimit = DriveConstants.limit;
 
         this.debugLogger = debugLogger;
 
@@ -152,30 +142,27 @@ public class DriveSubsystem extends SubsystemBase {
             return false;
         });
 
-        m_frontLeftPID = m_leftFront.getPIDController();
-        m_frontRightPID = m_rightFront.getPIDController();
-        m_backLeftPID = m_leftBack.getPIDController();
-        m_backRightPID = m_rightBack.getPIDController();
+        m_frontLeftPID = m_frontLeftMotor.getPIDController();
+        m_frontRightPID = m_frontRightMotor.getPIDController();
+        m_backLeftPID = m_backLeftMotor.getPIDController();
+        m_backRightPID = m_backRightMotor.getPIDController();
 
-        buildPidController(m_frontLeftPID);
-        buildPidController(m_frontRightPID);
-        buildPidController(m_backLeftPID);
-        buildPidController(m_backRightPID);
-
-        resetPose();
+        PIDUtils.setPIDConstants(m_frontLeftPID, DriveConstants.kDriveVelocityPIDParams);
+        PIDUtils.setPIDConstants(m_frontRightPID, DriveConstants.kDriveVelocityPIDParams);
+        PIDUtils.setPIDConstants(m_backLeftPID, DriveConstants.kDriveVelocityPIDParams);
+        PIDUtils.setPIDConstants(m_backRightPID, DriveConstants.kDriveVelocityPIDParams);
 
         AutoBuilder.configureRamsete(
-                this::getPose, // Robot pose supplier
-                this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getCurrentSpeeds, // Current ChassisSpeeds supplier
-                this::drive, // Method that will drive the robot given ChassisSpeeds
+                this::getPose,
+                this::resetPose,
+                this::getCurrentSpeeds,
+                this::drive,
                 new ReplanningConfig(), // Default path replanning config. See the API for the options here
                 bsupply::getAsBoolean, // Boolean supplier that controls when the path will be mirrored for the red
                 // alliance
-                this); // Reference to this subsystem to set requirements
+                this);
     }
 
-    // path planner
     public Pose2d getPose() {
         return m_odometry.getPoseMeters();
     }
@@ -186,7 +173,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public ChassisSpeeds getCurrentSpeeds() {
-        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(DriveConstants.trackWidthMeters);
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(DriveConstants.kTrackWidthMeters);
 
         var wheelSpeeds = new DifferentialDriveWheelSpeeds(m_leftEncoder.getVelocity(), m_rightEncoder.getVelocity());
 
@@ -195,54 +182,28 @@ public class DriveSubsystem extends SubsystemBase {
         return chassisSpeeds;
     }
 
-    public void resetPose() {
-        this.resetPose(this.getPose());
-    }
-
     public void tankDrive(double left, double right) {
-        this.m_drive.tankDrive(left * speedLimit, right * speedLimit);
+        this.m_drive.tankDrive(left, right);
     }
 
     public void drive(ChassisSpeeds speeds) {
         DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
-                Constants.DriveConstants.trackWidthMeters);
-        // Convert to wheel speeds
+                DriveConstants.kTrackWidthMeters);
+
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
-        // Left velocity
         double leftVelocity = wheelSpeeds.leftMetersPerSecond;
-
-        // Right velocity
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
         // TODO: TEST IF WE NEED TO APPLY THESE TO THE BACK MOTORCONTROLLER PIDS TOO
         m_frontLeftPID.setReference(leftVelocity, ControlType.kVelocity);
-
         m_frontRightPID.setReference(rightVelocity, ControlType.kVelocity);
 
         m_drive.feed();
-
-    }
-
-    private void buildPidController(SparkPIDController pidController) {
-        pidController.setP(9e-5);
-        pidController.setI(0);
-        pidController.setD(0);
-        pidController.setIZone(0);
-        pidController.setFF((1 / 5.4));
-        pidController.setOutputRange(-1, 1);
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {
-        this.m_drive.arcadeDrive(xSpeed * speedLimit, rotation * speedLimit);
-    }
-
-    public void setSpeedLimit(double speedLimit) {
-        this.speedLimit = speedLimit;
-    }
-
-    public double getSpeedLimit() {
-        return this.speedLimit;
+        this.m_drive.arcadeDrive(xSpeed, rotation);
     }
 
     public double getYaw() {
@@ -250,19 +211,11 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void stopDriveTrain() {
-        m_drive.tankDrive(0, 0);
+        m_drive.stopMotor();
     }
 
     @Override
     public void periodic() {
-        currPose2d = m_poseEstimator.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(),
-                m_rightEncoder.getPosition());
-        /*
-         * debugLogger.logln("leftFront: " + m_leftFront.getOutputCurrent() +
-         * " rightFront: " + m_rightFront.getOutputCurrent()
-         * + "      |||      leftBack: " + m_leftBack.getOutputCurrent() +
-         * "  rightBack: " + m_rightBack.getOutputCurrent());
-         */
         SmartDashboard.putNumber("Current Y position: ", getPose().getY());
         SmartDashboard.putNumber("Current X position: ", getPose().getX());
         SmartDashboard.putNumber("Current Heading: ", getPose().getRotation().getDegrees());
@@ -271,10 +224,10 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Left Encoder: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Right Encoder: ", m_rightEncoder.getPosition());
 
-        SmartDashboard.putNumber("Front Left Duty Cycle: ", m_leftFront.get());
+        SmartDashboard.putNumber("Front Left Duty Cycle: ", m_frontLeftMotor.get());
         SmartDashboard.putNumber("Front Left Distance: ", m_leftEncoder.getPosition());
         SmartDashboard.putNumber("Front Left Rate: ", m_leftEncoder.getVelocity());
-        SmartDashboard.putNumber("Back Left Rate: ", m_leftBack.getEncoder().getVelocity());
+        SmartDashboard.putNumber("Back Left Rate: ", m_backLeftMotor.getEncoder().getVelocity());
 
         SmartDashboard.putNumber("Sim Y position: ", m_driveSim.getPose().getY());
         SmartDashboard.putNumber("Sim X position: ", m_driveSim.getPose().getX());
@@ -284,10 +237,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        m_driveSim.setInputs(m_leftFront.get() * EmpiricalConstants.kInputVoltage,
-                m_rightFront.get() * EmpiricalConstants.kInputVoltage);
+        m_driveSim.setInputs(m_frontLeftMotor.get() * DriveConstants.kMaxSimInputVoltage,
+                m_frontRightMotor.get() * DriveConstants.kMaxSimInputVoltage);
 
-        System.out.println(m_leftFront.get());
+        System.out.println(m_frontLeftMotor.get());
 
         m_driveSim.update(0.02);
 
@@ -301,7 +254,7 @@ public class DriveSubsystem extends SubsystemBase {
      * [frontLeft, frontRight, backLeft, backRight]
      */
     public CANSparkMax[] getDriveMotorControllers() {
-        return new CANSparkMax[] { m_leftFront, m_rightFront, m_leftBack, m_rightBack };
+        return new CANSparkMax[] { m_frontLeftMotor, m_frontRightMotor, m_backLeftMotor, m_backRightMotor };
 
         // andrew i was trying to resolve a merge conflict here idk what this code does
 

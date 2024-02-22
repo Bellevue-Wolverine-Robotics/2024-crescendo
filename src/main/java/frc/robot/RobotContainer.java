@@ -4,35 +4,25 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ClimbingConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.FlywheelConstants;
-import frc.robot.Constants.OperatorConstants;
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Enums.AutoEnum;
-import frc.robot.Enums.Throttles;
-import frc.robot.commands.*;
+import frc.robot.commands.Autos;
+import frc.robot.commands.DebugClose;
+import frc.robot.commands.climber.ClimberExtendCommand;
+import frc.robot.commands.climber.ClimberRetractCommand;
+import frc.robot.commands.drivetrain.ArcadeDriveCommand;
+import frc.robot.constants.DriveConstants;
+import frc.robot.constants.IOConstants.DriverButtonConstants;
+import frc.robot.constants.IOConstants.JoystickPortConstants;
+import frc.robot.constants.IOConstants.OperatorButtonConstants;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
-import frc.robot.subsystems.IntakeArmSubsystem;
-import frc.robot.subsystems.IntakeMotorSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-import java.time.Instant;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.util.ReplanningConfig;
-
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -45,39 +35,34 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class RobotContainer {
   private final Debug debugLogger = new Debug("DebugDriveSubsystem.txt");
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
-  private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
+
+  // private final DriveSubsystem m_driveSubsystem = new
+  // DriveSubsystem(debugLogger);
+  // private final FlywheelSubsystem m_flywheelSubsystem = new
+  // FlywheelSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+  // private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
-  private final IntakeArmSubsystem m_intakeArmSubsystem = new IntakeArmSubsystem();
-  private final IntakeMotorSubsystem m_intakeMotorSubsystem = new IntakeMotorSubsystem();
-
-  private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
-  private final CommandJoystick m_operatorController = new CommandJoystick(OperatorConstants.kOperatorControllerPort);
+  private final CommandJoystick m_driverController = new CommandJoystick(JoystickPortConstants.kDriverControllerPort);
+  private final CommandJoystick m_operatorController = new CommandJoystick(
+      JoystickPortConstants.kOperatorControllerPort);
 
   public RobotContainer() {
     configureBindings();
     smartDashBoardBinding();
-
   }
 
   private void configureBindings() {
-    m_driveSubsystem.setDefaultCommand(
-        new ArcadeDrive(m_driveSubsystem, () -> -m_driverController.getY(), () -> -m_driverController.getX()));
-
-    m_flywheelSubsystem.setDefaultCommand(
-        new InstantCommand(
-            () -> m_flywheelSubsystem.setFlywheelVelocity(m_operatorController.getY() *
-                FlywheelConstants.kMaxRPM),
-            m_flywheelSubsystem));
+    // m_driveSubsystem.setDefaultCommand(
+    // new ArcadeDriveCommand(m_driveSubsystem, () ->
+    // getArcadeDriveSpeeds().getFirst(),
+    // () -> getArcadeDriveSpeeds().getSecond()));
 
     // climber
-    m_operatorController.button(OperatorConstants.kClimbToSetpointButton)
-        .onTrue(m_climberSubsystem.climbToPositionSetpointCommand(25));
-    m_operatorController.button(OperatorConstants.kClimbUpButton)
-        .whileTrue(m_climberSubsystem.climbUpCommand());
-    m_operatorController.button(OperatorConstants.kClimbDownButton)
-        .whileTrue(m_climberSubsystem.climbDownCommand());
+    m_operatorController.button(OperatorButtonConstants.kClimbUpButton)
+        .whileTrue(new ClimberExtendCommand(m_climberSubsystem));
+    m_operatorController.button(OperatorButtonConstants.kClimbDownButton)
+        .whileTrue(new ClimberRetractCommand(m_climberSubsystem));
 
     // intake
     // m_operatorController.button(OperatorConstants.kIntakeEnableMotorButton)
@@ -88,30 +73,13 @@ public class RobotContainer {
     SmartDashboard.putData("Save logging info", new DebugClose(debugLogger));
   }
 
-  public void setDriveThrottleSpeed(Throttles throttleSpeed) {
-    switch (throttleSpeed) {
-      case FAST:
-        m_driveSubsystem.setSpeedLimit(DriveConstants.FAST);
-        break;
-      case MEDIUM:
-        m_driveSubsystem.setSpeedLimit(DriveConstants.MEDIUM);
-        break;
-      case SLOW:
-        m_driveSubsystem.setSpeedLimit(DriveConstants.SLOW);
-        break;
-      default:
-        break;
-    }
-
-  }
-
   public Command getAutonomousCommand(AutoEnum autoEnum) {
     // return Autos.getPathPlannerCommand();
     switch (autoEnum) {
-      case FOWARD_TEST:
-        return Autos.forwardTest(m_driveSubsystem);
-      case CUSTOM_PATH_PLANNER:
-        return Autos.test949PathPlan(m_driveSubsystem);
+      // case FOWARD_TEST:
+      // return Autos.forwardTest(m_driveSubsystem);
+      // case CUSTOM_PATH_PLANNER:
+      // return Autos.test949PathPlan(m_driveSubsystem);
       case PATH_PLANNER:
         return Autos.getPathPlannerCommand();
       default:
@@ -119,8 +87,32 @@ public class RobotContainer {
     }
   }
 
-  public DriveSubsystem getDriveSubsystem() {
-    return m_driveSubsystem;
+  /**
+   * Returns arcade drive speeds based on throttles and squaring selected
+   * 
+   * @return A pair of the x speed and the z rotation
+   */
+  private Pair<Double, Double> getArcadeDriveSpeeds() {
+    double xSpeed = -m_driverController.getY();
+    double zRotation = -m_driverController.getX();
+
+    if (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
+        DriverButtonConstants.kDriveSpeedPreset1Button)) {
+      xSpeed *= DriveConstants.kThrottlePreset1;
+      zRotation *= DriveConstants.kRotationPreset1;
+    } else if (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
+        DriverButtonConstants.kDriveSpeedPreset2Button)) {
+      xSpeed *= DriveConstants.kThrottlePreset2;
+      zRotation *= DriveConstants.kRotationPreset2;
+    }
+
+    Pair<Double, Double> arcadeDriveSpeedsPair = new Pair<Double, Double>(xSpeed, zRotation);
+
+    return arcadeDriveSpeedsPair;
   }
 
+  public DriveSubsystem getDriveSubsystem() {
+    return null;
+    // return m_driveSubsystem;
+  }
 }
