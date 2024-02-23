@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.6170365068002863,
-        "y": 6.99655944766435
+        "x": 2.542406539358533,
+        "y": 5.550603828480384
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4416145195926757,
-        "y": 6.9872307017341315
+        "x": 2.318516637033274,
+        "y": 5.541275082550166
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.3763132980811417,
-        "y": 5.522617590689727
+        "x": 1.2923545847091693,
+        "y": 5.550603828480384
       },
       "prevControl": {
-        "x": 2.0852979887777963,
-        "y": 5.494631352899069
+        "x": 1.684161913778373,
+        "y": 5.541275082550166
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
   "reversed": true,
   "folder": "Alliance Notes",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 179.51030440687074,
     "velocity": 0
   },
   "useDefaultConstraints": true
