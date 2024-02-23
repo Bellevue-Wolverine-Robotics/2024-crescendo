@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.FlywheelConstants;
 import frc.utils.PIDUtils;
@@ -81,7 +82,10 @@ public class FlywheelSubsystem extends SubsystemBase {
 	}
 
 	public void feedIntoShooter() {
-		m_feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
+		double currentRotation = m_feederMotor.getSelectedSensorPosition();
+		double rotationSetpoint = currentRotation + FlywheelConstants.kFeederRelativeSetpoint;
+
+		m_feederMotor.set(TalonSRXControlMode.Position, rotationSetpoint);
 	}
 
 	public boolean shooterVelocityAtSetpoint() {
@@ -96,5 +100,6 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		SmartDashboard.putNumber("Flywheel Feeder Position", m_feederMotor.getSelectedSensorPosition());
 	}
 }
