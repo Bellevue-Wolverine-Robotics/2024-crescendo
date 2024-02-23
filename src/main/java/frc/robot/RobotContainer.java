@@ -80,8 +80,6 @@ public class RobotContainer {
       // return Autos.forwardTest(m_driveSubsystem);
       // case CUSTOM_PATH_PLANNER:
       // return Autos.test949PathPlan(m_driveSubsystem);
-      case PATH_PLANNER:
-        return Autos.getPathPlannerCommand();
       default:
         return null;
     }
