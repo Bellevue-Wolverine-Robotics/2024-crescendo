@@ -1,0 +1,85 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp_center_to_amp_close_note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp_close_note_to_amp_center"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp_center_to_amp_mid_note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp_center_note_to_amp_center"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp_center_to_amp_far_note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp_far_note_to_amp_center"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

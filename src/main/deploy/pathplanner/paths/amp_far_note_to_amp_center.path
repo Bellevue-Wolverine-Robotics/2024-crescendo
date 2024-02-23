@@ -42,7 +42,7 @@
     "rotation": 0,
     "rotateFast": false
   },
-  "reversed": true,
+  "reversed": false,
   "folder": "Alliance Notes",
   "previewStartingState": {
     "rotation": 179.0122396003602,

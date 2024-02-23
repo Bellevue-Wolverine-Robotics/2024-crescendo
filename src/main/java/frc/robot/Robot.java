@@ -44,7 +44,6 @@ public class Robot extends TimedRobot {
 
     m_autoChooser.setDefaultOption("Testing going forward", AutoEnum.FOWARD_TEST);
     m_autoChooser.addOption("Custom Path Planner", AutoEnum.CUSTOM_PATH_PLANNER);
-    m_autoChooser.addOption("Path Planner", AutoEnum.PATH_PLANNER);
     m_autoChooser.addOption("Square Drive 300 Inches", AutoEnum.SQUARE_300_INCHES);
     m_autoChooser.addOption("Straight Drive 300 Inches", AutoEnum.STRAIGHT_300_INCHES);
 

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,9 +14,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Enums.AutoEnum;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DebugClose;
+import frc.robot.commands.SubstituteCommand;
 import frc.robot.commands.climber.ClimberExtendCommand;
 import frc.robot.commands.climber.ClimberRetractCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCommand;
+import frc.robot.commands.intake.StartIntakeCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.IOConstants.DriverButtonConstants;
 import frc.robot.constants.IOConstants.JoystickPortConstants;
@@ -41,6 +45,7 @@ public class RobotContainer {
   // FlywheelSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   // private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   private final CommandJoystick m_driverController = new CommandJoystick(JoystickPortConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(
@@ -49,6 +54,12 @@ public class RobotContainer {
   public RobotContainer() {
     configureBindings();
     smartDashBoardBinding();
+
+    NamedCommands.registerCommand("startIntake", new StartIntakeCommand(m_intakeSubsystem));
+    NamedCommands.registerCommand("climberExtend", new ClimberExtendCommand(m_climberSubsystem));
+    NamedCommands.registerCommand("climberRetract", new ClimberRetractCommand(m_climberSubsystem));
+    NamedCommands.registerCommand("passNoteAndShoot", new SubstituteCommand());
+
   }
 
   private void configureBindings() {
