@@ -23,7 +23,10 @@ public final class FlywheelConstants {
 
 	// Setpoints
 
-	public static final double kShootStageDutyCycleSetpoint = 0.5;
+	public static final double kShooterVelocityTolerance = 0;
+	
+	public static final double kShootSpeakerDutyCycleSetpoint = 0.5;
+	public static final double kShootSpeakerVelocitySetpoint = 1;
 
 	public static final double kStageShoulderSetpoint = 0;
 	public static final double kStageElbowSetpoint = 0;
