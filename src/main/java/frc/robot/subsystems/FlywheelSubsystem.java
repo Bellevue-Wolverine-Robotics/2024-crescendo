@@ -60,7 +60,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 	}
 
 	public void startShooter() {
-		setShooterDutyCycle(FlywheelConstants.kShootStageDutyCycleSetpoint);
+		setShooterDutyCycle(FlywheelConstants.kShootSpeakerDutyCycleSetpoint);
 	}
 
 	public void stopShooter() {
@@ -82,6 +82,16 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 	public void feedIntoShooter() {
 		m_feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
+	}
+
+	public boolean shooterVelocityAtSetpoint() {
+		return PIDUtils.atSetpoint(getShooterVelocity(), 
+									FlywheelConstants.kShootSpeakerVelocitySetpoint, 
+									FlywheelConstants.kShooterVelocityTolerance);
+	}
+
+	private double getShooterVelocity() {
+		return m_shooterMotorLeader.getSelectedSensorVelocity();
 	}
 
 	@Override
