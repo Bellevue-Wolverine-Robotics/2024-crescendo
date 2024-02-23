@@ -78,10 +78,6 @@ public class RobotContainer {
       // return Autos.forwardTest(m_driveSubsystem);
       // case CUSTOM_PATH_PLANNER:
       // return Autos.test949PathPlan(m_driveSubsystem);
-      case SQUARE_300_INCHES:
-        return Autos.square300InchesCommand();
-      case STRAIGHT_300_INCHES:
-        return Autos.straight300InchesCommand();
       default:
         return null;
     }
