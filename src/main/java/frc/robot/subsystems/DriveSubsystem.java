@@ -168,6 +168,9 @@ public class DriveSubsystem extends SubsystemBase {
                 bsupply::getAsBoolean, // Boolean supplier that controls when the path will be mirrored for the red
                 // alliance
                 this);
+
+        // System.out.println("IF YOU FORGET THIS THEN YOU WILL BE ");
+        // resetPose(new Pose2d(1.39, 5.5 3, new Rotation2d(2.34)));
     }
 
     public Pose2d getPose() {
@@ -203,7 +206,8 @@ public class DriveSubsystem extends SubsystemBase {
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
         System.out.println("Setpoints: " + leftVelocity + ", " + rightVelocity);
-        System.out.println("Velocity: " + m_leftEncoder.getVelocity() + ", " + m_rightEncoder.getVelocity());
+        System.out.println("Velocity: " + m_leftEncoder.getVelocity() + ", " +
+                m_rightEncoder.getVelocity());
 
         // TODO: TEST IF WE NEED TO APPLY THESE TO THE BACK MOTORCONTROLLER PIDS TOO
         m_frontLeftPID.setReference(leftVelocity, ControlType.kVelocity);
@@ -251,7 +255,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_driveSim.setInputs(m_frontLeftMotor.get() * DriveConstants.kMaxSimInputVoltage,
                 m_frontRightMotor.get() * DriveConstants.kMaxSimInputVoltage);
 
-        System.out.println(m_frontLeftMotor.get());
+        // System.out.println(m_frontLeftMotor.get());
 
         m_driveSim.update(0.02);
 
@@ -290,5 +294,9 @@ public class DriveSubsystem extends SubsystemBase {
         );
 
         return pathfindingCommand;
+    }
+
+    public double getFrontRightRate() {
+        return m_rightEncoder.getVelocity();
     }
 }

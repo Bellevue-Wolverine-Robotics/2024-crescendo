@@ -26,7 +26,7 @@ import frc.robot.Enums.AutoEnum;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  SendableChooser<AutoEnum> m_autoChooser = new SendableChooser<>();
+  // SendableChooser<AutoEnum> m_autoChooser = new SendableChooser<>();
 
   private RobotContainer m_robotContainer;
 
@@ -42,12 +42,15 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    m_autoChooser.setDefaultOption("Testing going forward", AutoEnum.FOWARD_TEST);
-    m_autoChooser.addOption("Custom Path Planner", AutoEnum.CUSTOM_PATH_PLANNER);
-    m_autoChooser.addOption("Square Drive 300 Inches", AutoEnum.SQUARE_300_INCHES);
-    m_autoChooser.addOption("Straight Drive 300 Inches", AutoEnum.STRAIGHT_300_INCHES);
+    // m_autoChooser.setDefaultOption("Testing going forward",
+    // AutoEnum.FOWARD_TEST);
+    // m_autoChooser.addOption("Custom Path Planner", AutoEnum.CUSTOM_PATH_PLANNER);
+    // m_autoChooser.addOption("Square Drive 300 Inches",
+    // AutoEnum.SQUARE_300_INCHES);
+    // m_autoChooser.addOption("Straight Drive 300 Inches",
+    // AutoEnum.STRAIGHT_300_INCHES);
 
-    SmartDashboard.putData("Auto Chooser", m_autoChooser);
+    // SmartDashboard.putData("Auto Chooser", m_autoChooser);
   }
 
   /**
@@ -87,7 +90,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_autoChooser.getSelected());
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -114,6 +117,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    System.out
+        .println("Joystick: " + m_robotContainer.getStickY() + ", Velocity: " + m_robotContainer.getRightVelocity());
   }
 
   @Override

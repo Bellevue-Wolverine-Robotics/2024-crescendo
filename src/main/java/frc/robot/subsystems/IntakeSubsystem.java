@@ -20,10 +20,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	private RelativeEncoder m_intakeArmRelativeEncoder;
 	private ArmFeedforward m_armFeedforward;
 
-	private CANSparkMax m_intakeMotor;
+	private CANSparkMax m_feederMotor;
 	private DigitalInput limitSwitch = new DigitalInput(IntakeConstants.kNoteSwitchDIOPort);
 
 	public IntakeSubsystem() {
+		m_feederMotor = new CANSparkMax(IntakeConstants.kFeederMotorId, MotorType.kBrushless);
 		m_intakeArm = new CANSparkMax(IntakeConstants.kArmMotorId,
 				MotorType.kBrushless);
 
@@ -63,7 +64,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	// -- Intake Motor -- //
 	public void setIntakeMotorSpeed(double speed) {
 		if (!limitSwitch.get() && speed > 0) {
-			m_intakeMotor.set(speed);
+			m_feederMotor.set(speed);
 		}
 	}
 
@@ -72,7 +73,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void stopIntakeMotor() {
-		m_intakeMotor.stopMotor();
+		m_feederMotor.stopMotor();
 	}
 
 	public boolean hasNote() {
@@ -82,7 +83,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 		if (limitSwitch.get()) {
-			m_intakeMotor.stopMotor();
+			m_feederMotor.stopMotor();
 		}
 	}
 }

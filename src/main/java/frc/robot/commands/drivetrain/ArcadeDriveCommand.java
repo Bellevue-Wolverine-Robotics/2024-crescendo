@@ -21,8 +21,8 @@ public class ArcadeDriveCommand extends Command {
 
     @Override
     public void execute() {
-        System.out.println("xSpeed: " + m_xSpeedSupplier.getAsDouble());
-        System.out.println("zRot: " + m_zRotSupplier.getAsDouble());
+        // System.out.println("xSpeed: " + m_xSpeedSupplier.getAsDouble());
+        // System.out.println("zRot: " + m_zRotSupplier.getAsDouble());
         m_driveSubsystem.arcadeDrive(m_xSpeedSupplier.getAsDouble(), m_zRotSupplier.getAsDouble());
     }
 }

@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.39,
+      "y": 5.53
+    },
+    "rotation": 180.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "print"
           }
         },
         {
@@ -24,18 +30,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": null
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": null
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "amp_center_to_amp_mid_note"
@@ -48,18 +42,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": null
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": null
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "amp_center_to_amp_far_note"
@@ -69,12 +51,6 @@
           "type": "path",
           "data": {
             "pathName": "amp_far_note_to_amp_center"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": null
           }
         }
       ]

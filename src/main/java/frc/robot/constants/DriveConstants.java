@@ -32,8 +32,9 @@ public final class DriveConstants {
 	// TODO: modify this value when we change the wheels and stuff because THIS
 	// NUMBER WILL CHANGE
 	public static final double kMaxVelocity = 5.4;
+	public static final double ff = (0.7578125 / 2.930143117904663);
 
-	public static final SparkPIDParams kDriveVelocityPIDParams = new SparkPIDParams(0.0009, 0, 0, 0, 1 / kMaxVelocity,
+	public static final SparkPIDParams kDriveVelocityPIDParams = new SparkPIDParams(0.5, 0, 0, 0, 1 / 6.5,
 			-1, 1);
 
 	public static final double kMaxSimInputVoltage = 12;
