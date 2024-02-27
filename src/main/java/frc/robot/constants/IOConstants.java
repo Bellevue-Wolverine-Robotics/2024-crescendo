@@ -24,7 +24,8 @@ public final class IOConstants {
 		// Intake
 		public static final int kStartIntakeButton = 6;
 		public static final int kStopIntakeButton = 7;
-		public static final int kfullIntakeCycle = 8;
+		public static final int kFullIntakeCycle = 8;
+		public static final int kCancelALL = 9;
 	}
 
 }
