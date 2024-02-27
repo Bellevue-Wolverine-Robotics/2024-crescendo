@@ -3,6 +3,7 @@ package frc.robot.commands.flywheel;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.FlywheelSubsystem;
 import java.lang.Math;
+import frc.robot.constants.FlywheelConstants;
 
 public class FlywheelShootCommand extends Command {
 	private FlywheelSubsystem m_flywheelSubsystem;
@@ -21,14 +22,12 @@ public class FlywheelShootCommand extends Command {
 	public boolean isFinished() {
 		//return false
 
-		/*
-		double targetVelocity = constants.FlywheelConstants.kShootSpeakerDutyCycleSetpoint;
+		
+		double targetVelocity = FlywheelConstants.kShootSpeakerDutyCycleSetpoint;
 		double currentVelocity = m_flywheelSubsystem.getShooterVelocity ();
-		double error = constants.FlywheelConstants.kShooterVelocityTolerance;
-		*/
+		double error = FlywheelConstants.kShooterVelocityTolerance;
 
-		//all statements in one line to minimize memory usage
-		return Math.abs (m_flywheelSubsystem.getShooterVelocity () - constants.FlywheelConstants.kShootSpeakerDutyCycleSetpoint) < constants.FlywheelConstants.kShooterVelocityTolerance;
+		return Math.abs(targetVelocity - currentVelocity) < error;
 	}
 
 	@Override
