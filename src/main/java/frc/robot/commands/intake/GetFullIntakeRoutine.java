@@ -48,25 +48,22 @@ public class GetFullIntakeRoutine {
             /*
              * AT THIS POINT ARM HAS ACQUIRED NOTE(VERIFIED BY LIMIT SWITCH)
              */
-            new SetArmAngleCommand(intakeSubsystem, restIntakeAngle),
+            new StopIntakeCommand(intakeSubsystem),
             /*
              * AT THIS POINT THE INTAKE ARM IS AT REST POSITION AND IN POSITION FOR FLYWHEEL INTAKE TO RECIEVE
+             *   INTAKE MOTOR WILL STOP BECAUSE IT HAS ACUIRED NOTE 
              */
-            new ParallelCommandGroup(
-                new FlywheelStartIntakeCommand(flywheelSubsystem),
-                new StopIntakeCommand(intakeSubsystem)
-            ),
-            /*
-             * INTAKE MOTOR WILL STOP BECAUSE IT HAS ACUIRED NOTE 
-             * AT THIS POINT THE FLYWHEEL WILL START ACQURING THE NOTE FROM THE INTAKE
-             */
-            new SequentialCommandGroup(
-                new GetIntakeStatusFlywheel(flywheelSubsystem),
-                new FlywheelStopIntakeCommand(flywheelSubsystem)
-            ),
             new InstantCommand(
-                    () -> {flywheelSubsystem.setArmSetpoint(flyWheelShoulderShootAngle, flyWheelElbowShootAngle);}                   
+                    () -> {flywheelSubsystem.feedIntoShooter();}    
+                    /*
+                    *FLYWHEEL IS ALREAY IN POSITION, FLYWHEEL DOING INTAKE
+                    */               
+            ),
+            //FLYWHEEL ACQUIRED NOTE
+            new InstantCommand(
+                    () -> {flywheelSubsystem.setArmSetpoint(flyWheelShoulderShootAngle, flyWheelElbowShootAngle);}                  
             )
+            //RETURNS TO SHOOTINGANGLE
 
         );
         
