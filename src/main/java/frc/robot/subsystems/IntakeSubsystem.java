@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -16,8 +19,7 @@ import frc.utils.PIDUtils;
 import frc.utils.PIDUtils.ArmFFParams;
 
 public class IntakeSubsystem extends SubsystemBase {
-	private CANSparkMax m_intakeArm;
-	private SparkPIDController m_armPidController;
+	private WPI_TalonSRX m_intakeArm;
 	private RelativeEncoder m_intakeArmRelativeEncoder;
 	private ArmFeedforward m_armFeedforward;
 
@@ -26,19 +28,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public IntakeSubsystem() {
 		m_feederMotor = new CANSparkMax(IntakeConstants.kFeederMotorId, MotorType.kBrushless);
-		m_intakeArm = new CANSparkMax(IntakeConstants.kArmMotorId,
-				MotorType.kBrushless);
+		m_intakeArm = new WPI_TalonSRX(IntakeConstants.kArmMotorId);
 
-		m_intakeArm.restoreFactoryDefaults();
-		m_intakeArm.setIdleMode(IdleMode.kBrake);
-		m_intakeArm.setSmartCurrentLimit(IntakeConstants.kSmartCurrentLimit);
-
-		m_intakeArmRelativeEncoder = m_intakeArm.getEncoder();
-		m_intakeArmRelativeEncoder.setPositionConversionFactor(IntakeConstants.kArmPositionConversionFactor);
-		m_intakeArmRelativeEncoder.setPosition(0);
-
-		m_armPidController = m_intakeArm.getPIDController();
-		PIDUtils.setPIDConstants(m_armPidController, IntakeConstants.kIntakeArmPIDParams);
+		PIDUtils.setPIDConstants(m_intakeArm, IntakeConstants.kIntakeArmPIDParams);
 
 		m_armFeedforward = PIDUtils.createArmFeedforward(IntakeConstants.kIntakeArmFFParams);
 	}
@@ -51,7 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	public void setIntakeArmPIDSetpoint(double setpoint) {
 		double gravityFFTerm = m_armFeedforward.calculate(setpoint, 0, 0); // should be in degrees also should
 
-		m_armPidController.setReference(setpoint, ControlType.kPosition, 0, gravityFFTerm);
+		m_intakeArm.set(TalonSRXControlMode.Position, setpoint);
 	}
 
 	public void deployIntakeArm() {

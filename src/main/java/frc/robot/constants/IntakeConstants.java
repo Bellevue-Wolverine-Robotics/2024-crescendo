@@ -1,7 +1,7 @@
 package frc.robot.constants;
 
 import frc.utils.PIDUtils.ArmFFParams;
-import frc.utils.PIDUtils.SparkPIDParams;
+import frc.utils.PIDUtils.TalonPIDParams;;
 
 public final class IntakeConstants {
 	public static final int kFeederMotorId = 8;
@@ -13,7 +13,7 @@ public final class IntakeConstants {
 
 	public static final double kFeederDutyCycle = 0.3;
 
-	public static final SparkPIDParams kIntakeArmPIDParams = new SparkPIDParams(1.0, 0, 0, 0, 0, 1.0, -1.0);
+	public static final TalonPIDParams kIntakeArmPIDParams = new TalonPIDParams(1.0, 0, 0, 0, 0);
 
 	public static final double kIntakeArmSetpointStow = 0.0;
 	public static final double kIntakeArmSetpointDeploy = 1.0;
@@ -22,5 +22,5 @@ public final class IntakeConstants {
 
 	public static final int kNoteSwitchDIOPort = 0;
 	public static final int kFlyWheelwitchDIOPort = 1;
-	
+
 }
