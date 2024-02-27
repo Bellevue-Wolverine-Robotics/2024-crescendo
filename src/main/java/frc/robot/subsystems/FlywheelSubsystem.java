@@ -9,9 +9,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.FlywheelConstants;
+import frc.robot.constants.IntakeConstants;
 import frc.utils.PIDUtils;
 
 public class FlywheelSubsystem extends SubsystemBase {
@@ -28,7 +30,9 @@ public class FlywheelSubsystem extends SubsystemBase {
 	private SparkPIDController m_armElbowPidController;
 
 	private TalonSRX m_feederMotor; // this is a motor that collects the note from the intake
+	private DigitalInput limitSwitch = new DigitalInput(IntakeConstants.kFlyWheelwitchDIOPort);
 
+	
 	public FlywheelSubsystem() {
 		// Shooter Init
 		m_shooterMotorLeader = new WPI_TalonSRX(FlywheelConstants.kShooterLeaderId);
@@ -94,8 +98,17 @@ public class FlywheelSubsystem extends SubsystemBase {
 									FlywheelConstants.kShooterVelocityTolerance);
 	}
 
-	private double getShooterVelocity() {
+	private static final double velocity = 0.1;
+	public void startFeederMotor () {
+		m_feederMotor.set (TalonSRXControlMode.Velocity, velocity);
+	}
+
+	public double getShooterVelocity() {
 		return m_shooterMotorLeader.getSelectedSensorVelocity();
+	}
+
+	public boolean hasNote() {
+		return limitSwitch.get();
 	}
 
 	@Override
