@@ -30,7 +30,6 @@ public class FlywheelSubsystem extends SubsystemBase {
 	private SparkPIDController m_armElbowPidController;
 
 	private TalonSRX m_feederMotor; // this is a motor that collects the note from the intake
-	private DigitalInput limitSwitch = new DigitalInput(IntakeConstants.kFlyWheelwitchDIOPort);
 
 	
 	public FlywheelSubsystem() {
@@ -107,9 +106,6 @@ public class FlywheelSubsystem extends SubsystemBase {
 		return m_shooterMotorLeader.getSelectedSensorVelocity();
 	}
 
-	public boolean hasNote() {
-		return limitSwitch.get();
-	}
 
 	@Override
 	public void periodic() {
