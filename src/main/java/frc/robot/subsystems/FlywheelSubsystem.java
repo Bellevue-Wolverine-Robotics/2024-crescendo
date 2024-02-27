@@ -103,7 +103,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 		m_feederMotor.set (TalonSRXControlMode.Velocity, velocity);
 	}
 
-	private double getShooterVelocity() {
+	public double getShooterVelocity() {
 		return m_shooterMotorLeader.getSelectedSensorVelocity();
 	}
 
