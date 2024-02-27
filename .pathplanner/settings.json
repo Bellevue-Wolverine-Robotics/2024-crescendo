@@ -5,7 +5,11 @@
   "pathFolders": [
     "Alliance Notes"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Amp Close",
+    "Amp Mid",
+    "Amp Far"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,

@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 2.2,
-        "y": 4.1
+        "y": 6.95
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.201780594147689,
-        "y": 4.1
+        "x": 1.2000000000000004,
+        "y": 6.95
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.37,
-        "y": 5.57
+        "x": 0.75,
+        "y": 6.68
       },
       "prevControl": {
-        "x": 2.584027956300638,
-        "y": 5.57
+        "x": 1.25,
+        "y": 7.546025403784438
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "Alliance Notes",
   "previewStartingState": {
-    "rotation": 179.0122396003602,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

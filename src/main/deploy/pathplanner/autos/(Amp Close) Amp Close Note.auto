@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.75,
+      "y": 6.68
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp_close_to_amp_close_note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp_close_note_to_amp_center"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Amp Close",
+  "choreoAuto": false
+}
