@@ -13,6 +13,6 @@ public class FlywheelStopIntakeCommand extends Command {
 
 	@Override
 	public void initialize() {
-		// m_flywheelSubsystem.stopIntakeMotor();
+		 m_flywheelSubsystem.stopIntakeMotor();
 	}
 }

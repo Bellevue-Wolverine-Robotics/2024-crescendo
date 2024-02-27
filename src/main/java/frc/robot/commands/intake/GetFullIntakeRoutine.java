@@ -26,14 +26,11 @@ public class GetFullIntakeRoutine {
 
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new SequentialCommandGroup(
-                    new SetArmAngleCommand(intakeSubsystem, extendIntakeAngle),
-                    new StartIntakeCommand(intakeSubsystem)
-                    /*
-                     * AFTER INTAKE IS IN RECIEVING POSITION, 
-                     * INTAKE WHEELS STARTS SPINNING
-                     */
-                ),
+                new StartIntakeCommand(intakeSubsystem),
+                /*
+                * AFTER INTAKE IS IN RECIEVING POSITION, 
+                * INTAKE WHEELS STARTS SPINNING
+                */
                 
                 new InstantCommand(
                     () -> {flywheelSubsystem.setArmSetpoint(flyWheelShoulderRecieveAngle, flyWheelElbowRecieveAngle);}    
