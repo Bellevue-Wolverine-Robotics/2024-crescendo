@@ -98,6 +98,11 @@ public class FlywheelSubsystem extends SubsystemBase {
 									FlywheelConstants.kShooterVelocityTolerance);
 	}
 
+	private static final double velocity = 0.1;
+	public void startFeederMotor () {
+		m_feederMotor.set (TalonSRXControlMode.Velocity, velocity);
+	}
+
 	private double getShooterVelocity() {
 		return m_shooterMotorLeader.getSelectedSensorVelocity();
 	}
