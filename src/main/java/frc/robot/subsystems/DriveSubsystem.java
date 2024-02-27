@@ -205,6 +205,12 @@ public class DriveSubsystem extends SubsystemBase {
         double leftVelocity = wheelSpeeds.leftMetersPerSecond;
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
+        SmartDashboard.putNumber("Left Velocity Setpoint", leftVelocity);
+        SmartDashboard.putNumber("Right Velocity Setpoint", rightVelocity);
+
+        SmartDashboard.putNumber("Left Velocity", m_leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Right Velocity", m_rightEncoder.getVelocity());
+
         System.out.println("Setpoints: " + leftVelocity + ", " + rightVelocity);
         System.out.println("Velocity: " + m_leftEncoder.getVelocity() + ", " +
                 m_rightEncoder.getVelocity());
