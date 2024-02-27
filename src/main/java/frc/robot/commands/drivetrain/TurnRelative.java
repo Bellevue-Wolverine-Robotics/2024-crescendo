@@ -7,7 +7,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.utils.PIDUtils;
 
 public class TurnRelative extends Command {
-    double kPTurn = 2.0;
+    double kPTurn = 180.0;
     double kIurn = 0.0;
     double kDturn = 0.0;
 
