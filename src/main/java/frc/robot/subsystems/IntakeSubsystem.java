@@ -10,6 +10,7 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.FlywheelConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.utils.PIDUtils;
 import frc.utils.PIDUtils.ArmFFParams;
@@ -63,9 +64,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// -- Intake Motor -- //
 	public void setIntakeMotorSpeed(double speed) {
-		if (!limitSwitch.get() && speed > 0) {
+		if (!limitSwitch.get()) {
 			m_feederMotor.set(speed);
 		}
+	}
+
+	// -- SHOOTER MODE -- //
+	public void shoot() {
+		setIntakeMotorSpeed(-1.0);
 	}
 
 	public void startIntakeMotor() {

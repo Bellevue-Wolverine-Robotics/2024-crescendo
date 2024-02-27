@@ -89,8 +89,6 @@ public class RobotContainer {
         .whileTrue(new ClimberExtendCommand(m_climberSubsystem));
     m_operatorController.button(OperatorButtonConstants.kClimbDownButton)
         .whileTrue(new ClimberRetractCommand(m_climberSubsystem));
-
-
     m_operatorController.button(OperatorButtonConstants.kfullIntakeCycle).onTrue(GetFullIntakeRoutine.fullIntakeSequence(m_intakeSubsystem, m_flyWheelSubsystem));
 
 
