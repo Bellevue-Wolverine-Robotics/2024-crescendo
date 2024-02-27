@@ -108,7 +108,7 @@ public class BackupPathPlanner {
             // angleToTurn is optomized at this point.
             SequentialCommandGroup driveSeq = new SequentialCommandGroup();
 
-            driveSeq.addCommands(new TurnRelative(angleToTurn, driveSubsystem));
+            driveSeq.addCommands(new TurnRelative(driveSubsystem, angleToTurn));
             driveSeq.addCommands(new DriveStraight(driveSubsystem,
                     Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2))));
 
@@ -117,7 +117,7 @@ public class BackupPathPlanner {
             // correctHeading is optomized at this point.
 
             driveSeq.addCommands(
-                    new TurnRelative(correctHeading, driveSubsystem));
+                    new TurnRelative(driveSubsystem, correctHeading));
 
             ParallelCommandGroup atPointRun = new ParallelCommandGroup();
             atPointRun.addCommands(driveSeq);

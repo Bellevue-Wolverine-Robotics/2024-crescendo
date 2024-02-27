@@ -23,6 +23,5 @@ public class ClimberRetractCommand extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		m_climberSubsystem.holdPosition();
 	}
 }

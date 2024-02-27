@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Enums.AutoEnum;
+import frc.robot.commands.climber.ClimberResetCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,7 +28,7 @@ import frc.robot.Enums.AutoEnum;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  SendableChooser<AutoEnum> m_autoChooser = new SendableChooser<>();
+  // SendableChooser<AutoEnum> m_autoChooser = new SendableChooser<>();
 
   private RobotContainer m_robotContainer;
 
@@ -42,10 +44,15 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    m_autoChooser.setDefaultOption("Testing going forward", AutoEnum.FOWARD_TEST);
-    m_autoChooser.addOption("Custom Path Planner", AutoEnum.CUSTOM_PATH_PLANNER);
-    m_autoChooser.addOption("Path Planner", AutoEnum.PATH_PLANNER);
-    SmartDashboard.putData("Auto Chooser", m_autoChooser);
+    // m_autoChooser.setDefaultOption("Testing going forward",
+    // AutoEnum.FOWARD_TEST);
+    // m_autoChooser.addOption("Custom Path Planner", AutoEnum.CUSTOM_PATH_PLANNER);
+    // m_autoChooser.addOption("Square Drive 300 Inches",
+    // AutoEnum.SQUARE_300_INCHES);
+    // m_autoChooser.addOption("Straight Drive 300 Inches",
+    // AutoEnum.STRAIGHT_300_INCHES);
+
+    // SmartDashboard.putData("Auto Chooser", m_autoChooser);
   }
 
   /**
@@ -85,12 +92,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_autoChooser.getSelected());
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    new ClimberResetCommand(m_robotContainer.getClimberSubsystem()).schedule();
   }
 
   /** This function is called periodically during autonomous. */
@@ -112,6 +121,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    // System.out
+    // .println("Joystick: " + m_robotContainer.getStickY() + ", Velocity: " +
+    // m_robotContainer.getRightVelocity());
   }
 
   @Override

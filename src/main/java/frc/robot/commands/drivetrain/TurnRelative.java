@@ -1,41 +1,44 @@
 package frc.robot.commands.drivetrain;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.utils.PIDUtils;
 
 public class TurnRelative extends Command {
-	private DriveSubsystem m_driveSubsystem;
-	private double setPoint;
-	private PIDController m_pid = PIDUtils.createPIDController(frc.robot.constants.DriveConstants.kTurnPidParams);
+    double kPTurn = 180.0;
+    double kIurn = 0.0;
+    double kDturn = 0.0;
 
-	public TurnRelative(double radians, DriveSubsystem driveSubsystem)
-	// @requires -Math.PI <= radians && radians <= Math.PI
-	// @requires driveSubsystem != null
-	{
-		m_driveSubsystem = driveSubsystem;
-		setPoint = Math.toRadians(m_driveSubsystem.getYaw()) + radians;
+    private PIDController m_pidLinear = new PIDController(kPTurn, kIurn, kDturn);
 
-		m_pid.setTolerance(0.1);
+    private DriveSubsystem m_driveSubsystem;
+    private double m_targetAngle;
+    public TurnRelative(DriveSubsystem driveSubsystem, double angle){ //ANGLE IN DEGREES
+        m_driveSubsystem = driveSubsystem;
+        m_targetAngle = angle; 
 
-		addRequirements(m_driveSubsystem);
-	}
+        m_pidLinear.setTolerance(5);
+        addRequirements(m_driveSubsystem);
+    }
 
-	@Override
-	public void execute() {
-		double motorSpeed = m_pid.calculate(m_driveSubsystem.getYaw(), setPoint);
-		m_driveSubsystem.tankDrive(-motorSpeed, motorSpeed);
-	}
 
-	@Override
-	public boolean isFinished() {
-		return false;
-		// return m_pid.atSetpoint();
-	}
+    @Override
+    public void execute() {
+        double linearSpeed = MathUtil.clamp(m_pidLinear.calculate(m_driveSubsystem.getPose().getRotation().getDegrees(), m_targetAngle), -0.7, 0.7);
+        m_driveSubsystem.tankDrive(linearSpeed, -linearSpeed);
+    }
 
-	@Override
-	public void end(boolean interrupted) {
-		m_driveSubsystem.stopDriveTrain();
-	}
+    @Override
+    public boolean isFinished() {
+
+        return m_pidLinear.atSetpoint();
+    }
+
+    @Override
+    public void end(boolean interrupted)
+    {
+        m_driveSubsystem.stopDriveTrain();
+    }
 }

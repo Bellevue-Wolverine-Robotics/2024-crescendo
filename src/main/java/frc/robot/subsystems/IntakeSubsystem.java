@@ -10,6 +10,7 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.FlywheelConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.utils.PIDUtils;
 import frc.utils.PIDUtils.ArmFFParams;
@@ -20,10 +21,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	private RelativeEncoder m_intakeArmRelativeEncoder;
 	private ArmFeedforward m_armFeedforward;
 
-	private CANSparkMax m_intakeMotor;
+	private CANSparkMax m_feederMotor;
 	private DigitalInput limitSwitch = new DigitalInput(IntakeConstants.kNoteSwitchDIOPort);
 
 	public IntakeSubsystem() {
+		m_feederMotor = new CANSparkMax(IntakeConstants.kFeederMotorId, MotorType.kBrushless);
 		m_intakeArm = new CANSparkMax(IntakeConstants.kArmMotorId,
 				MotorType.kBrushless);
 
@@ -62,9 +64,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// -- Intake Motor -- //
 	public void setIntakeMotorSpeed(double speed) {
-		if (!limitSwitch.get() && speed > 0) {
-			m_intakeMotor.set(speed);
+		if (!limitSwitch.get()) {
+			m_feederMotor.set(speed);
 		}
+	}
+
+	// -- SHOOTER MODE -- //
+	public void shoot() {
+		setIntakeMotorSpeed(-1.0);
 	}
 
 	public void startIntakeMotor() {
@@ -72,7 +79,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void stopIntakeMotor() {
-		m_intakeMotor.stopMotor();
+		m_feederMotor.stopMotor();
 	}
 
 	public boolean hasNote() {
@@ -82,7 +89,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 		if (limitSwitch.get()) {
-			m_intakeMotor.stopMotor();
+			m_feederMotor.stopMotor();
 		}
 	}
 }

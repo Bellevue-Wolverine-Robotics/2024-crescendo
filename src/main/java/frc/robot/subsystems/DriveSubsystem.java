@@ -4,6 +4,7 @@ import java.util.function.BooleanSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -17,6 +18,8 @@ import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -29,6 +32,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DebugSettings;
 import frc.robot.constants.DriveConstants;
@@ -128,6 +132,9 @@ public class DriveSubsystem extends SubsystemBase {
         m_imu.resetDisplacement();
         m_imu.zeroYaw();
 
+        m_odometry = new DifferentialDriveOdometry(m_imu.getRotation2d(), m_leftEncoder.getPosition(),
+                m_rightEncoder.getPosition());
+
         this.debugLogger = debugLogger;
 
         BooleanSupplier bsupply = (() -> {
@@ -161,6 +168,9 @@ public class DriveSubsystem extends SubsystemBase {
                 bsupply::getAsBoolean, // Boolean supplier that controls when the path will be mirrored for the red
                 // alliance
                 this);
+
+        // System.out.println("IF YOU FORGET THIS THEN YOU WILL BE ");
+        // resetPose(new Pose2d(1.39, 5.5 3, new Rotation2d(2.34)));
     }
 
     public Pose2d getPose() {
@@ -194,6 +204,16 @@ public class DriveSubsystem extends SubsystemBase {
 
         double leftVelocity = wheelSpeeds.leftMetersPerSecond;
         double rightVelocity = wheelSpeeds.rightMetersPerSecond;
+
+        SmartDashboard.putNumber("Left Velocity Setpoint", leftVelocity);
+        SmartDashboard.putNumber("Right Velocity Setpoint", rightVelocity);
+
+        SmartDashboard.putNumber("Left Velocity", m_leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Right Velocity", m_rightEncoder.getVelocity());
+
+        System.out.println("Setpoints: " + leftVelocity + ", " + rightVelocity);
+        System.out.println("Velocity: " + m_leftEncoder.getVelocity() + ", " +
+                m_rightEncoder.getVelocity());
 
         // TODO: TEST IF WE NEED TO APPLY THESE TO THE BACK MOTORCONTROLLER PIDS TOO
         m_frontLeftPID.setReference(leftVelocity, ControlType.kVelocity);
@@ -232,6 +252,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Sim Y position: ", m_driveSim.getPose().getY());
         SmartDashboard.putNumber("Sim X position: ", m_driveSim.getPose().getX());
 
+        m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
         m_field.setRobotPose(getPose());
     }
 
@@ -240,7 +261,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_driveSim.setInputs(m_frontLeftMotor.get() * DriveConstants.kMaxSimInputVoltage,
                 m_frontRightMotor.get() * DriveConstants.kMaxSimInputVoltage);
 
-        System.out.println(m_frontLeftMotor.get());
+        // System.out.println(m_frontLeftMotor.get());
 
         m_driveSim.update(0.02);
 
@@ -263,4 +284,25 @@ public class DriveSubsystem extends SubsystemBase {
         // vision.getTimestampSeconds());
     }
 
+    public Command pathfindToStartCommand() {
+        Pose2d targetPose = new Pose2d(0, 8, Rotation2d.fromDegrees(0));
+
+        PathConstraints constraints = new PathConstraints(
+                3.0, 4.0,
+                Units.degreesToRadians(540), Units.degreesToRadians(720));
+
+        Command pathfindingCommand = AutoBuilder.pathfindToPose(
+                targetPose,
+                constraints,
+                0.0, // Goal end velocity in meters/sec
+                0.0 // Rotation delay distance in meters. This is how far the robot should travel
+                    // before attempting to rotate.
+        );
+
+        return pathfindingCommand;
+    }
+
+    public double getFrontRightRate() {
+        return m_rightEncoder.getVelocity();
+    }
 }

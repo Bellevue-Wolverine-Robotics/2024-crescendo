@@ -24,9 +24,10 @@ public class ClimberSubsystem extends SubsystemBase {
     private RelativeEncoder m_leftClimbRelativeEncoder;
     private RelativeEncoder m_rightClimbRelativeEncoder;
 
-    private DigitalInput m_limitSwitch = new DigitalInput(ClimberConstants.kLimitSwitchDIOPort);
+    private DigitalInput m_topLimitSwitch = new DigitalInput(ClimberConstants.kTopLimitSwitchDIOPort);
+    private DigitalInput m_bottomLimitSwitch = new DigitalInput(ClimberConstants.kBottomLimitSwitchDIOPort);
 
-    private boolean m_limitSwitchEnabled = false;
+    private boolean m_limitSwitchEnabled = true;
 
     public ClimberSubsystem() {
         m_leftClimbMotor = new CANSparkMax(ClimberConstants.kLeftClimbMotorId,
@@ -46,6 +47,9 @@ public class ClimberSubsystem extends SubsystemBase {
         m_leftClimbRelativeEncoder.setPosition(0);
         m_rightClimbRelativeEncoder.setPosition(0);
 
+        m_leftClimbRelativeEncoder.setPositionConversionFactor(ClimberConstants.kClimberPositionConversion);
+        m_rightClimbRelativeEncoder.setPositionConversionFactor(ClimberConstants.kClimberPositionConversion);
+
         PIDUtils.setPIDConstants(m_leftClimbPidController, ClimberConstants.kClimbPidParams);
         PIDUtils.setPIDConstants(m_rightClimbPidController, ClimberConstants.kClimbPidParams);
     }
@@ -62,16 +66,38 @@ public class ClimberSubsystem extends SubsystemBase {
         return new Pair<>(m_leftClimbRelativeEncoder.getPosition(), m_rightClimbRelativeEncoder.getPosition());
     }
 
+    public void zeroPosition() {
+        m_leftClimbRelativeEncoder.setPosition(0);
+        m_rightClimbRelativeEncoder.setPosition(0);
+    }
+
+    // Positive voltage/duty cycle corresponds to raising the elevator
     public void setDutyCycle(double dutyCycle)
     // @requires 0.0 <= dutyCycle && dutyCycle <= 1.0;
     {
+        if (limitSwitchSetCheck(dutyCycle))
+            return;
+
         m_leftClimbMotor.set(dutyCycle);
         m_rightClimbMotor.set(dutyCycle);
     }
 
     public void setVoltage(double voltage) {
+        if (limitSwitchSetCheck(voltage))
+            return;
+
         m_leftClimbMotor.setVoltage(voltage);
         m_rightClimbMotor.setVoltage(voltage);
+    }
+
+    private boolean limitSwitchSetCheck(double value) {
+        return m_bottomLimitSwitch.get() && value < 0 || m_topLimitSwitch.get() && value > 0;
+    }
+
+    public boolean limitSwitchVelocityCheck() {
+        return m_bottomLimitSwitch.get() && m_leftClimbRelativeEncoder.getVelocity() < ClimberConstants.kClimbTolerance
+                || m_topLimitSwitch.get()
+                        && m_leftClimbRelativeEncoder.getVelocity() > -ClimberConstants.kClimbTolerance;
     }
 
     public void setClimbPIDPositionSetpoint(double positionSetpoint) {
@@ -115,8 +141,24 @@ public class ClimberSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Climber Position", getPosition().getFirst());
 
-        if (m_limitSwitchEnabled && m_limitSwitch.get()) {
+        SmartDashboard.putNumber("Left Encoder Velocity",
+                m_leftClimbRelativeEncoder.getVelocity());
+
+        SmartDashboard.putNumber("Right Encoder Velocity",
+                m_rightClimbRelativeEncoder.getVelocity());
+
+        if (m_limitSwitchEnabled && limitSwitchVelocityCheck()) {
             this.stopMotors();
         }
+
+        if (m_topLimitSwitch.get()) {
+            this.zeroPosition();
+        }
+
+        SmartDashboard.putNumber("Climber Conversion Factor", ClimberConstants.kClimberPositionConversion);
+        SmartDashboard.putNumber("kSprocketDiameterInches", ClimberConstants.kSprocketDiameterInches);
+        SmartDashboard.putNumber("kSprocketDiameterMeters", ClimberConstants.kSprocketDiameterMeters);
+        SmartDashboard.putNumber("kSprocketCircumferenceMeters", ClimberConstants.kSprocketCircumferenceMeters);
+
     }
 }

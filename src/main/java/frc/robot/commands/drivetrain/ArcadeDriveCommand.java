@@ -10,7 +10,7 @@ public class ArcadeDriveCommand extends Command {
     private DoubleSupplier m_xSpeedSupplier;
     private DoubleSupplier m_zRotSupplier;
 
-    public ArcadeDriveCommand(DriveSubsystem drivesystem, DoubleSupplier xSpeedSupplier, DoubleSupplier zRotSupplier){
+    public ArcadeDriveCommand(DriveSubsystem drivesystem, DoubleSupplier xSpeedSupplier, DoubleSupplier zRotSupplier) {
         this.m_driveSubsystem = drivesystem;
 
         m_xSpeedSupplier = xSpeedSupplier;
@@ -20,8 +20,9 @@ public class ArcadeDriveCommand extends Command {
     }
 
     @Override
-    public void execute()
-    {
-        m_driveSubsystem.arcadeDrive(m_xSpeedSupplier.getAsDouble(), m_zRotSupplier.getAsDouble());   
+    public void execute() {
+        // System.out.println("xSpeed: " + m_xSpeedSupplier.getAsDouble());
+        // System.out.println("zRot: " + m_zRotSupplier.getAsDouble());
+        m_driveSubsystem.arcadeDrive(m_xSpeedSupplier.getAsDouble(), m_zRotSupplier.getAsDouble());
     }
 }
