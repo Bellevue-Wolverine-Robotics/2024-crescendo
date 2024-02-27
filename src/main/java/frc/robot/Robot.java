@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Enums.AutoEnum;
+import frc.robot.commands.climber.ClimberResetCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -96,6 +98,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    new ClimberResetCommand(m_robotContainer.getClimberSubsystem()).schedule();
   }
 
   /** This function is called periodically during autonomous. */
@@ -117,8 +121,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    System.out
-        .println("Joystick: " + m_robotContainer.getStickY() + ", Velocity: " + m_robotContainer.getRightVelocity());
+    // System.out
+    // .println("Joystick: " + m_robotContainer.getStickY() + ", Velocity: " +
+    // m_robotContainer.getRightVelocity());
   }
 
   @Override

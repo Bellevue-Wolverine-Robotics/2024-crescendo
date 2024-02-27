@@ -2,6 +2,7 @@ package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.constants.ClimberConstants;
 import frc.robot.subsystems.ClimberSubsystem;
 
 public class ClimberContinuousDutyCommand extends Command {
@@ -16,6 +17,6 @@ public class ClimberContinuousDutyCommand extends Command {
 
 	@Override
 	public void execute() {
-		m_climberSubsystem.setDutyCycle(-m_joystick.getY() / 10);
+		m_climberSubsystem.setDutyCycle(-m_joystick.getY() * ClimberConstants.kControllerClimberSensitivity);
 	}
 }

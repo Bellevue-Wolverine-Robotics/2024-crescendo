@@ -25,7 +25,7 @@ public class ClimberSubsystem extends SubsystemBase {
     private RelativeEncoder m_rightClimbRelativeEncoder;
 
     private DigitalInput m_topLimitSwitch = new DigitalInput(ClimberConstants.kTopLimitSwitchDIOPort);
-    private DigitalInput m_bottomLimitSwitch = new DigitalInput(ClimberConstants.kBottomLimitSwitchDIO);
+    private DigitalInput m_bottomLimitSwitch = new DigitalInput(ClimberConstants.kBottomLimitSwitchDIOPort);
 
     private boolean m_limitSwitchEnabled = true;
 
@@ -66,6 +66,11 @@ public class ClimberSubsystem extends SubsystemBase {
         return new Pair<>(m_leftClimbRelativeEncoder.getPosition(), m_rightClimbRelativeEncoder.getPosition());
     }
 
+    public void zeroPosition() {
+        m_leftClimbRelativeEncoder.setPosition(0);
+        m_rightClimbRelativeEncoder.setPosition(0);
+    }
+
     // Positive voltage/duty cycle corresponds to raising the elevator
     public void setDutyCycle(double dutyCycle)
     // @requires 0.0 <= dutyCycle && dutyCycle <= 1.0;
@@ -90,8 +95,9 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public boolean limitSwitchVelocityCheck() {
-        return m_bottomLimitSwitch.get() && m_leftClimbRelativeEncoder.getVelocity() < 0
-                || m_topLimitSwitch.get() && m_leftClimbRelativeEncoder.getVelocity() > 0;
+        return m_bottomLimitSwitch.get() && m_leftClimbRelativeEncoder.getVelocity() < ClimberConstants.kClimbTolerance
+                || m_topLimitSwitch.get()
+                        && m_leftClimbRelativeEncoder.getVelocity() > -ClimberConstants.kClimbTolerance;
     }
 
     public void setClimbPIDPositionSetpoint(double positionSetpoint) {
@@ -143,6 +149,10 @@ public class ClimberSubsystem extends SubsystemBase {
 
         if (m_limitSwitchEnabled && limitSwitchVelocityCheck()) {
             this.stopMotors();
+        }
+
+        if (m_topLimitSwitch.get()) {
+            this.zeroPosition();
         }
 
         SmartDashboard.putNumber("Climber Conversion Factor", ClimberConstants.kClimberPositionConversion);
