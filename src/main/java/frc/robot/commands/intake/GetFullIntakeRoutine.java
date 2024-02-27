@@ -29,19 +29,40 @@ public class GetFullIntakeRoutine {
                 new SequentialCommandGroup(
                     new SetArmAngleCommand(intakeSubsystem, extendIntakeAngle),
                     new StartIntakeCommand(intakeSubsystem)
+                    /*
+                     * AFTER INTAKE IS IN RECIEVING POSITION, 
+                     * INTAKE WHEELS STARTS SPINNING
+                     */
                 ),
                 
                 new InstantCommand(
-                    () -> {flywheelSubsystem.setArmSetpoint(flyWheelShoulderRecieveAngle, flyWheelElbowRecieveAngle);}                   
+                    () -> {flywheelSubsystem.setArmSetpoint(flyWheelShoulderRecieveAngle, flyWheelElbowRecieveAngle);}    
+                    /*
+                    *GET FLYWHEEEL IN POSITION TO RECIEVE
+                    */               
                 )
 
             ),
-
+            /*
+             * AT THIS POINT INTAKE IS IN RECIEVING POSITION AND THE INTAKE IS SPINNNING
+             * THE FLYWHEEL IS IN POSITION TO RECIEVE FROM INTAKE
+             */
             new GetIntakeStatus(intakeSubsystem),
+            /*
+             * AT THIS POINT ARM HAS ACQUIRED NOTE(VERIFIED BY LIMIT SWITCH)
+             */
+            new SetArmAngleCommand(intakeSubsystem, restIntakeAngle),
+            /*
+             * AT THIS POINT THE INTAKE ARM IS AT REST POSITION AND IN POSITION FOR FLYWHEEL INTAKE TO RECIEVE
+             */
             new ParallelCommandGroup(
                 new FlywheelStartIntakeCommand(flywheelSubsystem),
                 new StopIntakeCommand(intakeSubsystem)
             ),
+            /*
+             * INTAKE MOTOR WILL STOP BECAUSE IT HAS ACUIRED NOTE 
+             * AT THIS POINT THE FLYWHEEL WILL START ACQURING THE NOTE FROM THE INTAKE
+             */
             new SequentialCommandGroup(
                 new GetIntakeStatusFlywheel(flywheelSubsystem),
                 new FlywheelStopIntakeCommand(flywheelSubsystem)
