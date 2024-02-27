@@ -39,7 +39,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 		m_shooterMotorFollower.follow(m_shooterMotorLeader);
 
-		PIDUtils.setPIDConstants(m_shooterMotorFollower, FlywheelConstants.kShooterVelocityPid);
+		PIDUtils.setPIDConstants(m_shooterMotorLeader, FlywheelConstants.kShooterVelocityPid);
 
 		// Arm Init
 		m_armShoulderMotor = new CANSparkMax(FlywheelConstants.kArmShoulderId, MotorType.kBrushless);
