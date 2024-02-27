@@ -22,4 +22,5 @@ public final class IntakeConstants {
 
 	public static final int kNoteSwitchDIOPort = 0;
 	public static final int kFlyWheelwitchDIOPort = 1;
+	
 }

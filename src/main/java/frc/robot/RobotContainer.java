@@ -22,7 +22,9 @@ import frc.robot.commands.climber.ClimberExtendCommand;
 import frc.robot.commands.climber.ClimberResetCommand;
 import frc.robot.commands.climber.ClimberRetractCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCommand;
+import frc.robot.commands.intake.GetFullIntakeRoutine;
 import frc.robot.commands.intake.StartIntakeCommand;
+import frc.robot.commands.intake.GetFullIntakeRoutine;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.IOConstants.DriverButtonConstants;
 import frc.robot.constants.IOConstants.JoystickPortConstants;
@@ -52,6 +54,7 @@ public class RobotContainer {
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   // private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final FlywheelSubsystem m_flyWheelSubsystem = new FlywheelSubsystem();
 
   private final CommandJoystick m_driverController = new CommandJoystick(JoystickPortConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(
@@ -86,6 +89,10 @@ public class RobotContainer {
         .whileTrue(new ClimberExtendCommand(m_climberSubsystem));
     m_operatorController.button(OperatorButtonConstants.kClimbDownButton)
         .whileTrue(new ClimberRetractCommand(m_climberSubsystem));
+
+
+    m_operatorController.button(OperatorButtonConstants.kfullIntakeCycle).onTrue(GetFullIntakeRoutine.fullIntakeSequence(m_intakeSubsystem, m_flyWheelSubsystem));
+
 
     // intake
     // m_operatorController.button(OperatorConstants.kIntakeEnableMotorButton)
