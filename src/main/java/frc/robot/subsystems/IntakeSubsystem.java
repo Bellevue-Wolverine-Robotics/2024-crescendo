@@ -98,10 +98,6 @@ public class IntakeSubsystem extends SubsystemBase {
 		PIDUtils.setPIDConstants(m_intakeArmPID, intakeArmParams);
 
 
-		
-
-
-
 		if (limitSwitch.get()) {
 			m_feederMotor.stopMotor();
 		}

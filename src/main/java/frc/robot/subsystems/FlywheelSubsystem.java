@@ -36,6 +36,8 @@ public class FlywheelSubsystem extends SubsystemBase {
 		// Shooter Init
 		m_shooterMotorLeader = new WPI_TalonSRX(FlywheelConstants.kShooterLeaderId);
 		m_shooterMotorFollower = new WPI_TalonSRX(FlywheelConstants.kShooterFollowerId);
+		m_feederMotor = new WPI_TalonSRX(FlywheelConstants.kFeederId);
+
 
 		m_shooterMotorFollower.follow(m_shooterMotorLeader);
 
