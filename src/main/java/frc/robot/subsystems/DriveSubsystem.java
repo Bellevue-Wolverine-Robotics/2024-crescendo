@@ -273,7 +273,6 @@ public class DriveSubsystem extends SubsystemBase {
         var leftMotorParams = new PIDUtils.SparkPIDParams(m_frontLeftMotor);
         var rightMotorParams = new PIDUtils.SparkPIDParams(m_frontLeftMotor);
 
-
         leftMotorParams.changeKp(SmartDashboard.getNumber("Drive Kp Left", m_frontLeftPID.getP()));
         rightMotorParams.changeKp(SmartDashboard.getNumber("Drive Kp Right", m_frontRightPID.getP()));
         leftMotorParams.changeKi(SmartDashboard.getNumber("Drive Ki Left", m_frontLeftPID.getI()));
