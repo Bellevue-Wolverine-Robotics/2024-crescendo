@@ -67,8 +67,8 @@ public class PIDUtils {
 			this.kMaxOutput = kMaxOutput;
 		}
 
-		public SparkPIDParams(CANSparkMax motor){
-			var pidController = motor.getPIDController();
+		public SparkPIDParams(CANSparkMax m_intakeArmPID){
+			var pidController = m_intakeArmPID.getPIDController();
 			this.kP = pidController.getP();
 			this.kI = pidController.getI();
 			this.kD = pidController.getD();

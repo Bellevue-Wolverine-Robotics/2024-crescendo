@@ -141,6 +141,5 @@ public class FlywheelSubsystem extends SubsystemBase {
 		PIDUtils.setPIDConstants(m_armShoulderPidController, armShoulderParams);
 		
         PIDUtils.setPIDConstants(m_armElbowPidController, armElbowParams);
-
 	}
 }
