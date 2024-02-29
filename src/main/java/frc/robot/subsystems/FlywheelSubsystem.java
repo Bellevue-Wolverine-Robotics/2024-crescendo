@@ -37,10 +37,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 		m_shooterMotorFollower = new WPI_TalonSRX(FlywheelConstants.kShooterFollowerId);
 		m_feederMotor = new WPI_TalonSRX(FlywheelConstants.kFeederId);
 
-
 		m_shooterMotorFollower.follow(m_shooterMotorLeader);
-
-		PIDUtils.setPIDConstants(m_shooterMotorLeader, FlywheelConstants.kShooterVelocityPid);
 
 		// Arm Init
 		m_armShoulderMotor = new CANSparkMax(FlywheelConstants.kArmShoulderId, MotorType.kBrushless);
@@ -55,21 +52,15 @@ public class FlywheelSubsystem extends SubsystemBase {
 		PIDUtils.setPIDConstants(m_armShoulderPidController, FlywheelConstants.kArmShoulderPid);
 		PIDUtils.setPIDConstants(m_armElbowPidController, FlywheelConstants.kArmElbowPid);
 
-
-
 		SmartDashboard.putNumber("m_armShoulderPidController kP", m_armShoulderPidController.getP());
-        SmartDashboard.putNumber("m_armShoulderPidController kI", m_armShoulderPidController.getI());
+		SmartDashboard.putNumber("m_armShoulderPidController kI", m_armShoulderPidController.getI());
 		SmartDashboard.putNumber("m_armShoulderPidController kD", m_armShoulderPidController.getD());
 		SmartDashboard.putNumber("m_armShoulderPidController kff", m_armShoulderPidController.getFF());
 
 		SmartDashboard.putNumber("m_armElbowPidController kP", m_armElbowPidController.getP());
-        SmartDashboard.putNumber("m_armElbowPidController kI", m_armElbowPidController.getI());
+		SmartDashboard.putNumber("m_armElbowPidController kI", m_armElbowPidController.getI());
 		SmartDashboard.putNumber("m_armElbowPidController kD", m_armElbowPidController.getD());
 		SmartDashboard.putNumber("m_armElbowPidController kff", m_armElbowPidController.getFF());
-	}
-
-	public void setShooterVelocity(double setpoint) {
-		m_shooterMotorLeader.set(TalonSRXControlMode.Velocity, setpoint);
 	}
 
 	public void setShooterDutyCycle(double dutyCycle) {
@@ -89,8 +80,8 @@ public class FlywheelSubsystem extends SubsystemBase {
 		m_armElbowPidController.setReference(elbowSetpoint, ControlType.kPosition);
 	}
 
-	public void aimArmToStage() {
-		setArmSetpoint(FlywheelConstants.kStageShoulderSetpoint, FlywheelConstants.kStageElbowSetpoint);
+	public void aimArmToSpeaker() {
+		setArmSetpoint(FlywheelConstants.kSpeakerShoulderSetpoint, FlywheelConstants.kSpeakerElbowSetpoint);
 	}
 
 	public void aimArmToAmp() {
@@ -104,19 +95,6 @@ public class FlywheelSubsystem extends SubsystemBase {
 		setArmSetpoint(FlywheelConstants.kIntakeReceiveShoulderSetpoint, FlywheelConstants.kIntakeReceiveElbowSetpoint);
 	}
 
-	public void feedIntoShooter() {
-		double currentRotation = m_feederMotor.getSelectedSensorPosition();
-		double rotationSetpoint = currentRotation + FlywheelConstants.kFeederRelativeSetpoint;
-
-		m_feederMotor.set(TalonSRXControlMode.Position, rotationSetpoint);
-	}
-
-	public boolean shooterVelocityAtSetpoint() {
-		return PIDUtils.atSetpoint(getShooterVelocity(),
-				FlywheelConstants.kShootSpeakerVelocitySetpoint,
-				FlywheelConstants.kShooterVelocityTolerance);
-	}
-
 	public boolean isArmAimingTowardsIntake() {
 		return isArmAtSetpoint(FlywheelConstants.kIntakeReceiveShoulderSetpoint,
 				FlywheelConstants.kIntakeReceiveElbowSetpoint);
@@ -127,7 +105,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 	}
 
 	public boolean isArmAimingTowardsSpeaker() {
-		return isArmAtSetpoint(FlywheelConstants.kStageShoulderSetpoint, FlywheelConstants.kStageElbowSetpoint);
+		return isArmAtSetpoint(FlywheelConstants.kSpeakerShoulderSetpoint, FlywheelConstants.kSpeakerElbowSetpoint);
 	}
 
 	public boolean isArmAtSetpoint(double shoulderSetpoint, double elbowSetpoint) {
@@ -137,37 +115,41 @@ public class FlywheelSubsystem extends SubsystemBase {
 						FlywheelConstants.kArmElbowTolerance);
 	}
 
-	private static final double velocity = 0.1;
-
-	public void startFeederMotor() {
-		m_feederMotor.set(TalonSRXControlMode.Velocity, velocity);
+	public void startFeeder() {
+		m_feederMotor.set(TalonSRXControlMode.PercentOutput, FlywheelConstants.kFeederDutyCycleSetpoint);
 	}
 
-	public double getShooterVelocity() {
-		return m_shooterMotorLeader.getSelectedSensorVelocity();
+	public void stopFeeder() {
+		m_feederMotor.set(TalonSRXControlMode.PercentOutput, 0);
 	}
 
 	@Override
 	public void periodic() {
 		SmartDashboard.putNumber("Flywheel Feeder Position", m_feederMotor.getSelectedSensorPosition());
 
-
-
 		var armShoulderParams = new PIDUtils.SparkPIDParams(m_armShoulderMotor);
-        var armElbowParams = new PIDUtils.SparkPIDParams(m_armElbowMotor);
+		var armElbowParams = new PIDUtils.SparkPIDParams(m_armElbowMotor);
 
-		armShoulderParams.changeKp(SmartDashboard.getNumber("m_armShoulderPidController kP", m_armShoulderPidController.getP()));
-        armShoulderParams.changeKi(SmartDashboard.getNumber("m_armShoulderPidController kI", m_armShoulderPidController.getI()));
-		armShoulderParams.changeKd(SmartDashboard.getNumber("m_armShoulderPidController kD", m_armShoulderPidController.getD()));
-		armShoulderParams.changeKff(SmartDashboard.getNumber("m_armShoulderPidController kff", m_armShoulderPidController.getFF()));
+		armShoulderParams
+				.changeKp(SmartDashboard.getNumber("m_armShoulderPidController kP", m_armShoulderPidController.getP()));
+		armShoulderParams
+				.changeKi(SmartDashboard.getNumber("m_armShoulderPidController kI", m_armShoulderPidController.getI()));
+		armShoulderParams
+				.changeKd(SmartDashboard.getNumber("m_armShoulderPidController kD", m_armShoulderPidController.getD()));
+		armShoulderParams.changeKff(
+				SmartDashboard.getNumber("m_armShoulderPidController kff", m_armShoulderPidController.getFF()));
 
-		armShoulderParams.changeKp(SmartDashboard.getNumber("m_armElbowPidController kP", m_armElbowPidController.getP()));
-        armShoulderParams.changeKi(SmartDashboard.getNumber("m_armElbowPidController kI", m_armElbowPidController.getI()));
-		armShoulderParams.changeKd(SmartDashboard.getNumber("m_armElbowPidController kD", m_armElbowPidController.getD()));
-		armShoulderParams.changeKff(SmartDashboard.getNumber("m_armElbowPidController kff", m_armElbowPidController.getFF()));
+		armShoulderParams
+				.changeKp(SmartDashboard.getNumber("m_armElbowPidController kP", m_armElbowPidController.getP()));
+		armShoulderParams
+				.changeKi(SmartDashboard.getNumber("m_armElbowPidController kI", m_armElbowPidController.getI()));
+		armShoulderParams
+				.changeKd(SmartDashboard.getNumber("m_armElbowPidController kD", m_armElbowPidController.getD()));
+		armShoulderParams
+				.changeKff(SmartDashboard.getNumber("m_armElbowPidController kff", m_armElbowPidController.getFF()));
 
 		PIDUtils.setPIDConstants(m_armShoulderPidController, armShoulderParams);
-		
-        PIDUtils.setPIDConstants(m_armElbowPidController, armElbowParams);
+
+		PIDUtils.setPIDConstants(m_armElbowPidController, armElbowParams);
 	}
 }

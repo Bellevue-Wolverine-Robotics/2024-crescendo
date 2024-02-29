@@ -14,18 +14,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.DebugClose;
-import frc.robot.commands.SubstituteCommand;
-import frc.robot.commands.climber.ClimberContinuousDutyCommand;
 import frc.robot.commands.climber.ClimberExtendCommand;
-import frc.robot.commands.climber.ClimberResetCommand;
 import frc.robot.commands.climber.ClimberRetractCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCommand;
 import frc.robot.commands.intake.GetFullIntakeRoutine;
 import frc.robot.commands.intake.StartIntakeCommand;
-import frc.robot.commands.intake.GetFullIntakeRoutine;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.IOConstants.DriverButtonConstants;
 import frc.robot.constants.IOConstants.JoystickPortConstants;
@@ -53,7 +48,9 @@ public class RobotContainer {
     configureBindings();
     smartDashBoardBinding();
 
-    NamedCommands.registerCommand("Intake", new StartIntakeCommand(m_intakeSubsystem));
+    NamedCommands.registerCommand("Intake", new GetFullIntakeRoutine.fullIntakeSequence(m_intakeSubsystem));
+    NamedCommands.registerCommand("ShootSpeaker", new InstantCommand(() -> System.out.println("TEST")));
+
     // NamedCommands.registerCommand("ShootSpeaker", );
 
     NamedCommands.registerCommand("TestPrint",

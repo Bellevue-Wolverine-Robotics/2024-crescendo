@@ -14,25 +14,20 @@ public final class FlywheelConstants {
 
 	// PID
 
-	public static final PIDUtils.TalonPIDParams kShooterVelocityPid = new PIDUtils.TalonPIDParams(6e-4, 0, 0, 0,
-			MotorConstants.kTalonClosedLoopFullOutput / kShooterMaxRPM);
-
 	public static final PIDUtils.SparkPIDParams kArmShoulderPid = new PIDUtils.SparkPIDParams(0, 0, 0, 0, 0, -1, 1);
 	public static final PIDUtils.SparkPIDParams kArmElbowPid = new PIDUtils.SparkPIDParams(0, 0, 0, 0, 0, -1, 1);
 	public static final PIDUtils.SparkPIDParams kFeederPid = new PIDUtils.SparkPIDParams(0, 0, 0, 0, 0, -1, 1);
 
 	// Setpoints
 
-	public static final double kShooterVelocityTolerance = 0;
-
 	public static final double kArmShoulderTolerance = 1;
 	public static final double kArmElbowTolerance = 1;
 
 	public static final double kShootSpeakerDutyCycleSetpoint = 0.5;
-	public static final double kShootSpeakerVelocitySetpoint = 1;
+	public static final double kFeederDutyCycleSetpoint = 0.8;
 
-	public static final double kStageShoulderSetpoint = 0;
-	public static final double kStageElbowSetpoint = 0;
+	public static final double kSpeakerShoulderSetpoint = 0;
+	public static final double kSpeakerElbowSetpoint = 0;
 
 	public static final double kAmpShoulderSetpoint = 0;
 	public static final double kAmpElbowSetpoint = 0;
@@ -40,6 +35,4 @@ public final class FlywheelConstants {
 	public static final double kIntakeReceiveShoulderSetpoint = 0;
 	public static final double kIntakeReceiveElbowSetpoint = 0;
 
-	public static final double kFeederRelativeSetpoint = 0; // how far the feeder motor should travel relative to its
-															// current position when feeding into the shooter
 }
