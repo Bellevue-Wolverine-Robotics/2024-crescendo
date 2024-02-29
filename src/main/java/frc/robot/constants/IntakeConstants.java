@@ -5,23 +5,31 @@ import frc.utils.PIDUtils.SparkPIDParams;
 import frc.utils.PIDUtils.TalonPIDParams;;
 
 public final class IntakeConstants {
-	public static final int kFeederMotorId = 8;
-	public static final int kArmMotorId = 7;
+	public static final int kFeederMotorId = 7;
+	public static final int kArmMotorId = 9;
 
 	public static final int kSmartCurrentLimit = 30;
 
 	public static final double kArmPositionConversionFactor = 1.0; // depends on gear ratio and diameter
 
-	public static final double kFeederDutyCycle = 0.3;
+	public static final double kFeederDutyCycle = 0.5;
+	public static final double kFeedIntoFlywheelDutyCycle = -0.5;
 
-	public static final SparkPIDParams kIntakeArmPIDParams = new SparkPIDParams(1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+	public static final SparkPIDParams kIntakeArmDeployPIDParams = new SparkPIDParams(((double) 1 / 8) * 0.2, 0.0, 0.0,
+			0.0, 0.0,
+			-1, 1.0);
+	public static final SparkPIDParams kIntakeArmStowPIDParams = new SparkPIDParams(((double) 1 / 8) * 0.4, 0.0, 0.0,
+			0.0, 0.0,
+			-1, 1.0);
 
+	// Positive values correspond to deploying the intake arm
 	public static final double kIntakeArmSetpointStow = 0.0;
-	public static final double kIntakeArmSetpointDeploy = 1.0;
+	public static final double kIntakeArmSetpointDeploy = 8;
 
 	public static final ArmFFParams kIntakeArmFFParams = new ArmFFParams(0, 0, 0, 0);
 
-	public static final int kNoteSwitchDIOPort = 0;
-	public static final int kFlyWheelwitchDIOPort = 1;
+	public static final int kNoteSwitchDIOPort = 7;
+
+	public static final double kIntakeArmStowTolerance = 0.5;
 
 }

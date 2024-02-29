@@ -3,10 +3,10 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class StartIntakeCommand extends Command {
+public class DeployIntakeCommand extends Command {
 	private IntakeSubsystem m_intakeSubsystem;
 
-	public StartIntakeCommand(IntakeSubsystem intakeSubsystem) {
+	public DeployIntakeCommand(IntakeSubsystem intakeSubsystem) {
 		m_intakeSubsystem = intakeSubsystem;
 
 		addRequirements(m_intakeSubsystem);
@@ -26,6 +26,5 @@ public class StartIntakeCommand extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		m_intakeSubsystem.stopIntakeMotor();
-		m_intakeSubsystem.stowIntakeArm();
 	}
 }

@@ -16,11 +16,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.DebugClose;
+import frc.robot.commands.Teleop;
 import frc.robot.commands.climber.ClimberExtendCommand;
 import frc.robot.commands.climber.ClimberRetractCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCommand;
-import frc.robot.commands.intake.GetFullIntakeRoutine;
-import frc.robot.commands.intake.StartIntakeCommand;
+import frc.robot.commands.intake.DeployIntakeCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.IOConstants.DriverButtonConstants;
 import frc.robot.constants.IOConstants.JoystickPortConstants;
@@ -48,7 +48,7 @@ public class RobotContainer {
     configureBindings();
     smartDashBoardBinding();
 
-    NamedCommands.registerCommand("Intake", new GetFullIntakeRoutine.fullIntakeSequence(m_intakeSubsystem));
+    NamedCommands.registerCommand("Intake", Teleop.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
     NamedCommands.registerCommand("ShootSpeaker", new InstantCommand(() -> System.out.println("TEST")));
 
     // NamedCommands.registerCommand("ShootSpeaker", );
@@ -75,11 +75,12 @@ public class RobotContainer {
 
     // Intake
     m_operatorController.button(OperatorButtonConstants.kFullIntakeCycle)
-        .onTrue(GetFullIntakeRoutine.fullIntakeSequence(m_intakeSubsystem, m_flyWheelSubsystem));
+        .onTrue(Teleop.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
 
-    m_operatorController.button(OperatorButtonConstants.kCancelALL).onTrue(new InstantCommand(() -> {
-      CommandScheduler.getInstance().cancelAll();
-    }));
+    // DEBUG STUFF
+    m_operatorController.button(10)
+        .onTrue(new InstantCommand(m_flyWheelSubsystem::aimArmToSpeaker, m_flyWheelSubsystem));
+
   }
 
   public void smartDashBoardBinding() {

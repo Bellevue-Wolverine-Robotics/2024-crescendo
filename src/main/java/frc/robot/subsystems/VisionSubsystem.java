@@ -25,7 +25,6 @@ public class VisionSubsystem extends SubsystemBase {
 	double updatedTime;
 	Pose2d robotPos;
 
-
 	public VisionSubsystem() {
 		camera = new PhotonCamera("photonvision");
 		periodic();
@@ -33,53 +32,52 @@ public class VisionSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		var result = camera.getLatestResult();
-		boolean hasTargets = result.hasTargets();
+		// var result = camera.getLatestResult();
+		// boolean hasTargets = result.hasTargets();
 
-		if(hasTargets){
-			pose3d = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); 
+		// if(hasTargets){
+		// pose3d = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new
+		// Rotation3d(0,0,0));
 
-			photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, pose3d);
+		// photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
+		// PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, pose3d);
 
-			updated = true;
-		}
-		else{
-			updated = false;
-		}
-		//List<PhotonTrackedTarget> targets = result.getTargets();
-		//PhotonTrackedTarget target = result.getBestTarget();
-	}
-	
-	public Transform3d getTransform3d(){
-		return pose3d;
-	}
+		// updated = true;
+		// }
+		// else{
+		// updated = false;
+		// }
+		// //List<PhotonTrackedTarget> targets = result.getTargets();
+		// //PhotonTrackedTarget target = result.getBestTarget();
+		// }
 
+		// public Transform3d getTransform3d(){
+		// return pose3d;
+		// }
 
-	public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-		if(updated){
-			photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-			Optional<EstimatedRobotPose> res = photonPoseEstimator.update();
+		// public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d
+		// prevEstimatedRobotPose) {
+		// if(updated){
+		// photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+		// Optional<EstimatedRobotPose> res = photonPoseEstimator.update();
 
+		// robotPos = res.get().estimatedPose.toPose2d();
+		// updatedTime = res.get().timestampSeconds;
 
-			robotPos = res.get().estimatedPose.toPose2d();
-			updatedTime = res.get().timestampSeconds;
-
-        	return res;
-		}
-        return null;
-    }
-
-	
-
-	public Pose2d getPose2d(){
-        return robotPos;
+		// return res;
+		// }
+		// return null;
 	}
 
-	public double getTimestampSeconds(){
+	public Pose2d getPose2d() {
+		return robotPos;
+	}
+
+	public double getTimestampSeconds() {
 		return updatedTime;
 	}
 
-	public boolean hasTarget(){
+	public boolean hasTarget() {
 		return updated;
 	}
 

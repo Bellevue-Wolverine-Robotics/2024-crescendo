@@ -173,11 +173,10 @@ public class DriveSubsystem extends SubsystemBase {
         // System.out.println("IF YOU FORGET THIS THEN YOU WILL BE ");
         // resetPose(new Pose2d(1.39, 5.5 3, new Rotation2d(2.34)));
 
-
         SmartDashboard.putNumber("Drive Kp Left", m_frontLeftPID.getP());
         SmartDashboard.putNumber("Drive Kp Right", m_frontRightPID.getP());
         SmartDashboard.putNumber("Drive Ki Left", m_frontLeftPID.getI());
-        SmartDashboard.putNumber("Drive Ki Right", m_frontRightPID.getI()); 
+        SmartDashboard.putNumber("Drive Ki Right", m_frontRightPID.getI());
         SmartDashboard.putNumber("Drive Kd Left", m_frontLeftPID.getD());
         SmartDashboard.putNumber("Drive Kd Right", m_frontRightPID.getD());
         SmartDashboard.putNumber("Drive Kf Left", m_frontLeftPID.getFF());
@@ -267,31 +266,31 @@ public class DriveSubsystem extends SubsystemBase {
         m_odometry.update(m_imu.getRotation2d(), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
         m_field.setRobotPose(getPose());
 
+        // var leftMotorParams = new PIDUtils.SparkPIDParams(m_frontLeftMotor);
+        // var rightMotorParams = new PIDUtils.SparkPIDParams(m_frontLeftMotor);
 
+        // leftMotorParams.changeKp(SmartDashboard.getNumber("Drive Kp Left",
+        // m_frontLeftPID.getP()));
+        // rightMotorParams.changeKp(SmartDashboard.getNumber("Drive Kp Right",
+        // m_frontRightPID.getP()));
+        // leftMotorParams.changeKi(SmartDashboard.getNumber("Drive Ki Left",
+        // m_frontLeftPID.getI()));
+        // rightMotorParams.changeKi(SmartDashboard.getNumber("Drive Ki Right",
+        // m_frontRightPID.getI()));
+        // leftMotorParams.changeKd(SmartDashboard.getNumber("Drive Kd Left",
+        // m_frontLeftPID.getD()));
+        // rightMotorParams.changeKd(SmartDashboard.getNumber("Drive Kd Right",
+        // m_frontRightPID.getD()));
+        // leftMotorParams.changeKff(SmartDashboard.getNumber("Drive Kf Left",
+        // m_frontLeftPID.getFF()));
+        // rightMotorParams.changeKff(SmartDashboard.getNumber("Drive Kf Right",
+        // m_frontRightPID.getFF()));
 
+        // PIDUtils.setPIDConstants(m_frontLeftPID, leftMotorParams);
+        // PIDUtils.setPIDConstants(m_backLeftPID, leftMotorParams);
 
-        var leftMotorParams = new PIDUtils.SparkPIDParams(m_frontLeftMotor);
-        var rightMotorParams = new PIDUtils.SparkPIDParams(m_frontLeftMotor);
-
-        leftMotorParams.changeKp(SmartDashboard.getNumber("Drive Kp Left", m_frontLeftPID.getP()));
-        rightMotorParams.changeKp(SmartDashboard.getNumber("Drive Kp Right", m_frontRightPID.getP()));
-        leftMotorParams.changeKi(SmartDashboard.getNumber("Drive Ki Left", m_frontLeftPID.getI()));
-        rightMotorParams.changeKi(SmartDashboard.getNumber("Drive Ki Right", m_frontRightPID.getI())); 
-        leftMotorParams.changeKd(SmartDashboard.getNumber("Drive Kd Left", m_frontLeftPID.getD()));
-        rightMotorParams.changeKd(SmartDashboard.getNumber("Drive Kd Right", m_frontRightPID.getD()));
-        leftMotorParams.changeKff(SmartDashboard.getNumber("Drive Kf Left", m_frontLeftPID.getFF()));
-        rightMotorParams.changeKff(SmartDashboard.getNumber("Drive Kf Right", m_frontRightPID.getFF()));
-
-        PIDUtils.setPIDConstants(m_frontLeftPID, leftMotorParams);
-        PIDUtils.setPIDConstants(m_backLeftPID, leftMotorParams);
-
-        PIDUtils.setPIDConstants(m_frontRightPID, rightMotorParams);
-        PIDUtils.setPIDConstants(m_backRightPID, rightMotorParams);
-
-        
-        
-
-
+        // PIDUtils.setPIDConstants(m_frontRightPID, rightMotorParams);
+        // PIDUtils.setPIDConstants(m_backRightPID, rightMotorParams);
     }
 
     @Override
