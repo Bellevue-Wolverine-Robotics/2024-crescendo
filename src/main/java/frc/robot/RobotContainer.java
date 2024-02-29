@@ -35,25 +35,13 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-/**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
   private final SendableChooser<Command> m_autoChooser;
 
   private final Debug debugLogger = new Debug("DebugDriveSubsystem.txt");
 
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(debugLogger);
-  // private final FlywheelSubsystem m_flywheelSubsystem = new
-  // FlywheelSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
-  // private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final FlywheelSubsystem m_flyWheelSubsystem = new FlywheelSubsystem();
 
@@ -65,12 +53,11 @@ public class RobotContainer {
     configureBindings();
     smartDashBoardBinding();
 
-    NamedCommands.registerCommand("startIntake", new StartIntakeCommand(m_intakeSubsystem));
-    NamedCommands.registerCommand("climberExtend", new ClimberExtendCommand(m_climberSubsystem));
-    NamedCommands.registerCommand("climberRetract", new ClimberRetractCommand(m_climberSubsystem));
-    NamedCommands.registerCommand("passNoteAndShoot", new SubstituteCommand());
-    NamedCommands.registerCommand("print",
-        new InstantCommand(() -> System.out.println("osuheotnsuheohuenohucrohucreohu")));
+    NamedCommands.registerCommand("Intake", new StartIntakeCommand(m_intakeSubsystem));
+    // NamedCommands.registerCommand("ShootSpeaker", );
+
+    NamedCommands.registerCommand("TestPrint",
+        new InstantCommand(() -> System.out.println("TEST")));
 
     m_autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
@@ -78,26 +65,24 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    // Driving
     m_driveSubsystem.setDefaultCommand(
         new ArcadeDriveCommand(m_driveSubsystem, () -> getArcadeDriveSpeeds().getFirst(),
             () -> getArcadeDriveSpeeds().getSecond()));
 
-    m_climberSubsystem.setDefaultCommand(
-        new ClimberContinuousDutyCommand(m_climberSubsystem, m_operatorController));
-
-    // climber
+    // Climber
     m_operatorController.button(OperatorButtonConstants.kClimbUpButton)
         .whileTrue(new ClimberExtendCommand(m_climberSubsystem));
     m_operatorController.button(OperatorButtonConstants.kClimbDownButton)
         .whileTrue(new ClimberRetractCommand(m_climberSubsystem));
-    m_operatorController.button(OperatorButtonConstants.kFullIntakeCycle).onTrue(GetFullIntakeRoutine.fullIntakeSequence(m_intakeSubsystem, m_flyWheelSubsystem));
-    m_operatorController.button(OperatorButtonConstants.kCancelALL).onTrue(new InstantCommand(() -> {CommandScheduler.getInstance().cancelAll();}));
 
+    // Intake
+    m_operatorController.button(OperatorButtonConstants.kFullIntakeCycle)
+        .onTrue(GetFullIntakeRoutine.fullIntakeSequence(m_intakeSubsystem, m_flyWheelSubsystem));
 
-    // intake
-    // m_operatorController.button(OperatorConstants.kIntakeEnableMotorButton)
-    // .onTrue(Autos.IntakeSequence(m_intakeArmSubsystem, m_intakeMotorSubsystem));
-
+    m_operatorController.button(OperatorButtonConstants.kCancelALL).onTrue(new InstantCommand(() -> {
+      CommandScheduler.getInstance().cancelAll();
+    }));
   }
 
   public void smartDashBoardBinding() {
@@ -105,23 +90,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // return new ParallelCommandGroup(new ClimberResetCommand(m_climberSubsystem));
-
-    // return new ParallelCommandGroup(m_autoChooser.getSelected());
     return m_autoChooser.getSelected();
-
-    // PathPlannerPath path = PathPlannerPath.fromPathFile("straight");
-    // return AutoBuilder.followPath(path);
-
-    // return Autos.getPathPlannerCommand();
-    // switch (autoEnum) {
-    // // case FOWARD_TEST:
-    // // return Autos.forwardTest(m_driveSubsystem);
-    // // case CUSTOM_PATH_PLANNER:
-    // // return Autos.test949PathPlan(m_driveSubsystem);
-    // default:
-    // return null;
-    // }
   }
 
   /**
@@ -154,13 +123,5 @@ public class RobotContainer {
 
   public ClimberSubsystem getClimberSubsystem() {
     return m_climberSubsystem;
-  }
-
-  public double getStickY() {
-    return m_driverController.getY();
-  }
-
-  public double getRightVelocity() {
-    return m_driveSubsystem.getFrontRightRate();
   }
 }
