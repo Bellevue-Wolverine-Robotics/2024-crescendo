@@ -211,9 +211,9 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Left Velocity", m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Right Velocity", m_rightEncoder.getVelocity());
 
-        System.out.println("Setpoints: " + leftVelocity + ", " + rightVelocity);
-        System.out.println("Velocity: " + m_leftEncoder.getVelocity() + ", " +
-                m_rightEncoder.getVelocity());
+        // System.out.println("Setpoints: " + leftVelocity + ", " + rightVelocity);
+        // System.out.println("Velocity: " + m_leftEncoder.getVelocity() + ", " +
+        // m_rightEncoder.getVelocity());
 
         // TODO: TEST IF WE NEED TO APPLY THESE TO THE BACK MOTORCONTROLLER PIDS TOO
         m_frontLeftPID.setReference(leftVelocity, ControlType.kVelocity);
