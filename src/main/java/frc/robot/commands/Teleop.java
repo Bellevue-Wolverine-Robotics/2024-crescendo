@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.BackupPathPlanner;
 import frc.robot.commands.flywheel.FlywheelAimIntakeReceiveCommand;
 import frc.robot.commands.flywheel.FlywheelAimSpeakerCommand;
+import frc.robot.commands.flywheel.FlywheelMoveToMakeSpaceForIntakeCommand;
 import frc.robot.commands.intake.DeployIntakeCommand;
 import frc.robot.commands.intake.GetIntakeStatus;
 import frc.robot.commands.intake.StopIntakeCommand;
@@ -35,14 +36,15 @@ public final class Teleop {
         new InstantCommand(flywheelSubsystem::startShooter, flywheelSubsystem),
         new WaitCommand(1),
         new InstantCommand(flywheelSubsystem::startFeeder, flywheelSubsystem),
-        new WaitCommand(0.5),
+        new WaitCommand(1),
         new InstantCommand(flywheelSubsystem::stopShooter, flywheelSubsystem),
-        new InstantCommand(flywheelSubsystem::stopFeeder, flywheelSubsystem));
+        new InstantCommand(flywheelSubsystem::stopFeeder, flywheelSubsystem),
+        new FlywheelAimIntakeReceiveCommand(flywheelSubsystem));
   }
 
   public static Command getFullIntakeRoutine(IntakeSubsystem intakeSubsystem, FlywheelSubsystem flywheelSubsystem) {
     return new SequentialCommandGroup(
-        new FlywheelAimSpeakerCommand(flywheelSubsystem),
+        new FlywheelMoveToMakeSpaceForIntakeCommand(flywheelSubsystem),
         new DeployIntakeCommand(intakeSubsystem),
         new StowIntakeCommand(intakeSubsystem),
         new FlywheelAimIntakeReceiveCommand(flywheelSubsystem),

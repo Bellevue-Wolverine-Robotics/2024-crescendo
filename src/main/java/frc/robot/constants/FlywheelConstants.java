@@ -15,8 +15,9 @@ public final class FlywheelConstants {
 	// PID
 
 	public static final PIDUtils.SparkPIDParams kArmShoulderPid = new PIDUtils.SparkPIDParams(((double) 1 / 19) * 0.3,
-			0, 0, 0, 0, -1, 1);
-	public static final PIDUtils.SparkPIDParams kArmElbowPid = new PIDUtils.SparkPIDParams(((double) 1 / 4) * 0.3, 0,
+			0.001 * ((double) 1 / 19) * 0.3, 0, 0, 0, -1, 1);
+	public static final PIDUtils.SparkPIDParams kArmElbowPid = new PIDUtils.SparkPIDParams(((double) 1 / 16) * 0.2,
+			0,
 			0, 0, 0, -1, 1);
 
 	// Setpoints
@@ -35,8 +36,11 @@ public final class FlywheelConstants {
 
 	// Negative elbow corresponds to twisting towards the robot, pointing up
 
-	public static final double kSpeakerShoulderSetpoint = 19;
-	public static final double kSpeakerElbowSetpoint = -4;
+	public static final double kSpeakerShoulderSetpoint = 17;
+	public static final double kSpeakerElbowSetpoint = -16;
+
+	public static final double kIntakeMakeSpaceShoulderSetpoint = 5;
+	public static final double kIntakeMakeSpaceElbowSetpoint = 0;
 
 	public static final double kAmpShoulderSetpoint = 0;
 	public static final double kAmpElbowSetpoint = 0;

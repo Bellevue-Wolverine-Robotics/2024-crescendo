@@ -13,7 +13,7 @@ public final class IntakeConstants {
 	public static final double kArmPositionConversionFactor = 1.0; // depends on gear ratio and diameter
 
 	public static final double kFeederDutyCycle = 0.5;
-	public static final double kFeedIntoFlywheelDutyCycle = -0.5;
+	public static final double kFeedIntoFlywheelDutyCycle = -0.3;
 
 	public static final SparkPIDParams kIntakeArmDeployPIDParams = new SparkPIDParams(((double) 1 / 8) * 0.2, 0.0, 0.0,
 			0.0, 0.0,

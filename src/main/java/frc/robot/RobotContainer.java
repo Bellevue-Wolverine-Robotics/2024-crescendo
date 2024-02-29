@@ -77,9 +77,7 @@ public class RobotContainer {
     m_operatorController.button(OperatorButtonConstants.kFullIntakeCycle)
         .onTrue(Teleop.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
 
-    // DEBUG STUFF
-    m_operatorController.button(10)
-        .onTrue(new InstantCommand(m_flyWheelSubsystem::aimArmToSpeaker, m_flyWheelSubsystem));
+      m_operatorController.button(OperatorButtonConstants.kFullShootCycle).onTrue(Teleop.getShootAtSpeakerRoutine(m_flyWheelSubsystem));
 
   }
 

@@ -98,6 +98,11 @@ public class FlywheelSubsystem extends SubsystemBase {
 		setArmSetpoint(FlywheelConstants.kSpeakerShoulderSetpoint, FlywheelConstants.kSpeakerElbowSetpoint);
 	}
 
+	public void aimArmToMakeSpaceForIntake() {
+		setArmSetpoint(FlywheelConstants.kIntakeMakeSpaceShoulderSetpoint,
+				FlywheelConstants.kIntakeMakeSpaceElbowSetpoint);
+	}
+
 	public void aimArmToAmp() {
 		setArmSetpoint(FlywheelConstants.kAmpShoulderSetpoint, FlywheelConstants.kAmpElbowSetpoint);
 	}
@@ -120,6 +125,11 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 	public boolean isArmAimingTowardsSpeaker() {
 		return isArmAtSetpoint(FlywheelConstants.kSpeakerShoulderSetpoint, FlywheelConstants.kSpeakerElbowSetpoint);
+	}
+
+	public boolean isArmMakingSpaceForIntake() {
+		return isArmAtSetpoint(FlywheelConstants.kIntakeMakeSpaceShoulderSetpoint,
+				FlywheelConstants.kIntakeMakeSpaceElbowSetpoint);
 	}
 
 	public boolean isArmAtSetpoint(double shoulderSetpoint, double elbowSetpoint) {

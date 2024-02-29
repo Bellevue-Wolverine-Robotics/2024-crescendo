@@ -25,7 +25,7 @@ public final class IOConstants {
 		public static final int kStartIntakeButton = 6;
 		public static final int kStopIntakeButton = 7;
 		public static final int kFullIntakeCycle = 8;
-		public static final int kCancelALL = 9;
+		public static final int kFullShootCycle = 9;
 	}
 
 }
