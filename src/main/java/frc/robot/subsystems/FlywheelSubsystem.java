@@ -31,7 +31,6 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 	private TalonSRX m_feederMotor; // this is a motor that collects the note from the intake
 
-	
 	public FlywheelSubsystem() {
 		// Shooter Init
 		m_shooterMotorLeader = new WPI_TalonSRX(FlywheelConstants.kShooterLeaderId);
@@ -84,6 +83,13 @@ public class FlywheelSubsystem extends SubsystemBase {
 		setArmSetpoint(FlywheelConstants.kAmpShoulderSetpoint, FlywheelConstants.kAmpElbowSetpoint);
 	}
 
+	/*
+	 * This method aims the arm to receive the note from the intake
+	 */
+	public void aimArmToIntake() {
+		setArmSetpoint(FlywheelConstants.kIntakeReceiveShoulderSetpoint, FlywheelConstants.kIntakeReceiveElbowSetpoint);
+	}
+
 	public void feedIntoShooter() {
 		double currentRotation = m_feederMotor.getSelectedSensorPosition();
 		double rotationSetpoint = currentRotation + FlywheelConstants.kFeederRelativeSetpoint;
@@ -92,20 +98,40 @@ public class FlywheelSubsystem extends SubsystemBase {
 	}
 
 	public boolean shooterVelocityAtSetpoint() {
-		return PIDUtils.atSetpoint(getShooterVelocity(), 
-									FlywheelConstants.kShootSpeakerVelocitySetpoint, 
-									FlywheelConstants.kShooterVelocityTolerance);
+		return PIDUtils.atSetpoint(getShooterVelocity(),
+				FlywheelConstants.kShootSpeakerVelocitySetpoint,
+				FlywheelConstants.kShooterVelocityTolerance);
+	}
+
+	public boolean isArmAimingTowardsIntake() {
+		return isArmAtSetpoint(FlywheelConstants.kIntakeReceiveShoulderSetpoint,
+				FlywheelConstants.kIntakeReceiveElbowSetpoint);
+	}
+
+	public boolean isArmAimingTowardsAmp() {
+		return isArmAtSetpoint(FlywheelConstants.kAmpShoulderSetpoint, FlywheelConstants.kAmpElbowSetpoint);
+	}
+
+	public boolean isArmAimingTowardsSpeaker() {
+		return isArmAtSetpoint(FlywheelConstants.kStageShoulderSetpoint, FlywheelConstants.kStageElbowSetpoint);
+	}
+
+	public boolean isArmAtSetpoint(double shoulderSetpoint, double elbowSetpoint) {
+		return PIDUtils.atSetpoint(m_armShoulderMotor.getEncoder().getPosition(), shoulderSetpoint,
+				FlywheelConstants.kArmShoulderTolerance) &&
+				PIDUtils.atSetpoint(m_armElbowMotor.getEncoder().getPosition(), elbowSetpoint,
+						FlywheelConstants.kArmElbowTolerance);
 	}
 
 	private static final double velocity = 0.1;
-	public void startFeederMotor () {
-		m_feederMotor.set (TalonSRXControlMode.Velocity, velocity);
+
+	public void startFeederMotor() {
+		m_feederMotor.set(TalonSRXControlMode.Velocity, velocity);
 	}
 
 	public double getShooterVelocity() {
 		return m_shooterMotorLeader.getSelectedSensorVelocity();
 	}
-
 
 	@Override
 	public void periodic() {

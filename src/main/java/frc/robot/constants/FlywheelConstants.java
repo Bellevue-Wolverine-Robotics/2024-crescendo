@@ -24,7 +24,10 @@ public final class FlywheelConstants {
 	// Setpoints
 
 	public static final double kShooterVelocityTolerance = 0;
-	
+
+	public static final double kArmShoulderTolerance = 1;
+	public static final double kArmElbowTolerance = 1;
+
 	public static final double kShootSpeakerDutyCycleSetpoint = 0.5;
 	public static final double kShootSpeakerVelocitySetpoint = 1;
 
@@ -32,7 +35,10 @@ public final class FlywheelConstants {
 	public static final double kStageElbowSetpoint = 0;
 
 	public static final double kAmpShoulderSetpoint = 0;
-	public static final double kAmpElbowSetpoint = 00;
+	public static final double kAmpElbowSetpoint = 0;
+
+	public static final double kIntakeReceiveShoulderSetpoint = 0;
+	public static final double kIntakeReceiveElbowSetpoint = 0;
 
 	public static final double kFeederRelativeSetpoint = 0; // how far the feeder motor should travel relative to its
 															// current position when feeding into the shooter
