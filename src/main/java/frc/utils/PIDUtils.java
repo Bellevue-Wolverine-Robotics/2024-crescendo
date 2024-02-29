@@ -1,12 +1,25 @@
 package frc.utils;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 
 public class PIDUtils {
+
+	/*public static class CANSparkMaxPID{
+		private CANSparkMax thisMotor;
+		public CANSparkMaxPID(CANSparkMax motor){
+			thisMotor = motor;
+		}
+		public updateKp(){
+			
+		}
+	}*/
+
+
 	public static class ArmFFParams {
 		public final double kGravity;
 		public final double kStatic;
@@ -35,13 +48,13 @@ public class PIDUtils {
 	}
 
 	public static class SparkPIDParams {
-		public final double kP;
-		public final double kI;
-		public final double kD;
-		public final double kIZone;
-		public final double kFF;
-		public final double kMinOutput;
-		public final double kMaxOutput;
+		public double kP;
+		public double kI;
+		public double kD;
+		public double kIZone;
+		public double kFF;
+		public double kMinOutput;
+		public double kMaxOutput;
 
 		public SparkPIDParams(double kP, double kI, double kD, double kIZone, double kFF, double kMinOutput,
 				double kMaxOutput) {
@@ -53,6 +66,40 @@ public class PIDUtils {
 			this.kMinOutput = kMinOutput;
 			this.kMaxOutput = kMaxOutput;
 		}
+
+		public SparkPIDParams(CANSparkMax m_intakeArmPID){
+			var pidController = m_intakeArmPID.getPIDController();
+			this.kP = pidController.getP();
+			this.kI = pidController.getI();
+			this.kD = pidController.getD();
+			this.kIZone = pidController.getIZone();
+			this.kFF = pidController.getFF();
+			this.kMinOutput = pidController.getOutputMin();
+			this.kMaxOutput = pidController.getOutputMax();	
+		}
+
+		public void changeKp(double kP){
+			this.kP = kP;
+		}
+		public void changeKi(double kI){
+			this.kI = kI;
+		}
+		public void changeKd(double kD){
+			this.kD = kD;
+		}
+		public void changeKiZone(double kiZone){
+			this.kIZone = kiZone;
+		}
+		public void changeKff(double kFF){
+			this.kFF = kFF;
+		}
+		public void changekMinOutput(double kMinOutput){
+			this.kMinOutput = kMinOutput;
+		}
+		public void changekMaxOutput(double kMaxOutput){
+			this.kMaxOutput = kMaxOutput;
+		}
+
 	}
 
 	public static class TalonPIDParams {
@@ -109,4 +156,7 @@ public class PIDUtils {
 	public static PIDController createPIDController(WPIPidParams pidParams) {
 		return new PIDController(pidParams.kP, pidParams.kI, pidParams.kD);
 	}
+
+
+	
 }
