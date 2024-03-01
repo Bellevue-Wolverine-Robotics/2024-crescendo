@@ -22,10 +22,10 @@ public final class IOConstants {
 		public static final int kClimbDownButton = 5;
 
 		// Intake
-		public static final int kStartIntakeButton = 6;
-		public static final int kStopIntakeButton = 7;
-		public static final int kFullIntakeCycle = 8;
-		public static final int kFullShootCycle = 9;
+		// public static final int kStartIntakeButton = 6;
+		// public static final int kStopIntakeButton = 7;
+		public static final int kFullIntakeCycle = 2;
+		public static final int kFullShootCycle = 3;
 	}
 
 }

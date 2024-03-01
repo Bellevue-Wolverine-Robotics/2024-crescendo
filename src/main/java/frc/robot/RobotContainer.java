@@ -20,6 +20,8 @@ import frc.robot.commands.FullRoutines;
 import frc.robot.commands.climber.ClimberExtendCommand;
 import frc.robot.commands.climber.ClimberRetractCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCommand;
+import frc.robot.commands.flywheel.FlywheelAimSpeakerCommand;
+import frc.robot.commands.flywheel.FlywheelMoveToMakeSpaceForIntakeCommand;
 import frc.robot.commands.intake.DeployIntakeCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.IOConstants.DriverButtonConstants;
@@ -49,14 +51,12 @@ public class RobotContainer {
     smartDashBoardBinding();
 
     NamedCommands.registerCommand("Intake", FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
-    NamedCommands.registerCommand("ShootSpeaker", new InstantCommand(() -> System.out.println("TEST")));
-
-    // NamedCommands.registerCommand("ShootSpeaker", );
-
+    NamedCommands.registerCommand("ShootSpeaker", FullRoutines.getShootAtSpeakerRoutine(m_flyWheelSubsystem));
     NamedCommands.registerCommand("TestPrint",
         new InstantCommand(() -> System.out.println("TEST")));
 
     m_autoChooser = AutoBuilder.buildAutoChooser();
+
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
   }
@@ -77,7 +77,14 @@ public class RobotContainer {
     m_operatorController.button(OperatorButtonConstants.kFullIntakeCycle)
         .onTrue(FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
 
-      m_operatorController.button(OperatorButtonConstants.kFullShootCycle).onTrue(FullRoutines.getShootAtSpeakerRoutine(m_flyWheelSubsystem));
+    m_operatorController.button(OperatorButtonConstants.kFullShootCycle)
+        .onTrue(FullRoutines.getShootAtSpeakerRoutine(m_flyWheelSubsystem));
+
+    m_flyWheelSubsystem.setDefaultCommand(
+        new InstantCommand(() -> m_flyWheelSubsystem.debugShoulder(m_operatorController), m_flyWheelSubsystem));
+
+    m_operatorController.button(9).onTrue(new FlywheelAimSpeakerCommand(m_flyWheelSubsystem));
+    m_operatorController.button(8).onTrue(new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
 
   }
 

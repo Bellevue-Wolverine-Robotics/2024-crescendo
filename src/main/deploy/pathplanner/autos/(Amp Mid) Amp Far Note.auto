@@ -18,9 +18,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": null
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "amp_far_note_to_amp_center"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
           }
         }
       ]
