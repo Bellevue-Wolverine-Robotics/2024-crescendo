@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ShootSpeaker"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "amp_close_to_amp_far_note"

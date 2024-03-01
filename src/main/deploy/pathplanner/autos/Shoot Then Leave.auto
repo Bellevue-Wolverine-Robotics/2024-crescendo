@@ -20,30 +20,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "amp_center_to_amp_far_note"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "amp_far_note_to_amp_center"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootSpeaker"
+            "pathName": "amp_center_to_amp_mid_note"
           }
         }
       ]
     }
   },
-  "folder": "Amp Mid",
+  "folder": null,
   "choreoAuto": false
 }
