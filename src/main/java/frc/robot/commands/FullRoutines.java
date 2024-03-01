@@ -24,9 +24,9 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public final class Teleop {
+public final class FullRoutines {
 
-  private Teleop() {
+  private FullRoutines() {
     throw new UnsupportedOperationException("This is a utility class!");
   }
 
@@ -39,7 +39,7 @@ public final class Teleop {
         new WaitCommand(1),
         new InstantCommand(flywheelSubsystem::stopShooter, flywheelSubsystem),
         new InstantCommand(flywheelSubsystem::stopFeeder, flywheelSubsystem),
-        new FlywheelAimIntakeReceiveCommand(flywheelSubsystem));
+        new FlywheelMoveToMakeSpaceForIntakeCommand(flywheelSubsystem));
   }
 
   public static Command getFullIntakeRoutine(IntakeSubsystem intakeSubsystem, FlywheelSubsystem flywheelSubsystem) {
