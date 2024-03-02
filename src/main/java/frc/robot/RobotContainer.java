@@ -87,8 +87,9 @@ public class RobotContainer {
     m_operatorController.button(8).onTrue(new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
     m_operatorController.button(1).onTrue(new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
     m_operatorController.button(6).onTrue(new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
+    m_operatorController.button(7).onTrue(new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
 
-    m_operatorController.button(7).onTrue(FullRoutines.prepareToClimb(m_intakeSubsystem));
+    m_operatorController.button(10).onTrue(FullRoutines.prepareToClimb(m_intakeSubsystem));
 
   }
 
