@@ -42,14 +42,18 @@ public class FlywheelSubsystem extends SubsystemBase {
 		m_shooterMotorFollower = new WPI_TalonSRX(FlywheelConstants.kShooterFollowerId);
 		m_feederMotor = new WPI_TalonSRX(FlywheelConstants.kFeederId);
 
-		m_shooterMotorFollower.follow(m_shooterMotorLeader);
-
 		// Arm Init
 		m_armShoulderMotor = new CANSparkMax(FlywheelConstants.kArmShoulderId, MotorType.kBrushless);
 		m_armElbowMotor = new CANSparkMax(FlywheelConstants.kArmElbowId, MotorType.kBrushless);
 
 		m_armShoulderMotor.restoreFactoryDefaults();
 		m_armElbowMotor.restoreFactoryDefaults();
+
+		m_shooterMotorLeader.configFactoryDefault();
+		m_shooterMotorFollower.configFactoryDefault();
+		m_feederMotor.configFactoryDefault();
+
+		m_shooterMotorFollower.follow(m_shooterMotorLeader);
 
 		m_armShoulderEncoder = m_armShoulderMotor.getEncoder();
 		m_armElbowEncoder = m_armElbowMotor.getEncoder();
@@ -75,6 +79,14 @@ public class FlywheelSubsystem extends SubsystemBase {
 		SmartDashboard.putNumber("m_armElbowPidController kI", m_armElbowPidController.getI());
 		SmartDashboard.putNumber("m_armElbowPidController kD", m_armElbowPidController.getD());
 		SmartDashboard.putNumber("m_armElbowPidController kff", m_armElbowPidController.getFF());
+	}
+
+	public void setElbow(double dutyCycle) {
+		m_armElbowMotor.set(dutyCycle);
+	}
+
+	public void stopElbowMotor() {
+		m_armElbowMotor.stopMotor();
 	}
 
 	public void setShooterDutyCycle(double dutyCycle) {

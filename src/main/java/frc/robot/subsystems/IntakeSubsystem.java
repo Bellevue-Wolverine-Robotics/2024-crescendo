@@ -25,6 +25,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public IntakeSubsystem() {
 		m_feederMotor = new WPI_TalonSRX(IntakeConstants.kFeederMotorId);
+		m_feederMotor.configFactoryDefault();
+		m_feederMotor.configPeakCurrentLimit(20);
 
 		m_intakeArm = new CANSparkMax(IntakeConstants.kArmMotorId, MotorType.kBrushless);
 		m_intakeArm.restoreFactoryDefaults();

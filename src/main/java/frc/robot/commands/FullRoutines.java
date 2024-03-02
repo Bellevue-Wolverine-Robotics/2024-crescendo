@@ -12,6 +12,7 @@ import frc.robot.commands.flywheel.FlywheelAimIntakeReceiveCommand;
 import frc.robot.commands.flywheel.FlywheelAimSpeakerCommand;
 import frc.robot.commands.flywheel.FlywheelMoveToMakeSpaceForIntakeCommand;
 import frc.robot.commands.intake.DeployIntakeCommand;
+import frc.robot.commands.intake.DeployIntakeCommandWithoutStartingMotor;
 import frc.robot.commands.intake.StowIntakeCommand;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -24,11 +25,11 @@ public final class FullRoutines {
 
   public static Command getShootAtSpeakerRoutine(FlywheelSubsystem flywheelSubsystem) {
     return new SequentialCommandGroup(
-        new FlywheelAimSpeakerCommand(flywheelSubsystem),
         new InstantCommand(flywheelSubsystem::startShooter, flywheelSubsystem),
+        new FlywheelAimSpeakerCommand(flywheelSubsystem),
         new WaitCommand(1),
         new InstantCommand(flywheelSubsystem::startFeeder, flywheelSubsystem),
-        new WaitCommand(1),
+        new WaitCommand(5),
         new InstantCommand(flywheelSubsystem::stopShooter, flywheelSubsystem),
         new InstantCommand(flywheelSubsystem::stopFeeder, flywheelSubsystem),
         new FlywheelMoveToMakeSpaceForIntakeCommand(flywheelSubsystem));
@@ -41,6 +42,11 @@ public final class FullRoutines {
         new StowIntakeCommand(intakeSubsystem),
         new FlywheelAimIntakeReceiveCommand(flywheelSubsystem),
         new FeedNoteFromIntakeToFlywheelCommand(intakeSubsystem, flywheelSubsystem));
+  }
+
+  public static Command prepareToClimb(IntakeSubsystem intakeSubsystem) {
+    return new SequentialCommandGroup(
+        new DeployIntakeCommandWithoutStartingMotor(intakeSubsystem));
   }
 }
 // new ParallelCommandGroup(

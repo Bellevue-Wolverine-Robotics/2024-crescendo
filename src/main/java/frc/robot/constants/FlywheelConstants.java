@@ -16,19 +16,19 @@ public final class FlywheelConstants {
 
 	public static final PIDUtils.SparkPIDParams kArmShoulderPid = new PIDUtils.SparkPIDParams(((double) 1 / 19) * 0.3,
 			0.001 * ((double) 1 / 19) * 0.3, 0, 0, 0, -1, 1);
-	public static final PIDUtils.SparkPIDParams kArmElbowPid = new PIDUtils.SparkPIDParams(((double) 1 / 16) * 0.2,
-			0,
+	public static final PIDUtils.SparkPIDParams kArmElbowPid = new PIDUtils.SparkPIDParams(((double) 1 / 16) * 0.3,
+			(0.001) * ((double) 1 / 16) * 0.3,
 			0, 0, 0, -1, 1);
 
 	// Setpoints
 
-	public static final double kArmShoulderTolerance = 0.5;
-	public static final double kArmElbowTolerance = 0.5;
+	public static final double kArmShoulderTolerance = 1;
+	public static final double kArmElbowTolerance = 1;
 
 	// Negative duty cycles correspond to shooting
 	// Positive duty cycles correspond to feeding in
-	public static final double kShootSpeakerDutyCycleSetpoint = -0.5;
-	public static final double kFeederDutyCycleSetpoint = 0.2;
+	public static final double kShootSpeakerDutyCycleSetpoint = -1;
+	public static final double kFeederDutyCycleSetpoint = 1;
 
 	// For the shoulder and elbow, positive encoder and set() values correspond to
 	// leaving the
