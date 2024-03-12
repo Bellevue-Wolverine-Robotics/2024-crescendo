@@ -24,6 +24,7 @@ import frc.robot.commands.flywheel.FlywheelAimSpeakerCommand;
 import frc.robot.commands.flywheel.FlywheelMoveToMakeSpaceForIntakeCommand;
 import frc.robot.commands.intake.DeployIntakeCommand;
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.SmartOperatorButtons;
 import frc.robot.constants.IOConstants.DriverButtonConstants;
 import frc.robot.constants.IOConstants.JoystickPortConstants;
 import frc.robot.constants.IOConstants.OperatorButtonConstants;
@@ -45,6 +46,13 @@ public class RobotContainer {
   private final CommandJoystick m_driverController = new CommandJoystick(JoystickPortConstants.kDriverControllerPort);
   private final CommandJoystick m_operatorController = new CommandJoystick(
       JoystickPortConstants.kOperatorControllerPort);
+
+
+
+  private final String smartDashboardDebugKey = "Debug Mode";
+  private final String smartDashboardDebugKeyLabel = "Debug Mode Label";
+
+
 
   public RobotContainer() {
     configureBindings();
@@ -83,19 +91,53 @@ public class RobotContainer {
     m_flyWheelSubsystem.setDefaultCommand(
         new InstantCommand(() -> m_flyWheelSubsystem.debugShoulder(m_operatorController), m_flyWheelSubsystem));
 
+
+
     m_operatorController.button(9).onTrue(new FlywheelAimSpeakerCommand(m_flyWheelSubsystem));
-    m_operatorController.button(8).onTrue(new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
-    m_operatorController.button(1).onTrue(new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
-    m_operatorController.button(6).onTrue(new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
-    m_operatorController.button(7).onTrue(new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
+    
+    m_operatorController.button(6).onTrue(new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
+    m_operatorController.button(7).onTrue(new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
 
     m_operatorController.button(10).onTrue(FullRoutines.prepareToClimb(m_intakeSubsystem));
+    m_operatorController.button(11).onTrue(new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
+
+
+
 
   }
 
   public void smartDashBoardBinding() {
     SmartDashboard.putData("Save logging info", new DebugClose(debugLogger));
+
+    SmartDashboard.putString(smartDashboardDebugKeyLabel, DebugSettings.debugMode? "DEBUG MODE": "RELEASE MODE");
+    SmartDashboard.putData(smartDashboardDebugKey, new InstantCommand(() -> {
+        DebugSettings.debugMode = !DebugSettings.debugMode;
+        SmartDashboard.putString(smartDashboardDebugKeyLabel, DebugSettings.debugMode? "DEBUG MODE": "RELEASE MODE");
+
+    }));
+    smartDashBoardOperatorBindings();
   }
+
+  public void smartDashBoardOperatorBindings(){
+    SmartDashboard.putData(SmartOperatorButtons.fullIntakeRoutine, FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
+
+
+    SmartDashboard.putData(SmartOperatorButtons.flywheelStart, new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
+    SmartDashboard.putData(SmartOperatorButtons.flywheelStop, new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
+
+    SmartDashboard.putData(SmartOperatorButtons.FlywheelAimSpeaker, new FlywheelAimSpeakerCommand(m_flyWheelSubsystem));
+
+
+    SmartDashboard.putData(SmartOperatorButtons.FlywheelMoveToMakeSpaceForIntakeCommand, new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
+    SmartDashboard.putData(SmartOperatorButtons.prepareToClimb, FullRoutines.prepareToClimb(m_intakeSubsystem));
+
+    SmartDashboard.putData(SmartOperatorButtons.extendIntake, new ClimberExtendCommand(m_climberSubsystem));
+    SmartDashboard.putData(SmartOperatorButtons.retractIntake, new ClimberRetractCommand(m_climberSubsystem));
+  }
+
+
+
+
 
   public Command getAutonomousCommand() {
     return m_autoChooser.getSelected();

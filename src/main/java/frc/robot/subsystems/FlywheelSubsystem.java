@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.DebugSettings;
 import frc.robot.constants.FlywheelConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.utils.PIDUtils;
@@ -161,38 +162,23 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		// var armShoulderParams = new PIDUtils.SparkPIDParams(m_armShoulderMotor);
-		// var armElbowParams = new PIDUtils.SparkPIDParams(m_armElbowMotor);
+		if(DebugSettings.debugMode){
+			var armShoulderParams = new PIDUtils.SparkPIDParams(m_armShoulderMotor);
+			var armElbowParams = new PIDUtils.SparkPIDParams(m_armElbowMotor);
 
-		// armShoulderParams
-		// .changeKp(SmartDashboard.getNumber("m_armShoulderPidController kP",
-		// m_armShoulderPidController.getP()));
-		// armShoulderParams
-		// .changeKi(SmartDashboard.getNumber("m_armShoulderPidController kI",
-		// m_armShoulderPidController.getI()));
-		// armShoulderParams
-		// .changeKd(SmartDashboard.getNumber("m_armShoulderPidController kD",
-		// m_armShoulderPidController.getD()));
-		// armShoulderParams.changeKff(
-		// SmartDashboard.getNumber("m_armShoulderPidController kff",
-		// m_armShoulderPidController.getFF()));
+			armShoulderParams.changeKp(SmartDashboard.getNumber("m_armShoulderPidController kP", m_armShoulderPidController.getP()));
+			armShoulderParams.changeKi(SmartDashboard.getNumber("m_armShoulderPidController kI", m_armShoulderPidController.getI()));
+			armShoulderParams.changeKd(SmartDashboard.getNumber("m_armShoulderPidController kD", m_armShoulderPidController.getD()));
+			armShoulderParams.changeKff(SmartDashboard.getNumber("m_armShoulderPidController kff", m_armShoulderPidController.getFF()));
 
-		// armShoulderParams
-		// .changeKp(SmartDashboard.getNumber("m_armElbowPidController kP",
-		// m_armElbowPidController.getP()));
-		// armShoulderParams
-		// .changeKi(SmartDashboard.getNumber("m_armElbowPidController kI",
-		// m_armElbowPidController.getI()));
-		// armShoulderParams
-		// .changeKd(SmartDashboard.getNumber("m_armElbowPidController kD",
-		// m_armElbowPidController.getD()));
-		// armShoulderParams
-		// .changeKff(SmartDashboard.getNumber("m_armElbowPidController kff",
-		// m_armElbowPidController.getFF()));
+			armShoulderParams.changeKp(SmartDashboard.getNumber("m_armElbowPidController kP", m_armElbowPidController.getP()));
+			armShoulderParams.changeKi(SmartDashboard.getNumber("m_armElbowPidController kI", m_armElbowPidController.getI()));
+			armShoulderParams.changeKd(SmartDashboard.getNumber("m_armElbowPidController kD", m_armElbowPidController.getD()));
+			armShoulderParams.changeKff(SmartDashboard.getNumber("m_armElbowPidController kff", m_armElbowPidController.getFF()));
 
-		// PIDUtils.setPIDConstants(m_armShoulderPidController, armShoulderParams);
-
-		// PIDUtils.setPIDConstants(m_armElbowPidController, armElbowParams);
+			PIDUtils.setPIDConstants(m_armShoulderPidController, armShoulderParams);
+			PIDUtils.setPIDConstants(m_armElbowPidController, armElbowParams);
+		}
 
 		SmartDashboard.putNumber("SHOULDER ANGLE", m_armShoulderEncoder.getPosition());
 		SmartDashboard.putNumber("ELBOW ANGLE", m_armElbowEncoder.getPosition());
