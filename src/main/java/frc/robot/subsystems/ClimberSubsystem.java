@@ -161,9 +161,6 @@ public class ClimberSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Right Encoder Velocity",
                 m_rightClimbRelativeEncoder.getVelocity());
 
-        if (m_limitSwitchEnabled && limitSwitchVelocityCheck()) {
-            this.stopMotors();
-        }
 
         if (m_topLimitSwitch.get()) {
             this.zeroPosition();
