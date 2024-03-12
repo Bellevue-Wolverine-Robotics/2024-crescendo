@@ -4,6 +4,8 @@
 
 package frc.robot;
 
-public class DebugSettings {
+public final class DebugSettings {
   public static final boolean enableLogging = false;
+  public static boolean debugMode = false;
+
 }

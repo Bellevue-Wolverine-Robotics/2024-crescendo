@@ -11,6 +11,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.DebugSettings;
 import frc.robot.constants.ClimberConstants;
 import frc.utils.PIDUtils;
 
@@ -166,38 +167,31 @@ public class ClimberSubsystem extends SubsystemBase {
             this.zeroPosition();
         }
 
-        // SmartDashboard.putNumber("Climber Conversion Factor",
-        // ClimberConstants.kClimberPositionConversion);
-        // SmartDashboard.putNumber("kSprocketDiameterInches",
-        // ClimberConstants.kSprocketDiameterInches);
-        // SmartDashboard.putNumber("kSprocketDiameterMeters",
-        // ClimberConstants.kSprocketDiameterMeters);
-        // SmartDashboard.putNumber("kSprocketCircumferenceMeters",
-        // ClimberConstants.kSprocketCircumferenceMeters);
 
-        // var m_leftClimbParams = new PIDUtils.SparkPIDParams(m_leftClimbMotor);
-        // var m_rightClimbParams = new PIDUtils.SparkPIDParams(m_rightClimbMotor);
+        if(DebugSettings.debugMode){
+            SmartDashboard.putNumber("Climber Conversion Factor", ClimberConstants.kClimberPositionConversion);
+            SmartDashboard.putNumber("kSprocketDiameterInches", ClimberConstants.kSprocketDiameterInches);
+            SmartDashboard.putNumber("kSprocketDiameterMeters", ClimberConstants.kSprocketDiameterMeters);
+            SmartDashboard.putNumber("kSprocketCircumferenceMeters", ClimberConstants.kSprocketCircumferenceMeters);
 
-        // m_leftClimbParams.changeKp(SmartDashboard.getNumber("m_leftClimbPidController
-        // kP", m_leftClimbPidController.getP()));
-        // m_leftClimbParams.changeKi(SmartDashboard.getNumber("m_leftClimbPidController
-        // kI", m_leftClimbPidController.getI()));
-        // m_leftClimbParams.changeKd(SmartDashboard.getNumber("m_leftClimbPidController
-        // kD", m_leftClimbPidController.getD()));
-        // m_leftClimbParams.changeKff(SmartDashboard.getNumber("m_leftClimbPidController
-        // kFF", m_leftClimbPidController.getFF()));
+            var m_leftClimbParams = new PIDUtils.SparkPIDParams(m_leftClimbMotor);
+            var m_rightClimbParams = new PIDUtils.SparkPIDParams(m_rightClimbMotor);
 
-        // m_rightClimbParams.changeKp(SmartDashboard.getNumber("m_rightClimbPidController
-        // kP", m_rightClimbPidController.getP()));
-        // m_rightClimbParams.changeKi(SmartDashboard.getNumber("m_rightClimbPidController
-        // kI", m_rightClimbPidController.getI()));
-        // m_rightClimbParams.changeKd(SmartDashboard.getNumber("m_rightClimbPidController
-        // kD", m_rightClimbPidController.getD()));
-        // m_rightClimbParams.changeKff(SmartDashboard.getNumber("m_rightClimbPidController
-        // kFF", m_rightClimbPidController.getFF()));
+            m_leftClimbParams.changeKp(SmartDashboard.getNumber("m_leftClimbPidController kP", m_leftClimbPidController.getP()));
+            m_leftClimbParams.changeKi(SmartDashboard.getNumber("m_leftClimbPidController kI", m_leftClimbPidController.getI()));
+            m_leftClimbParams.changeKd(SmartDashboard.getNumber("m_leftClimbPidController kD", m_leftClimbPidController.getD()));
+            m_leftClimbParams.changeKff(SmartDashboard.getNumber("m_leftClimbPidController kFF", m_leftClimbPidController.getFF()));
 
-        // PIDUtils.setPIDConstants(m_leftClimbPidController, m_leftClimbParams);
-        // PIDUtils.setPIDConstants(m_rightClimbPidController, m_rightClimbParams);
+            m_rightClimbParams.changeKp(SmartDashboard.getNumber("m_rightClimbPidController kP", m_rightClimbPidController.getP()));
+            m_rightClimbParams.changeKi(SmartDashboard.getNumber("m_rightClimbPidController kI", m_rightClimbPidController.getI()));
+            m_rightClimbParams.changeKd(SmartDashboard.getNumber("m_rightClimbPidController kD", m_rightClimbPidController.getD()));
+            m_rightClimbParams.changeKff(SmartDashboard.getNumber("m_rightClimbPidController kFF", m_rightClimbPidController.getFF()));
+
+            PIDUtils.setPIDConstants(m_leftClimbPidController, m_leftClimbParams);
+            PIDUtils.setPIDConstants(m_rightClimbPidController, m_rightClimbParams);
+        }
+
+        
 
     }
 }
