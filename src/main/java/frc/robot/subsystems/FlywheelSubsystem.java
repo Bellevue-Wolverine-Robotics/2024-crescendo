@@ -204,4 +204,12 @@ public class FlywheelSubsystem extends SubsystemBase {
 		m_armShoulderMotor.set(-joystick.getY() / 10);
 	}
 
+	public double getShoulderEncoderValue() {
+		return m_armShoulderEncoder.getPosition();
+	}
+
+	public double getElbowEncoderValue() {
+		return m_armElbowEncoder.getPosition();
+	}
+
 }

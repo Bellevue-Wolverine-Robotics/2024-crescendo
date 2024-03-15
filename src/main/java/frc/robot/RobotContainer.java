@@ -51,7 +51,8 @@ public class RobotContainer {
 
   private final String smartDashboardDebugKey = "Debug Mode";
   private final String smartDashboardDebugKeyLabel = "Debug Mode Label";
-
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private String m_autoSelected;
 
 
   public RobotContainer() {
@@ -67,7 +68,12 @@ public class RobotContainer {
 
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
+
+
+
   }
+
+
 
   private void configureBindings() {
     // Driving
