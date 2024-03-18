@@ -158,6 +158,12 @@ public class RobotContainer {
     double xSpeed = -m_driverController.getY();
     double zRotation = -m_driverController.getX();
 
+    /*
+    if !(DriverStation.getStickButton(what button is this?) {
+      double rotationIntensityMult = 1 //Higher value means faster decrease in rotation as speed increases
+      zRotation = 1 / ((1 / zRotation) * (rotationIntensityyMult * sqrt(xSpeed) + 1)) //Decreases rotation based on speed increase (more speed = less rotation) for better handling 
+    }
+    */
     if (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
         DriverButtonConstants.kDriveSpeedPreset1Button)) {
       xSpeed *= DriveConstants.kThrottlePreset1;
