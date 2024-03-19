@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -33,6 +34,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		m_intakeArm.setInverted(true);
 		m_intakeArm.setIdleMode(IdleMode.kBrake);
+
+		m_feederMotor.setNeutralMode(NeutralMode.Coast);
 
 		m_intakeArmRelativeEncoder = m_intakeArm.getEncoder();
 		m_intakeArmRelativeEncoder.setPosition(0);
@@ -78,6 +81,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	// -- Intake Motor -- //
 	public void setIntakeMotorSpeed(double speed) {
 		if (!limitSwitch.get()) {
+			System.out.println("AHHHHHiufh8ey8eiowehuef fucifkm");
 			m_feederMotor.set(speed);
 		}
 	}
@@ -86,7 +90,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		setIntakeMotorSpeed(IntakeConstants.kFeederDutyCycle);
 	}
 
+	public int ahhhTestingIntakeDeleteMe = 1;
 	public void stopIntakeMotor() {
+		System.out.println("STOPPPP stopIntakeMotor: Intake MOtor " + ahhhTestingIntakeDeleteMe);
+		ahhhTestingIntakeDeleteMe ++;
 		m_feederMotor.stopMotor();
 	}
 
@@ -113,9 +120,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		// PIDUtils.setPIDConstants(m_intakeArmPID, intakeArmParams);
 
-		if (limitSwitch.get()) {
-			m_feederMotor.stopMotor();
-		}
+		/*if (limitSwitch.get()) {
+			//System.out.println("limit switch status: " + limitSwitch.get());
+			//m_feederMotor.stopMotor();
+			stopIntakeMotor();
+		}*/
 
 		SmartDashboard.putNumber("ARM POSITION", getAngle());
 	}

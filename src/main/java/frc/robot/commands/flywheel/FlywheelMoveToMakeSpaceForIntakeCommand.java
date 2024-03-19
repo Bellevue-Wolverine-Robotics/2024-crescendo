@@ -11,6 +11,7 @@ public class FlywheelMoveToMakeSpaceForIntakeCommand extends Command {
 	private FlywheelSubsystem m_flywheelSubsystem;
 
 	public FlywheelMoveToMakeSpaceForIntakeCommand(FlywheelSubsystem flywheelSubsystem) {
+		//System.out.println("FlywheelMoveToMakeSpaceForIntakeCommand");
 		m_flywheelSubsystem = flywheelSubsystem;
 		addRequirements(flywheelSubsystem);
 	}
@@ -22,6 +23,8 @@ public class FlywheelMoveToMakeSpaceForIntakeCommand extends Command {
 
 	@Override
 	public boolean isFinished() {
+		//if(m_flywheelSubsystem.isArmMakingSpaceForIntake())System.out.println("FlywheelMoveToMakeSpaceForIntakeCommand terminates");
+
 		return m_flywheelSubsystem.isArmMakingSpaceForIntake();
 	}
 }

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -53,6 +54,8 @@ public class FlywheelSubsystem extends SubsystemBase {
 		m_shooterMotorLeader.configFactoryDefault();
 		m_shooterMotorFollower.configFactoryDefault();
 		m_feederMotor.configFactoryDefault();
+		m_feederMotor.setNeutralMode(NeutralMode.Coast);
+
 
 		m_shooterMotorFollower.follow(m_shooterMotorLeader);
 
@@ -152,12 +155,20 @@ public class FlywheelSubsystem extends SubsystemBase {
 						FlywheelConstants.kArmElbowTolerance);
 	}
 
+	public int testingstartFeederDeleteMe = 1;
 	public void startFeeder() {
+
+		System.out.println("startfeeder count: " + testingstartFeederDeleteMe);
+		testingstartFeederDeleteMe ++ ;
 		m_feederMotor.set(TalonSRXControlMode.PercentOutput, FlywheelConstants.kFeederDutyCycleSetpoint);
 	}
 
+
+	public int stopFeederDELETEME = 1;
 	public void stopFeeder() {
-		m_feederMotor.set(TalonSRXControlMode.PercentOutput, 0);
+		System.out.println("stopping feeder motor: FLywheelsubsystem: " + stopFeederDELETEME);
+		stopFeederDELETEME++;
+		m_feederMotor.set(TalonSRXControlMode.PercentOutput, 0.0);
 	}
 
 	@Override
@@ -185,6 +196,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 	}
 
 	public boolean hasNote() {
+		//System.out.println("limit switch status" + m_noteLimitSwitch.get());
 		return m_noteLimitSwitch.get();
 	}
 

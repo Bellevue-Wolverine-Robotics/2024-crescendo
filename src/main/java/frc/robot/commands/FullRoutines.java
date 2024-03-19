@@ -41,7 +41,13 @@ public final class FullRoutines {
         new DeployIntakeCommand(intakeSubsystem),
         new StowIntakeCommand(intakeSubsystem),
         new FlywheelAimIntakeReceiveCommand(flywheelSubsystem),
-        new FeedNoteFromIntakeToFlywheelCommand(intakeSubsystem, flywheelSubsystem));
+        new InstantCommand(() -> {intakeSubsystem.startFeedIntoFlywheel();}),
+        new InstantCommand(() -> {flywheelSubsystem.startFeeder();}),
+        new WaitCommand(4.0),
+        new InstantCommand(() -> {intakeSubsystem.stopIntakeMotor();}),
+        new InstantCommand(() -> {flywheelSubsystem.stopFeeder();})
+        
+        );
   }
 
   public static Command prepareToClimb(IntakeSubsystem intakeSubsystem) {

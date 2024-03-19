@@ -23,11 +23,14 @@ public class FeedNoteFromIntakeToFlywheelCommand extends Command {
 
 	@Override
 	public boolean isFinished() {
+		//if(m_flywheelSubsystem.hasNote())System.out.println("Testing termination " + m_flywheelSubsystem.hasNote());
 		return m_flywheelSubsystem.hasNote();
 	}
 
 	@Override
 	public void end(boolean interrupted) {
+		//System.out.println("Interupted: " + m_flywheelSubsystem.hasNote());
+		
 		m_intakeSubsystem.stopIntakeMotor();
 		m_flywheelSubsystem.stopFeeder();
 	}

@@ -105,7 +105,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_backLeftMotor.setSmartCurrentLimit(30);
         m_backRightMotor.setSmartCurrentLimit(30);
 
-        m_frontLeftMotor.setIdleMode(IdleMode.kBrake);
+        m_frontLeftMotor.setIdleMode(IdleMode.kBrake); 
         m_backLeftMotor.setIdleMode(IdleMode.kBrake);
         m_frontRightMotor.setIdleMode(IdleMode.kBrake);
         m_backRightMotor.setIdleMode(IdleMode.kBrake);
