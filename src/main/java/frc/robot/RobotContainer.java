@@ -51,13 +51,10 @@ public class RobotContainer {
   private final CommandJoystick m_operatorController = new CommandJoystick(
       JoystickPortConstants.kOperatorControllerPort);
 
-
-
   private final String smartDashboardDebugKey = "Debug Mode";
   private final String smartDashboardDebugKeyLabel = "Debug Mode Label";
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private String m_autoSelected;
-
 
   public RobotContainer() {
     configureBindings();
@@ -72,12 +69,7 @@ public class RobotContainer {
 
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
-
-
-
   }
-
-
 
   private void configureBindings() {
     // Driving
@@ -101,62 +93,58 @@ public class RobotContainer {
     m_flyWheelSubsystem.setDefaultCommand(
         new InstantCommand(() -> m_flyWheelSubsystem.debugShoulder(m_operatorController), m_flyWheelSubsystem));
 
-
-
     m_operatorController.button(9).onTrue(new FlywheelAimSpeakerCommand(m_flyWheelSubsystem));
-    
+
     m_operatorController.button(6).onTrue(new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
     m_operatorController.button(7).onTrue(new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
 
     m_operatorController.button(10).onTrue(FullRoutines.prepareToClimb(m_intakeSubsystem));
     m_operatorController.button(11).onTrue(new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
 
-
     m_operatorController.button(1).onTrue(
-      new SequentialCommandGroup(
-        new InstantCommand(() -> {m_flyWheelSubsystem.startFeeder();}),
-        new WaitCommand(3),
-        new InstantCommand(() -> {m_flyWheelSubsystem.stopFeeder();})
-      ));
-
-
-
-
+        new SequentialCommandGroup(
+            new InstantCommand(() -> {
+              m_flyWheelSubsystem.startFeeder();
+            }),
+            new WaitCommand(3),
+            new InstantCommand(() -> {
+              m_flyWheelSubsystem.stopFeeder();
+            })));
 
   }
 
   public void smartDashBoardBinding() {
     SmartDashboard.putData("Save logging info", new DebugClose(debugLogger));
 
-    SmartDashboard.putString(smartDashboardDebugKeyLabel, DebugSettings.debugMode? "DEBUG MODE": "RELEASE MODE");
+    SmartDashboard.putString(smartDashboardDebugKeyLabel, DebugSettings.debugMode ? "DEBUG MODE" : "RELEASE MODE");
     SmartDashboard.putData(smartDashboardDebugKey, new InstantCommand(() -> {
-        DebugSettings.debugMode = !DebugSettings.debugMode;
-        SmartDashboard.putString(smartDashboardDebugKeyLabel, DebugSettings.debugMode? "DEBUG MODE": "RELEASE MODE");
+      DebugSettings.debugMode = !DebugSettings.debugMode;
+      // System.out.println("DEBUGGG TOGGLE: NEW STATE: " + (DebugSettings.debugMode ?
+      // "DEBUG MODE" : "RELEASE MODE"));
+      SmartDashboard.putString(smartDashboardDebugKeyLabel, DebugSettings.debugMode ? "DEBUG MODE" : "RELEASE MODE");
 
     }));
     smartDashBoardOperatorBindings();
   }
 
-  public void smartDashBoardOperatorBindings(){
-    SmartDashboard.putData(SmartOperatorButtons.fullIntakeRoutine, FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
+  public void smartDashBoardOperatorBindings() {
+    SmartDashboard.putData(SmartOperatorButtons.fullIntakeRoutine,
+        FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
 
-
-    SmartDashboard.putData(SmartOperatorButtons.flywheelStart, new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
-    SmartDashboard.putData(SmartOperatorButtons.flywheelStop, new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
+    SmartDashboard.putData(SmartOperatorButtons.flywheelStart,
+        new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
+    SmartDashboard.putData(SmartOperatorButtons.flywheelStop,
+        new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
 
     SmartDashboard.putData(SmartOperatorButtons.FlywheelAimSpeaker, new FlywheelAimSpeakerCommand(m_flyWheelSubsystem));
 
-
-    SmartDashboard.putData(SmartOperatorButtons.FlywheelMoveToMakeSpaceForIntakeCommand, new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
+    SmartDashboard.putData(SmartOperatorButtons.FlywheelMoveToMakeSpaceForIntakeCommand,
+        new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
     SmartDashboard.putData(SmartOperatorButtons.prepareToClimb, FullRoutines.prepareToClimb(m_intakeSubsystem));
 
     SmartDashboard.putData(SmartOperatorButtons.extendIntake, new ClimberExtendCommand(m_climberSubsystem));
     SmartDashboard.putData(SmartOperatorButtons.retractIntake, new ClimberRetractCommand(m_climberSubsystem));
   }
-
-
-
-
 
   public Command getAutonomousCommand() {
     return m_autoChooser.getSelected();
@@ -164,32 +152,40 @@ public class RobotContainer {
 
   /**
    * Returns arcade drive speeds based on throttles and squaring selected
+   * Improves handling by reducing rotation when driving at high speeds
    * 
    * @return A pair of the x speed and the z rotation
    */
   private Pair<Double, Double> getArcadeDriveSpeeds() {
-    double xSpeed = -m_driverController.getY();
-    double zRotation = -m_driverController.getX();
 
-    /*
-    if !(DriverStation.getStickButton(what button is this?) {
-      double rotationIntensityMult = 1 //Higher value means faster decrease in rotation as speed increases
-      zRotation = 1 / ((1 / zRotation) * (rotationIntensityyMult * sqrt(xSpeed) + 1)) //Decreases rotation based on speed increase (more speed = less rotation) for better handling 
-    }
-    */
-    if (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
-        DriverButtonConstants.kDriveSpeedPreset1Button)) {
-      xSpeed *= DriveConstants.kThrottlePreset1;
-      zRotation *= DriveConstants.kRotationPreset1;
-    } else if (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
-        DriverButtonConstants.kDriveSpeedPreset2Button)) {
-      xSpeed *= DriveConstants.kThrottlePreset2;
-      zRotation *= DriveConstants.kRotationPreset2;
+    double xSpeed = 0 - m_driverController.getY();
+    double zRotation = 0 - m_driverController.getX();
+
+    final double rotationIntensity = 0.5; // CONSTANT: Higher value means faster increase in rotation as speed increases
+
+    boolean aboveSpeedThreshold = Math.abs(xSpeed) > 0.05;
+    boolean buttonPressed = DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
+        DriverButtonConstants.kDriveSpeedPreset1Button);
+
+    if (buttonPressed == false && aboveSpeedThreshold) {
+      final double invertedRotationIntensity = 1 / rotationIntensity;
+      zRotation /= (invertedRotationIntensity * Math.sqrt(Math.abs(xSpeed)) + 1);
     }
 
-    Pair<Double, Double> arcadeDriveSpeedsPair = new Pair<Double, Double>(xSpeed, zRotation);
+    // if (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
+    // DriverButtonConstants.kDriveSpeedPreset1Button)) {
+    // xSpeed *= DriveConstants.kThrottlePreset1;
+    // zRotation *= DriveConstants.kRotatioanPreset1;
+    // } else if
+    // (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
+    // DriverButtonConstants.kDriveSpeedPreset2Button)) {
+    // xSpeed *= DariveConstants.kThrottlePresaet2;
+    // zRotation *= DriveConstants.kRotationPreset2;
+    // }
+    // I believe the above code can be deleted, but I'm not sure. I'll leave it for
+    // now.
 
-    return arcadeDriveSpeedsPair;
+    return new Pair<Double, Double>(xSpeed, zRotation);
   }
 
   public DriveSubsystem getDriveSubsystem() {
