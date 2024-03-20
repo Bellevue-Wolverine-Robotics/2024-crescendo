@@ -161,14 +161,12 @@ public class RobotContainer {
     double xSpeed = 0 - m_driverController.getY();
     double zRotation = 0 - m_driverController.getX();
 
-    final double rotationIntensity = 0.5; // CONSTANT: Higher value means faster increase in rotation as speed increases
-
-    boolean aboveSpeedThreshold = Math.abs(xSpeed) > 0.05;
+    boolean aboveSpeedThreshold = Math.abs(xSpeed) > DriveConstants.aboveSpeedThreshold;
     boolean buttonPressed = DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
         DriverButtonConstants.kDriveSpeedPreset1Button);
 
     if (buttonPressed == false && aboveSpeedThreshold) {
-      final double invertedRotationIntensity = 1 / rotationIntensity;
+      final double invertedRotationIntensity = 1 / DriveConstants.rotationIntensity;
       zRotation /= (invertedRotationIntensity * Math.sqrt(Math.abs(xSpeed)) + 1);
     }
 

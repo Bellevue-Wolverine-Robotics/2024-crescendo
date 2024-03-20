@@ -39,4 +39,7 @@ public final class DriveConstants {
 
 	public static final double kMaxSimInputVoltage = 12;
 
+	public static final double rotationIntensity = 0.5; // increase this to make rotation faster as drive speed increases
+	public static final double aboveSpeedThreshold = 0.05; // robot must be at least this speed for rotation to be affected
+
 }
