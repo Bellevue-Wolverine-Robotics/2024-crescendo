@@ -16,7 +16,7 @@ public final class ClimberConstants {
 
 	// units are in meters
 	public static final double kClimbExtendedSetpoint = 0.0;
-	public static final double kClimbRetractedSetpoint = -0.381;
+	public static final double kClimbRetractedSetpoint = -0.331;
 	public static final double kClimbTolerance = (0.05) * kClimbRetractedSetpoint;
 
 	public static final int kSmartCurrentLimit = 30;

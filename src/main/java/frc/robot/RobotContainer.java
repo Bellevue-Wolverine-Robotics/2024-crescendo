@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -24,8 +25,10 @@ import frc.robot.commands.FullRoutines;
 import frc.robot.commands.climber.ClimberExtendCommand;
 import frc.robot.commands.climber.ClimberRetractCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCommand;
+import frc.robot.commands.flywheel.FlywheelAimIntakeReceiveCommand;
 import frc.robot.commands.flywheel.FlywheelAimSpeakerCommand;
 import frc.robot.commands.flywheel.FlywheelMoveToMakeSpaceForIntakeCommand;
+import frc.robot.commands.flywheel.FlywheelShoot;
 import frc.robot.commands.intake.DeployIntakeCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.SmartOperatorButtons;
@@ -112,13 +115,47 @@ public class RobotContainer {
     m_operatorController.button(11).onTrue(new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
 
 
-    m_operatorController.button(1).onTrue(
-      new SequentialCommandGroup(
-        new InstantCommand(() -> {m_flyWheelSubsystem.startFeeder();}),
-        new WaitCommand(3),
-        new InstantCommand(() -> {m_flyWheelSubsystem.stopFeeder();})
-      ));
 
+    m_operatorController.button(8).onTrue(new FlywheelAimIntakeReceiveCommand(m_flyWheelSubsystem));
+    m_operatorController.button(1).whileTrue(
+        new SequentialCommandGroup(
+
+
+
+          new InstantCommand(() -> {m_flyWheelSubsystem.aimArmToIntake();}),
+          
+
+          new InstantCommand(() -> {m_flyWheelSubsystem.startShooter();}),
+
+          new WaitCommand(1),
+
+
+
+          new InstantCommand(() -> {m_intakeSubsystem.startFeedIntoFlywheel();}),
+          new InstantCommand(() -> {m_flyWheelSubsystem.startFeeder();}),
+          new InstantCommand(() -> {m_flyWheelSubsystem.aimLowerPosition();})
+
+          //new WaitCommand(2.0),
+  
+
+
+
+          
+          
+
+        )
+    );
+
+    m_operatorController.button(1).whileFalse(
+      new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          m_flyWheelSubsystem.stopShooter();
+          m_flyWheelSubsystem.stopFeeder();
+          m_intakeSubsystem.stopIntakeMotor();
+        }),
+        new InstantCommand(() -> {m_flyWheelSubsystem.aimArmToIntake();})
+      )
+    );
 
 
 

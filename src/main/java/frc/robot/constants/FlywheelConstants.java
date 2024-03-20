@@ -27,8 +27,10 @@ public final class FlywheelConstants {
 
 	// Negative duty cycles correspond to shooting
 	// Positive duty cycles correspond to feeding in
-	public static final double kShootSpeakerDutyCycleSetpoint = -1;
+	public static final double kShootSpeakerDutyCycleSetpoint = 1;
 	public static final double kFeederDutyCycleSetpoint = 1;
+	public static final double kFeederDutyCycleSetpointReverse = -1;
+
 
 	// For the shoulder and elbow, positive encoder and set() values correspond to
 	// leaving the
@@ -37,7 +39,7 @@ public final class FlywheelConstants {
 	// Negative elbow corresponds to twisting towards the robot, pointing up
 
 	public static final double kSpeakerShoulderSetpoint = 17;
-	public static final double kSpeakerElbowSetpoint = -16;
+	public static final double kSpeakerElbowSetpoint = -17;
 
 	public static final double kIntakeMakeSpaceShoulderSetpoint = 15;
 	public static final double kIntakeMakeSpaceElbowSetpoint = 0;
@@ -46,7 +48,10 @@ public final class FlywheelConstants {
 	public static final double kAmpElbowSetpoint = 0;
 
 	public static final double kIntakeReceiveShoulderSetpoint = 7;
-	public static final double kIntakeReceiveElbowSetpoint = -4;
+	public static final double kIntakeReceiveElbowSetpoint = -1.3;
+
+	public static final double kIntakeShooterShoulderSetpoint = 9.2;
+	public static final double kIntakeShooterElbowSetpoint = -8;
 
 	public static final int kNoteSwitchDIOPort = 6;
 

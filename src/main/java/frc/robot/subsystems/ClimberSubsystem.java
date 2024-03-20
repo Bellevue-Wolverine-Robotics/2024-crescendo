@@ -86,6 +86,13 @@ public class ClimberSubsystem extends SubsystemBase {
         m_rightClimbRelativeEncoder.setPosition(0);
     }
 
+    public void bottomPosition() {
+        System.out.println("TESTING.... ATTENTION BOTTOM POSITION CALIBRATE -0.35 " + m_leftClimbRelativeEncoder.getPosition());
+        m_leftClimbRelativeEncoder.setPosition(-0.35);
+        m_rightClimbRelativeEncoder.setPosition(-0.35);
+    }
+
+
     // Positive voltage/duty cycle corresponds to raising the elevator
     public void setDutyCycle(double dutyCycle)
     // @requires 0.0 <= dutyCycle && dutyCycle <= 1.0;
@@ -164,7 +171,14 @@ public class ClimberSubsystem extends SubsystemBase {
 
 
         if (m_topLimitSwitch.get()) {
+
+            //System.out.println("TOP HITTTTT TOP HITTTTT TOP HITTTTT TOP HITTTTT");
             this.zeroPosition();
+        }
+        if (m_bottomLimitSwitch.get()) {
+
+            //System.out.println("Bottom HITTTTT Bottom HITTTTT Bottom HITTTTT Bottom HITTTTT");
+            this.bottomPosition();
         }
 
 

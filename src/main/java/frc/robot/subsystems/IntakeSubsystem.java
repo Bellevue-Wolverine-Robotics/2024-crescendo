@@ -56,7 +56,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void setIntakeArmPIDSetpoint(double setpoint) {
-		System.out.println("SET SETPOINT: " + setpoint);
+		//System.out.println("SET SETPOINT: " + setpoint);
 		m_intakeArmPID.setReference(setpoint, ControlType.kPosition);
 	}
 
@@ -81,7 +81,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	// -- Intake Motor -- //
 	public void setIntakeMotorSpeed(double speed) {
 		if (!limitSwitch.get()) {
-			System.out.println("AHHHHHiufh8ey8eiowehuef fucifkm");
+			//System.out.println("AHHHHHiufh8ey8eiowehuef fucifkm");
 			m_feederMotor.set(speed);
 		}
 	}
@@ -92,7 +92,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public int ahhhTestingIntakeDeleteMe = 1;
 	public void stopIntakeMotor() {
-		System.out.println("STOPPPP stopIntakeMotor: Intake MOtor " + ahhhTestingIntakeDeleteMe);
+		//System.out.println("STOPPPP stopIntakeMotor: Intake MOtor " + ahhhTestingIntakeDeleteMe);
 		ahhhTestingIntakeDeleteMe ++;
 		m_feederMotor.stopMotor();
 	}

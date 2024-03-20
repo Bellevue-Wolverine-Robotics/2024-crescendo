@@ -25,14 +25,29 @@ public final class FullRoutines {
 
   public static Command getShootAtSpeakerRoutine(FlywheelSubsystem flywheelSubsystem) {
     return new SequentialCommandGroup(
-        new InstantCommand(flywheelSubsystem::startShooter, flywheelSubsystem),
-        new FlywheelAimSpeakerCommand(flywheelSubsystem),
-        new WaitCommand(1),
-        new InstantCommand(flywheelSubsystem::startFeeder, flywheelSubsystem),
-        new WaitCommand(5),
-        new InstantCommand(flywheelSubsystem::stopShooter, flywheelSubsystem),
-        new InstantCommand(flywheelSubsystem::stopFeeder, flywheelSubsystem),
-        new FlywheelMoveToMakeSpaceForIntakeCommand(flywheelSubsystem));
+        //new FlywheelAimSpeakerCommand(flywheelSubsystem),
+
+        new SequentialCommandGroup(
+          new InstantCommand(() -> {
+            flywheelSubsystem.setShoulderAimSpeaker();
+          }),
+          new WaitCommand(0.8),
+          new InstantCommand(() -> {
+            flywheelSubsystem.setElbowAimSpeaker();
+          })
+
+        )
+
+
+        //new InstantCommand(flywheelSubsystem::startShooter, flywheelSubsystem),
+
+        //new WaitCommand(1),
+        //new InstantCommand(flywheelSubsystem::startFeeder, flywheelSubsystem),
+        //new WaitCommand(3),
+        //new InstantCommand(flywheelSubsystem::stopShooter, flywheelSubsystem),
+        //new InstantCommand(flywheelSubsystem::stopFeeder, flywheelSubsystem),
+        //new FlywheelMoveToMakeSpaceForIntakeCommand(flywheelSubsystem)
+      );
   }
 
   public static Command getFullIntakeRoutine(IntakeSubsystem intakeSubsystem, FlywheelSubsystem flywheelSubsystem) {
@@ -40,12 +55,8 @@ public final class FullRoutines {
         new FlywheelMoveToMakeSpaceForIntakeCommand(flywheelSubsystem),
         new DeployIntakeCommand(intakeSubsystem),
         new StowIntakeCommand(intakeSubsystem),
-        new FlywheelAimIntakeReceiveCommand(flywheelSubsystem),
-        new InstantCommand(() -> {intakeSubsystem.startFeedIntoFlywheel();}),
-        new InstantCommand(() -> {flywheelSubsystem.startFeeder();}),
-        new WaitCommand(4.0),
-        new InstantCommand(() -> {intakeSubsystem.stopIntakeMotor();}),
-        new InstantCommand(() -> {flywheelSubsystem.stopFeeder();})
+        new FlywheelAimIntakeReceiveCommand(flywheelSubsystem)
+  
         
         );
   }

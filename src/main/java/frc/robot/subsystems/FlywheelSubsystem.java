@@ -58,6 +58,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 
 		m_shooterMotorFollower.follow(m_shooterMotorLeader);
+		m_shooterMotorFollower.setInverted(true);
 
 		m_armShoulderEncoder = m_armShoulderMotor.getEncoder();
 		m_armElbowEncoder = m_armElbowMotor.getEncoder();
@@ -119,6 +120,21 @@ public class FlywheelSubsystem extends SubsystemBase {
 				FlywheelConstants.kIntakeMakeSpaceElbowSetpoint);
 	}
 
+
+	public void aimLowerPosition(){
+		setArmSetpoint(FlywheelConstants.kIntakeShooterShoulderSetpoint,
+				FlywheelConstants.kIntakeShooterElbowSetpoint);
+	}
+
+
+	public void setShoulderAimSpeaker(){
+		m_armShoulderPidController.setReference(FlywheelConstants.kSpeakerShoulderSetpoint, ControlType.kPosition);
+	}
+
+	public void setElbowAimSpeaker(){
+		m_armElbowPidController.setReference(FlywheelConstants.kSpeakerElbowSetpoint, ControlType.kPosition);
+	}
+
 	public void aimArmToAmp() {
 		setArmSetpoint(FlywheelConstants.kAmpShoulderSetpoint, FlywheelConstants.kAmpElbowSetpoint);
 	}
@@ -155,19 +171,22 @@ public class FlywheelSubsystem extends SubsystemBase {
 						FlywheelConstants.kArmElbowTolerance);
 	}
 
-	public int testingstartFeederDeleteMe = 1;
+	//public int testingstartFeederDeleteMe = 1;
 	public void startFeeder() {
 
-		System.out.println("startfeeder count: " + testingstartFeederDeleteMe);
-		testingstartFeederDeleteMe ++ ;
+		//System.out.println("startfeeder count: " + testingstartFeederDeleteMe);
+		//testingstartFeederDeleteMe ++ ;
+		m_feederMotor.set(TalonSRXControlMode.PercentOutput, FlywheelConstants.kFeederDutyCycleSetpoint);
+	}
+	public void startFeederReverse() {
 		m_feederMotor.set(TalonSRXControlMode.PercentOutput, FlywheelConstants.kFeederDutyCycleSetpoint);
 	}
 
 
-	public int stopFeederDELETEME = 1;
+	//public int stopFeederDELETEME = 1;
 	public void stopFeeder() {
-		System.out.println("stopping feeder motor: FLywheelsubsystem: " + stopFeederDELETEME);
-		stopFeederDELETEME++;
+		//System.out.println("stopping feeder motor: FLywheelsubsystem: " + stopFeederDELETEME);
+		//stopFeederDELETEME++;
 		m_feederMotor.set(TalonSRXControlMode.PercentOutput, 0.0);
 	}
 
