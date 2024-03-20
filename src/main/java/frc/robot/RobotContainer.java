@@ -121,14 +121,11 @@ public class RobotContainer {
         new SequentialCommandGroup(
 
 
-
           new InstantCommand(() -> {m_flyWheelSubsystem.aimArmToIntake();}),
-          
+          new WaitCommand(0.8),
 
           new InstantCommand(() -> {m_flyWheelSubsystem.startShooter();}),
-
-          new WaitCommand(1),
-
+          new WaitCommand(0.5),
 
 
           new InstantCommand(() -> {m_intakeSubsystem.startFeedIntoFlywheel();}),

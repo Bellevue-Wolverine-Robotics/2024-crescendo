@@ -50,8 +50,8 @@ public final class FlywheelConstants {
 	public static final double kIntakeReceiveShoulderSetpoint = 7;
 	public static final double kIntakeReceiveElbowSetpoint = -1.3;
 
-	public static final double kIntakeShooterShoulderSetpoint = 9.2;
-	public static final double kIntakeShooterElbowSetpoint = -8;
+	public static final double kIntakeShooterShoulderSetpoint = 10.2;
+	public static final double kIntakeShooterElbowSetpoint = -9;
 
 	public static final int kNoteSwitchDIOPort = 6;
 
