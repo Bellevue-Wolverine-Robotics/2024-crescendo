@@ -170,7 +170,7 @@ public class ClimberSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Right Encoder Velocity",
                 m_rightClimbRelativeEncoder.getVelocity());
 
-        System.out.println(m_leftClimbRelativeEncoder.getPosition());
+        //System.out.println(m_leftClimbRelativeEncoder.getPosition());
         if (m_topLimitSwitch.get()) {
 
             this.zeroPosition();
