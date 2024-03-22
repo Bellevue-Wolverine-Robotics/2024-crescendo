@@ -12,12 +12,12 @@ public final class ClimberConstants {
 
 	// public static final SparkPIDParams kClimbPidParams = new SparkPIDParams(2, 0,
 	// 0.2, 0, 0, -1, 1);
-	public static final SparkPIDParams kClimbPidParams = new SparkPIDParams(1.5, 0.001, 0, 0, 0, -1, 1);
+	public static final SparkPIDParams kClimbPidParams = new SparkPIDParams(1.455, 0.000, 0, 0, 0, -1, 1);
 
 	// units are in meters
-	public static final double kClimbExtendedSetpoint = 0.0;
+	public static final double kClimbExtendedSetpoint = -0.001;
 	public static final double kClimbRetractedSetpoint = -0.331;
-	public static final double kClimbTolerance = (0.05) * kClimbRetractedSetpoint;
+	public static final double kClimbTolerance = Math.abs((0.01) * kClimbRetractedSetpoint);
 
 	public static final int kSmartCurrentLimit = 30;
 

@@ -41,17 +41,20 @@ public final class FlywheelConstants {
 	public static final double kSpeakerShoulderSetpoint = 17;
 	public static final double kSpeakerElbowSetpoint = -17;
 
-	public static final double kIntakeMakeSpaceShoulderSetpoint = 15;
+	public static final double kIntakeMakeSpaceShoulderSetpoint = 8;
 	public static final double kIntakeMakeSpaceElbowSetpoint = 0;
+
+	public static final double kIntakeClimbShoulderSetpoint = 16.0;
+	public static final double kIntakeClimbElbowSetpoint = -0.8;
 
 	public static final double kAmpShoulderSetpoint = 0;
 	public static final double kAmpElbowSetpoint = 0;
 
-	public static final double kIntakeReceiveShoulderSetpoint = 6;
-	public static final double kIntakeReceiveElbowSetpoint = -1.3;
+	public static final double kIntakeReceiveShoulderSetpoint = 6.3;
+	public static final double kIntakeReceiveElbowSetpoint = -0.8;
 
 	public static final double kIntakeShooterShoulderSetpoint = 10.2;
-	public static final double kIntakeShooterElbowSetpoint = -9;
+	public static final double kIntakeShooterElbowSetpoint = -12.2;
 
 	public static final int kNoteSwitchDIOPort = 6;
 

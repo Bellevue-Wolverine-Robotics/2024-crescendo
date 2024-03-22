@@ -27,6 +27,7 @@ import frc.robot.commands.climber.ClimberRetractCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCommand;
 import frc.robot.commands.flywheel.FlywheelAimIntakeReceiveCommand;
 import frc.robot.commands.flywheel.FlywheelAimSpeakerCommand;
+import frc.robot.commands.flywheel.FlywheelClimbModeCommand;
 import frc.robot.commands.flywheel.FlywheelMoveToMakeSpaceForIntakeCommand;
 import frc.robot.commands.flywheel.FlywheelShoot;
 import frc.robot.commands.intake.DeployIntakeCommand;
@@ -112,25 +113,25 @@ public class RobotContainer {
     m_operatorController.button(7).onTrue(new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
 
     m_operatorController.button(10).onTrue(FullRoutines.prepareToClimb(m_intakeSubsystem));
-    m_operatorController.button(11).onTrue(new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
+    m_operatorController.button(11).onTrue(new FlywheelClimbModeCommand(m_flyWheelSubsystem));
 
 
 
     m_operatorController.button(8).onTrue(new FlywheelAimIntakeReceiveCommand(m_flyWheelSubsystem));
     m_operatorController.button(1).whileTrue(
+        //new InstantCommand(() -> {m_flyWheelSubsystem.aimLowerPosition();})
         new SequentialCommandGroup(
 
 
-          new InstantCommand(() -> {m_flyWheelSubsystem.aimArmToIntake();}),
-          new WaitCommand(0.8),
-
+          new InstantCommand(() -> {m_flyWheelSubsystem.aimArmToIntake();}),          
           new InstantCommand(() -> {m_flyWheelSubsystem.startShooter();}),
-          new WaitCommand(0.5),
-
+          new WaitCommand(0.3),
+          new InstantCommand(() -> {m_flyWheelSubsystem.aimLowerPosition();}),          
+          new WaitCommand(0.05),
 
           new InstantCommand(() -> {m_intakeSubsystem.startFeedIntoFlywheel();}),
-          new InstantCommand(() -> {m_flyWheelSubsystem.startFeeder();}),
-          new InstantCommand(() -> {m_flyWheelSubsystem.aimLowerPosition();})
+          new InstantCommand(() -> {m_flyWheelSubsystem.startFeeder();})
+          //new InstantCommand(() -> {m_flyWheelSubsystem.aimLowerPosition();})
 
           //new WaitCommand(2.0),
   

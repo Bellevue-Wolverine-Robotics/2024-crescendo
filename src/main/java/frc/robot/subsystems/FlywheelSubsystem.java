@@ -139,6 +139,10 @@ public class FlywheelSubsystem extends SubsystemBase {
 		setArmSetpoint(FlywheelConstants.kAmpShoulderSetpoint, FlywheelConstants.kAmpElbowSetpoint);
 	}
 
+
+	public void climbMode() {
+		setArmSetpoint(FlywheelConstants.kIntakeClimbShoulderSetpoint, FlywheelConstants.kIntakeClimbElbowSetpoint);
+	}
 	/*
 	 * This method aims the arm to receive the note from the intake
 	 */
@@ -149,6 +153,11 @@ public class FlywheelSubsystem extends SubsystemBase {
 	public boolean isArmAimingTowardsIntake() {
 		return isArmAtSetpoint(FlywheelConstants.kIntakeReceiveShoulderSetpoint,
 				FlywheelConstants.kIntakeReceiveElbowSetpoint);
+	}
+
+	public boolean isArmClimbMode() {
+		return isArmAtSetpoint(FlywheelConstants.kIntakeClimbShoulderSetpoint,
+				FlywheelConstants.kIntakeClimbElbowSetpoint);
 	}
 
 	public boolean isArmAimingTowardsAmp() {

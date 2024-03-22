@@ -82,15 +82,16 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void zeroPosition() {
-        m_leftClimbRelativeEncoder.setPosition(0);
-        m_rightClimbRelativeEncoder.setPosition(0);
+        m_leftClimbRelativeEncoder.setPosition(-0.0);
+        m_rightClimbRelativeEncoder.setPosition(-0.0);
     }
 
     public void bottomPosition() {
-        System.out.println("TESTING.... ATTENTION BOTTOM POSITION CALIBRATE -0.35 " + m_leftClimbRelativeEncoder.getPosition());
+        //System.out.println("TESTING.... ATTENTION BOTTOM POSITION CALIBRATE -0.35 " + m_leftClimbRelativeEncoder.getPosition());
         m_leftClimbRelativeEncoder.setPosition(-0.35);
         m_rightClimbRelativeEncoder.setPosition(-0.35);
     }
+
 
 
     // Positive voltage/duty cycle corresponds to raising the elevator
@@ -137,9 +138,9 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public boolean atSetpoint(double setpoint) {
         return PIDUtils.atSetpoint(m_leftClimbRelativeEncoder.getPosition(), setpoint,
-                ClimberConstants.kClimbTolerance)
-                && PIDUtils.atSetpoint(m_rightClimbRelativeEncoder.getPosition(), setpoint,
-                        ClimberConstants.kClimbTolerance);
+                ClimberConstants.kClimbTolerance);
+                /*&& PIDUtils.atSetpoint(m_rightClimbRelativeEncoder.getPosition(), setpoint,
+                        ClimberConstants.kClimbTolerance);*/
     }
 
     public boolean isExtended() {
@@ -169,10 +170,9 @@ public class ClimberSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Right Encoder Velocity",
                 m_rightClimbRelativeEncoder.getVelocity());
 
-
+        System.out.println(m_leftClimbRelativeEncoder.getPosition());
         if (m_topLimitSwitch.get()) {
 
-            //System.out.println("TOP HITTTTT TOP HITTTTT TOP HITTTTT TOP HITTTTT");
             this.zeroPosition();
         }
         if (m_bottomLimitSwitch.get()) {
