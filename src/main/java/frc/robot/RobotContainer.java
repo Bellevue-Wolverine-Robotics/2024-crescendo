@@ -90,6 +90,12 @@ public class RobotContainer {
         new ArcadeDriveCommand(m_driveSubsystem, () -> getArcadeDriveSpeeds().getFirst(),
             () -> getArcadeDriveSpeeds().getSecond()));
 
+
+    m_driverController.button(DriveConstants.kThrottle1Button).onTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle1Speed);}));
+    m_driverController.button(DriveConstants.kThrottle2Button).onTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle2Speed);}));
+    m_driverController.button(DriveConstants.kThrottle3Button).onTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle3Speed);}));
+
+
     // Climber
     m_operatorController.button(OperatorButtonConstants.kClimbUpButton)
         .whileTrue(new ClimberExtendCommand(m_climberSubsystem));
@@ -100,12 +106,13 @@ public class RobotContainer {
     m_operatorController.button(OperatorButtonConstants.kFullIntakeCycle)
         .onTrue(FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
 
-    m_operatorController.button(OperatorButtonConstants.kFullShootCycle)
-        .onTrue(FullRoutines.getShootAtSpeakerRoutine(m_flyWheelSubsystem));
+    //m_operatorController.button(OperatorButtonConstants.kFullShootCycle)
+        //.onTrue(FullRoutines.getShootAtSpeakerRoutine(m_flyWheelSubsystem));
 
     m_flyWheelSubsystem.setDefaultCommand(
         new InstantCommand(() -> m_flyWheelSubsystem.debugShoulder(m_operatorController), m_flyWheelSubsystem));
 
+      
 
 
     m_operatorController.button(9).onTrue(new FlywheelAimSpeakerCommand(m_flyWheelSubsystem));

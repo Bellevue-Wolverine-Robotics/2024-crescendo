@@ -12,11 +12,23 @@ public final class DriveConstants {
 	public static final int kBackRightMotorId = 1;
 
 	// Speed Presets
-	public static final double kThrottlePreset1 = 0.5;
-	public static final double kRotationPreset1 = 0.3;
+	// public static final double kThrottlePreset1 = 0.5;
+	// public static final double kRotationPreset1 = 0.3;
 
-	public static final double kThrottlePreset2 = 0.2;
-	public static final double kRotationPreset2 = 0.2;
+	// public static final double kThrottlePreset2 = 0.2;
+	// public static final double kRotationPreset2 = 0.2;
+
+	public static final int kThrottle1Button = 3;
+	public static final double kThrottle1Speed = 2;
+
+	public static final int kThrottle2Button = 5;
+	public static final double kThrottle2Speed = 3;
+
+	public static final int kThrottle3Button = 2;
+	public static final double kThrottle3Speed = 0.5;
+
+
+
 
 	public static final double kDriveGearRatio = 8.45;
 	public static final double kWheelDiameterInches = 6;
