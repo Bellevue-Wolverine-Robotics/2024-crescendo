@@ -91,9 +91,15 @@ public class RobotContainer {
             () -> getArcadeDriveSpeeds().getSecond()));
 
 
-    m_driverController.button(DriveConstants.kThrottle1Button).onTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle1Speed);}));
-    m_driverController.button(DriveConstants.kThrottle2Button).onTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle2Speed);}));
-    m_driverController.button(DriveConstants.kThrottle3Button).onTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle3Speed);}));
+    m_driverController.button(DriveConstants.kThrottle1Button).whileTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle1Speed);}));
+    m_driverController.button(DriveConstants.kThrottle2Button).whileTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle2Speed);}));
+    m_driverController.button(DriveConstants.kThrottle3Button).whileTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle3Speed);}));
+
+
+
+    m_driverController.button(DriveConstants.kThrottle1Button).whileFalse(new InstantCommand(() -> {m_driveSubsystem.setThrottle(1.0);}));
+    m_driverController.button(DriveConstants.kThrottle2Button).whileFalse(new InstantCommand(() -> {m_driveSubsystem.setThrottle(1.0);}));
+    m_driverController.button(DriveConstants.kThrottle3Button).whileFalse(new InstantCommand(() -> {m_driveSubsystem.setThrottle(1.0);}));
 
 
     // Climber
