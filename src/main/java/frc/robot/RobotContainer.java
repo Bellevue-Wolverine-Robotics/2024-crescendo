@@ -27,6 +27,7 @@ import frc.robot.commands.climber.ClimberRetractCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCommand;
 import frc.robot.commands.flywheel.FlywheelAimIntakeReceiveCommand;
 import frc.robot.commands.flywheel.FlywheelAimSpeakerCommand;
+import frc.robot.commands.flywheel.FlywheelCalibrate;
 import frc.robot.commands.flywheel.FlywheelClimbModeCommand;
 import frc.robot.commands.flywheel.FlywheelMoveToMakeSpaceForIntakeCommand;
 import frc.robot.commands.flywheel.FlywheelShoot;
@@ -121,8 +122,9 @@ public class RobotContainer {
       
 
 
-    m_operatorController.button(9).onTrue(new FlywheelAimSpeakerCommand(m_flyWheelSubsystem));
-    
+    m_operatorController.button(9).whileTrue((new FlywheelCalibrate(m_flyWheelSubsystem)));
+    //m_operatorController.button(9).whileFalse((new InstantCommand(() -> {m_flyWheelSubsystem.setShoulderVoltage(0);})));
+
     //m_operatorController.button(6).onTrue(new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
     //m_operatorController.button(7).onTrue(new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
     m_operatorController.button(6).onTrue(new FlywheelAimIntakeReceiveCommand(m_flyWheelSubsystem));
@@ -226,8 +228,8 @@ public class RobotContainer {
     boolean aboveSpeedThreshold = Math.abs(xSpeed) > DriveConstants.aboveSpeedThreshold;
     boolean buttonPressed = DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
         DriverButtonConstants.kDriveSpeedPreset1Button);
-    if (buttonPressed == false && aboveSpeedThreshold) {
-      final double invertedRotationIntensity = 1 / DriveConstants.rotationIntensity;
+    if (buttonPressed && aboveSpeedThreshold) {
+      final double invertedRotationIntensity = 1;
       zRotation /= (invertedRotationIntensity * Math.sqrt(Math.abs(xSpeed)) + 1);
     }
     

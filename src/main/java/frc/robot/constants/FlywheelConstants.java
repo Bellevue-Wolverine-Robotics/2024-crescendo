@@ -44,13 +44,13 @@ public final class FlywheelConstants {
 	public static final double kIntakeMakeSpaceShoulderSetpoint = 8;
 	public static final double kIntakeMakeSpaceElbowSetpoint = 0;
 
-	public static final double kIntakeClimbShoulderSetpoint = 32.0;
+	public static final double kIntakeClimbShoulderSetpoint = 27.0;
 	public static final double kIntakeClimbElbowSetpoint = -0.8;
 
 	public static final double kAmpShoulderSetpoint = 0;
 	public static final double kAmpElbowSetpoint = 0;
 
-	public static final double kIntakeReceiveShoulderSetpoint = 6.3;
+	public static final double kIntakeReceiveShoulderSetpoint = 6.0;
 	public static final double kIntakeReceiveElbowSetpoint = -0.8;
 
 	public static final double kIntakeShooterShoulderSetpoint = 10.2;
