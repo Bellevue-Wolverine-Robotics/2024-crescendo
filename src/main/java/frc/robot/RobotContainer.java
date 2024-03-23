@@ -210,13 +210,15 @@ public class RobotContainer {
     double xSpeed = -m_driverController.getY();
     double zRotation = -m_driverController.getX();
 
-    /*
-    if !(DriverStation.getStickButton(what button is this?) {
-      double rotationIntensityMult = 1 //Higher value means faster decrease in rotation as speed increases
-      zRotation = 1 / ((1 / zRotation) * (rotationIntensityyMult * sqrt(xSpeed) + 1)) //Decreases rotation based on speed increase (more speed = less rotation) for better handling 
+    boolean aboveSpeedThreshold = Math.abs(xSpeed) > DriveConstants.aboveSpeedThreshold;
+    boolean buttonPressed = DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
+        DriverButtonConstants.kDriveSpeedPreset1Button);
+    if (buttonPressed == false && aboveSpeedThreshold) {
+      final double invertedRotationIntensity = 1 / DriveConstants.rotationIntensity;
+      zRotation /= (invertedRotationIntensity * Math.sqrt(Math.abs(xSpeed)) + 1);
     }
-    */
-    if (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
+    
+   /*  if (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
         DriverButtonConstants.kDriveSpeedPreset1Button)) {
       xSpeed *= DriveConstants.kThrottlePreset1;
       zRotation *= DriveConstants.kRotationPreset1;
@@ -224,7 +226,7 @@ public class RobotContainer {
         DriverButtonConstants.kDriveSpeedPreset2Button)) {
       xSpeed *= DriveConstants.kThrottlePreset2;
       zRotation *= DriveConstants.kRotationPreset2;
-    }
+    }*/
 
     Pair<Double, Double> arcadeDriveSpeedsPair = new Pair<Double, Double>(xSpeed, zRotation);
 

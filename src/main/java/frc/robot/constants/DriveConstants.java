@@ -38,5 +38,7 @@ public final class DriveConstants {
 			-1, 1);
 
 	public static final double kMaxSimInputVoltage = 12;
+	public static final double rotationIntensity = 0.5;
+    public static double aboveSpeedThreshold = 0.05;
 
 }
