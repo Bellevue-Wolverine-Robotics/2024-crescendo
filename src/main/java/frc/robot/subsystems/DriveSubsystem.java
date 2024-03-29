@@ -66,6 +66,8 @@ public class DriveSubsystem extends SubsystemBase {
     // SUBSYSTEMS????
     // private Pose2d currPose2d;
 
+    private double m_throttle = 1;
+
     private final DifferentialDrivePoseEstimator m_poseEstimator = new DifferentialDrivePoseEstimator(
             new DifferentialDriveKinematics(0.0),
             m_imu.getRotation2d(),
@@ -234,7 +236,11 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {
-        this.m_drive.arcadeDrive(xSpeed, rotation);
+        this.m_drive.arcadeDrive(xSpeed * m_throttle, rotation);
+    }
+
+    public void setThrottle(double throttle) {
+        this.m_throttle = throttle;
     }
 
     public double getYaw() {

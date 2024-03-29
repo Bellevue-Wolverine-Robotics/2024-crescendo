@@ -94,6 +94,22 @@ public class FlywheelSubsystem extends SubsystemBase {
 		m_armElbowMotor.stopMotor();
 	}
 
+
+	public void calibrateRetract(){
+		System.out.println("here callibrating");
+		m_armShoulderMotor.setVoltage(-1);
+		m_armShoulderEncoder.setPosition(0.0);
+	}
+
+	public void setShoulderVoltage(double voltage){
+		m_armShoulderMotor.setVoltage(voltage);
+	}
+
+	public void resetSholderEncoder(){
+		m_armShoulderEncoder.setPosition(0.0);
+	}
+
+
 	public void setShooterDutyCycle(double dutyCycle) {
 		m_shooterMotorLeader.set(TalonSRXControlMode.PercentOutput, dutyCycle);
 	}

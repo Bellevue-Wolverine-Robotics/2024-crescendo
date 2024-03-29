@@ -27,6 +27,7 @@ import frc.robot.commands.climber.ClimberRetractCommand;
 import frc.robot.commands.drivetrain.ArcadeDriveCommand;
 import frc.robot.commands.flywheel.FlywheelAimIntakeReceiveCommand;
 import frc.robot.commands.flywheel.FlywheelAimSpeakerCommand;
+import frc.robot.commands.flywheel.FlywheelCalibrate;
 import frc.robot.commands.flywheel.FlywheelClimbModeCommand;
 import frc.robot.commands.flywheel.FlywheelMoveToMakeSpaceForIntakeCommand;
 import frc.robot.commands.flywheel.FlywheelShoot;
@@ -90,6 +91,18 @@ public class RobotContainer {
         new ArcadeDriveCommand(m_driveSubsystem, () -> getArcadeDriveSpeeds().getFirst(),
             () -> getArcadeDriveSpeeds().getSecond()));
 
+
+    m_driverController.button(DriveConstants.kThrottle1Button).whileTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle1Speed);}));
+    m_driverController.button(DriveConstants.kThrottle2Button).whileTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle2Speed);}));
+    m_driverController.button(DriveConstants.kThrottle3Button).whileTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle3Speed);}));
+
+
+
+    m_driverController.button(DriveConstants.kThrottle1Button).whileFalse(new InstantCommand(() -> {m_driveSubsystem.setThrottle(1.0);}));
+    m_driverController.button(DriveConstants.kThrottle2Button).whileFalse(new InstantCommand(() -> {m_driveSubsystem.setThrottle(1.0);}));
+    m_driverController.button(DriveConstants.kThrottle3Button).whileFalse(new InstantCommand(() -> {m_driveSubsystem.setThrottle(1.0);}));
+
+
     // Climber
     m_operatorController.button(OperatorButtonConstants.kClimbUpButton)
         .whileTrue(new ClimberExtendCommand(m_climberSubsystem));
@@ -100,16 +113,18 @@ public class RobotContainer {
     m_operatorController.button(OperatorButtonConstants.kFullIntakeCycle)
         .onTrue(FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
 
-    m_operatorController.button(OperatorButtonConstants.kFullShootCycle)
-        .onTrue(FullRoutines.getShootAtSpeakerRoutine(m_flyWheelSubsystem));
+    //m_operatorController.button(OperatorButtonConstants.kFullShootCycle)
+        //.onTrue(FullRoutines.getShootAtSpeakerRoutine(m_flyWheelSubsystem));
 
     m_flyWheelSubsystem.setDefaultCommand(
         new InstantCommand(() -> m_flyWheelSubsystem.debugShoulder(m_operatorController), m_flyWheelSubsystem));
 
+      
 
 
-    m_operatorController.button(9).onTrue(new FlywheelAimSpeakerCommand(m_flyWheelSubsystem));
-    
+    m_operatorController.button(9).whileTrue((new FlywheelCalibrate(m_flyWheelSubsystem)));
+    //m_operatorController.button(9).whileFalse((new InstantCommand(() -> {m_flyWheelSubsystem.setShoulderVoltage(0);})));
+
     //m_operatorController.button(6).onTrue(new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
     //m_operatorController.button(7).onTrue(new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
     m_operatorController.button(6).onTrue(new FlywheelAimIntakeReceiveCommand(m_flyWheelSubsystem));
@@ -210,13 +225,15 @@ public class RobotContainer {
     double xSpeed = -m_driverController.getY();
     double zRotation = -m_driverController.getX();
 
-    /*
-    if !(DriverStation.getStickButton(what button is this?) {
-      double rotationIntensityMult = 1 //Higher value means faster decrease in rotation as speed increases
-      zRotation = 1 / ((1 / zRotation) * (rotationIntensityyMult * sqrt(xSpeed) + 1)) //Decreases rotation based on speed increase (more speed = less rotation) for better handling 
+    boolean aboveSpeedThreshold = Math.abs(xSpeed) > DriveConstants.aboveSpeedThreshold;
+    boolean buttonPressed = DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
+        DriverButtonConstants.kDriveSpeedPreset1Button);
+    if (buttonPressed && aboveSpeedThreshold) {
+      final double invertedRotationIntensity = 1;
+      zRotation /= (invertedRotationIntensity * Math.sqrt(Math.abs(xSpeed)) + 1);
     }
-    */
-    if (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
+    
+   /*  if (DriverStation.getStickButton(JoystickPortConstants.kDriverControllerPort,
         DriverButtonConstants.kDriveSpeedPreset1Button)) {
       xSpeed *= DriveConstants.kThrottlePreset1;
       zRotation *= DriveConstants.kRotationPreset1;
@@ -224,7 +241,7 @@ public class RobotContainer {
         DriverButtonConstants.kDriveSpeedPreset2Button)) {
       xSpeed *= DriveConstants.kThrottlePreset2;
       zRotation *= DriveConstants.kRotationPreset2;
-    }
+    }*/
 
     Pair<Double, Double> arcadeDriveSpeedsPair = new Pair<Double, Double>(xSpeed, zRotation);
 
