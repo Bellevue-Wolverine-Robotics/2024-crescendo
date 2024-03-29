@@ -193,22 +193,6 @@ public class RobotContainer {
   }
 
   public void smartDashBoardOperatorBindings(){
-    /*SmartDashboard.putData(SmartOperatorButtons.fullIntakeRoutine, FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
-
-
-    SmartDashboard.putData(SmartOperatorButtons.flywheelStart, new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
-    SmartDashboard.putData(SmartOperatorButtons.flywheelStop, new InstantCommand(m_flyWheelSubsystem::stopShooter, m_flyWheelSubsystem));
-
-    SmartDashboard.putData(SmartOperatorButtons.FlywheelAimSpeaker, new FlywheelAimSpeakerCommand(m_flyWheelSubsystem));
-
-
-    SmartDashboard.putData(SmartOperatorButtons.FlywheelMoveToMakeSpaceForIntakeCommand, new FlywheelMoveToMakeSpaceForIntakeCommand(m_flyWheelSubsystem));
-    SmartDashboard.putData(SmartOperatorButtons.prepareToClimb, FullRoutines.prepareToClimb(m_intakeSubsystem));
-
-    SmartDashboard.putData(SmartOperatorButtons.extendIntake, new ClimberExtendCommand(m_climberSubsystem));
-    SmartDashboard.putData(SmartOperatorButtons.retractIntake, new ClimberRetractCommand(m_climberSubsystem));*/
-
-
     throttleSelection = new SendableChooser<ThrottlesSmartdashboard> ();
     throttleSelection.setDefaultOption("Fast", ThrottlesSmartdashboard.FAST);
     throttleSelection.addOption("Medium", ThrottlesSmartdashboard.MEDIUM);
@@ -216,23 +200,21 @@ public class RobotContainer {
 
     SmartDashboard.putData("Max Speed", throttleSelection);
     
-    /*SmartDashboard.putData("Update Throttle Limit", runOnce(() -> {
-       m_driveSubsystem.setThrottleMode(throttleSelection.getSelected()); 
-       m_armSubsystem.setThrottleMode(throttleSelection.getSelected()); 
 
-    }, m_driveSubsystem));*/
     this.prevThrottle = throttleSelection.getSelected();
 
 
     new Thread(() ->{
       m_driveSubsystem.setThrottle(throttleSelection.getSelected());
+      //m_driveSubsystem.setThrottle(ThrottlesSmartdashboard.MEDIUM);
+
       while(true){
         if(throttleSelection.getSelected() != prevThrottle){
           prevThrottle = throttleSelection.getSelected();
           m_driveSubsystem.setThrottle(throttleSelection.getSelected());
         }
       } 
-    }).start();;  
+    }).start();
   }
 
   
