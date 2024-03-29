@@ -1,10 +1,13 @@
 package frc.robot.constants;
 
 import edu.wpi.first.math.util.Units;
+import frc.utils.Throttles;
 import frc.utils.PIDUtils.SparkPIDParams;
 import frc.utils.PIDUtils.WPIPidParams;
 
 public final class DriveConstants {
+
+
 	// CAN IDs
 	public static final int kFrontLeftMotorId = 4;
 	public static final int kFrontRightMotorId = 2;
@@ -28,6 +31,7 @@ public final class DriveConstants {
 	public static final double kThrottle3Speed = 0.5;
 
 
+	//public static final int driveThrottles = 1;
 
 
 	public static final double kDriveGearRatio = 8.45;
@@ -53,4 +57,5 @@ public final class DriveConstants {
 	public static final double rotationIntensity = 0.5;
     public static double aboveSpeedThreshold = 0.05;
 
-}
+	public static final Throttles[] driveThrottles = {new Throttles(1, 1), new Throttles(1, 0.7), new Throttles(1, 0.4)};
+}	

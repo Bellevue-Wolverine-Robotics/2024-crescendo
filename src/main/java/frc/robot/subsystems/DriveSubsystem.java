@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DebugSettings;
+import frc.robot.Enums.ThrottlesSmartdashboard;
 import frc.robot.constants.DriveConstants;
 import frc.utils.PIDUtils;
 import frc.robot.Debug;
@@ -61,12 +62,13 @@ public class DriveSubsystem extends SubsystemBase {
     private AHRS m_imu = new AHRS(SPI.Port.kMXP);
     private Debug debugLogger;
 
+    private int throttleMode = 1;
+
     private Field2d m_field = new Field2d();
     // private VisionSubsystem vision = new VisionSubsystem();// NESTED
     // SUBSYSTEMS????
     // private Pose2d currPose2d;
 
-    private double m_throttle = 1;
 
     private final DifferentialDrivePoseEstimator m_poseEstimator = new DifferentialDrivePoseEstimator(
             new DifferentialDriveKinematics(0.0),
@@ -140,6 +142,8 @@ public class DriveSubsystem extends SubsystemBase {
 
         this.debugLogger = debugLogger;
 
+
+
         BooleanSupplier bsupply = (() -> {
             // Boolean supplier that controls when the path will be mirrored for the red
             // alliance
@@ -161,6 +165,9 @@ public class DriveSubsystem extends SubsystemBase {
         PIDUtils.setPIDConstants(m_frontRightPID, DriveConstants.kDriveVelocityPIDParams);
         PIDUtils.setPIDConstants(m_backLeftPID, DriveConstants.kDriveVelocityPIDParams);
         PIDUtils.setPIDConstants(m_backRightPID, DriveConstants.kDriveVelocityPIDParams);
+
+        
+
 
         AutoBuilder.configureRamsete(
                 this::getPose,
@@ -185,6 +192,10 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Drive Kf Right", m_frontRightPID.getFF());
 
     }
+
+
+
+
 
     public Pose2d getPose() {
         return m_odometry.getPoseMeters();
@@ -236,11 +247,34 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void arcadeDrive(double xSpeed, double rotation) {
-        this.m_drive.arcadeDrive(xSpeed * m_throttle, rotation);
+        this.m_drive.arcadeDrive(DriveConstants.driveThrottles[this.throttleMode].applyGradient(xSpeed), DriveConstants.driveThrottles[this.throttleMode].applyGradient(rotation));
     }
 
-    public void setThrottle(double throttle) {
-        this.m_throttle = throttle;
+
+    public void setThrottle(ThrottlesSmartdashboard throttles) {
+
+        switch(throttles){
+            case FAST: {
+              this.throttleMode = 0;
+              break;
+            }
+            case MEDIUM: {
+              this.throttleMode = 1;
+              break;
+            }
+            case SLOW: {
+              this.throttleMode = 2;
+              break;
+            }
+            default:{
+              this.throttleMode = 0;
+              break;
+            }
+        }
+        DriveConstants.driveThrottles[this.throttleMode].setLimit(m_frontLeftMotor);
+        DriveConstants.driveThrottles[this.throttleMode].setLimit(m_frontRightMotor);
+        DriveConstants.driveThrottles[this.throttleMode].setLimit(m_backLeftMotor);
+        DriveConstants.driveThrottles[this.throttleMode].setLimit(m_backRightMotor);
     }
 
     public double getYaw() {

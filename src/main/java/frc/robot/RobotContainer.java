@@ -42,6 +42,9 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.Enums.ThrottlesSmartdashboard;
+
+import frc.utils.Throttles;
 
 public class RobotContainer {
   private final SendableChooser<Command> m_autoChooser;
@@ -57,8 +60,11 @@ public class RobotContainer {
   private final CommandJoystick m_operatorController = new CommandJoystick(
       JoystickPortConstants.kOperatorControllerPort);
 
+  
+  private SendableChooser<ThrottlesSmartdashboard> throttleSelection;
+  private ThrottlesSmartdashboard prevThrottle;
 
-
+  
   private final String smartDashboardDebugKey = "Debug Mode";
   private final String smartDashboardDebugKeyLabel = "Debug Mode Label";
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
@@ -91,16 +97,11 @@ public class RobotContainer {
         new ArcadeDriveCommand(m_driveSubsystem, () -> getArcadeDriveSpeeds().getFirst(),
             () -> getArcadeDriveSpeeds().getSecond()));
 
-
-    m_driverController.button(DriveConstants.kThrottle1Button).whileTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle1Speed);}));
-    m_driverController.button(DriveConstants.kThrottle2Button).whileTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle2Speed);}));
-    m_driverController.button(DriveConstants.kThrottle3Button).whileTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(DriveConstants.kThrottle3Speed);}));
-
-
-
-    m_driverController.button(DriveConstants.kThrottle1Button).whileFalse(new InstantCommand(() -> {m_driveSubsystem.setThrottle(1.0);}));
-    m_driverController.button(DriveConstants.kThrottle2Button).whileFalse(new InstantCommand(() -> {m_driveSubsystem.setThrottle(1.0);}));
-    m_driverController.button(DriveConstants.kThrottle3Button).whileFalse(new InstantCommand(() -> {m_driveSubsystem.setThrottle(1.0);}));
+    /*
+    m_driverController.button(DriveConstants.kThrottle1Button).onTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(0);}));
+    m_driverController.button(DriveConstants.kThrottle2Button).onTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(1);}));
+    m_driverController.button(DriveConstants.kThrottle3Button).onTrue(new InstantCommand(() -> {m_driveSubsystem.setThrottle(2);}));
+    */
 
 
     // Climber
@@ -192,7 +193,7 @@ public class RobotContainer {
   }
 
   public void smartDashBoardOperatorBindings(){
-    SmartDashboard.putData(SmartOperatorButtons.fullIntakeRoutine, FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
+    /*SmartDashboard.putData(SmartOperatorButtons.fullIntakeRoutine, FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
 
 
     SmartDashboard.putData(SmartOperatorButtons.flywheelStart, new InstantCommand(m_flyWheelSubsystem::startShooter, m_flyWheelSubsystem));
@@ -205,10 +206,36 @@ public class RobotContainer {
     SmartDashboard.putData(SmartOperatorButtons.prepareToClimb, FullRoutines.prepareToClimb(m_intakeSubsystem));
 
     SmartDashboard.putData(SmartOperatorButtons.extendIntake, new ClimberExtendCommand(m_climberSubsystem));
-    SmartDashboard.putData(SmartOperatorButtons.retractIntake, new ClimberRetractCommand(m_climberSubsystem));
+    SmartDashboard.putData(SmartOperatorButtons.retractIntake, new ClimberRetractCommand(m_climberSubsystem));*/
+
+
+    throttleSelection = new SendableChooser<ThrottlesSmartdashboard> ();
+    throttleSelection.setDefaultOption("Fast", ThrottlesSmartdashboard.FAST);
+    throttleSelection.addOption("Medium", ThrottlesSmartdashboard.MEDIUM);
+    throttleSelection.addOption("Slow", ThrottlesSmartdashboard.SLOW);
+
+    SmartDashboard.putData("Max Speed", throttleSelection);
+    
+    /*SmartDashboard.putData("Update Throttle Limit", runOnce(() -> {
+       m_driveSubsystem.setThrottleMode(throttleSelection.getSelected()); 
+       m_armSubsystem.setThrottleMode(throttleSelection.getSelected()); 
+
+    }, m_driveSubsystem));*/
+    this.prevThrottle = throttleSelection.getSelected();
+
+
+    new Thread(() ->{
+      m_driveSubsystem.setThrottle(throttleSelection.getSelected());
+      while(true){
+        if(throttleSelection.getSelected() != prevThrottle){
+          prevThrottle = throttleSelection.getSelected();
+          m_driveSubsystem.setThrottle(throttleSelection.getSelected());
+        }
+      } 
+    }).start();;  
   }
 
-
+  
 
 
 
