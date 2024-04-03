@@ -101,8 +101,8 @@ public class FlywheelSubsystem extends SubsystemBase {
 		m_armShoulderEncoder.setPosition(0.0);
 	}
 
-	public void setShoulderVoltage(double voltage){
-		m_armShoulderMotor.setVoltage(voltage);
+	public void setSpeed(double speed){
+		m_armShoulderMotor.set(speed);
 	}
 
 	public void resetSholderEncoder(){

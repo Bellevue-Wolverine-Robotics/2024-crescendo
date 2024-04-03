@@ -17,7 +17,7 @@ public class FlywheelCalibrate extends Command {
 
 	@Override
 	public void initialize() {
-		m_flywheelSubsystem.setShoulderVoltage(-1.0);
+		m_flywheelSubsystem.setSpeed(-0.3);
         m_flywheelSubsystem.resetSholderEncoder();
 	}
 
@@ -27,7 +27,7 @@ public class FlywheelCalibrate extends Command {
 	}
 	@Override
     public void end(boolean interrupted){
-        m_flywheelSubsystem.setShoulderVoltage(0.0);
+        m_flywheelSubsystem.setSpeed(0.0);
     }    
 }
 

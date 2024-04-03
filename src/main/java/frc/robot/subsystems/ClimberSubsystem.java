@@ -93,6 +93,11 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
 
+    public void setSpeed(double speed){
+        this.m_leftClimbMotor.set(speed);
+        this.m_rightClimbMotor.set(speed);
+
+    }
 
     // Positive voltage/duty cycle corresponds to raising the elevator
     public void setDutyCycle(double dutyCycle)
