@@ -16,7 +16,6 @@ public class Throttles {
         motor.getPIDController().setOutputRange(-limit, limit);
     }
     public void setLimit(WPI_TalonSRX motor){
-        //motor.configmax();
     }
 
     public double applyGradient(double input){

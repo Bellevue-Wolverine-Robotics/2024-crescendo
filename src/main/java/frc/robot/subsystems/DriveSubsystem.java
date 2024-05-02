@@ -249,10 +249,10 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public static int getThrottleInt (ThrottlesSmartdashboard throttles) {
-        switch(throttles){
-            case FAST: return 0;
-            case MEDIUM: return 1;
-            case SLOW: return 2;
+        switch (throttles) {
+            case FAST: return 0; //2
+            case MEDIUM: return 0; //1
+            case SLOW: return 0;
             default: return 0;
         }
     }
