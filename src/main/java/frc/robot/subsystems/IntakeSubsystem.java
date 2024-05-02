@@ -96,7 +96,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	public int ahhhTestingIntakeDeleteMe = 1;
 	public void stopIntakeMotor() {
 		//System.out.println("STOPPPP stopIntakeMotor: Intake MOtor " + ahhhTestingIntakeDeleteMe);
-		ahhhTestingIntakeDeleteMe ++;
+		//ahhhTestingIntakeDeleteMe ++;
 		m_feederMotor.stopMotor();
 	}
 
