@@ -111,9 +111,12 @@ public class RobotContainer {
         .whileTrue(new ClimberRetractCommand(m_climberSubsystem));
 
     // Intake
-    m_operatorController.button(OperatorButtonConstants.kFullIntakeCycle)
-        .onTrue(FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));
+    /*m_operatorController.button(OperatorButtonConstants.kFullIntakeCycle)
+        .onTrue(FullRoutines.getFullIntakeRoutine(m_intakeSubsystem, m_flyWheelSubsystem));*/
 
+    m_operatorController.button(OperatorButtonConstants.kFullIntakeCycle)
+        .onTrue(new DeployIntakeCommand(m_intakeSubsystem));
+        
     //m_operatorController.button(OperatorButtonConstants.kFullShootCycle)
         //.onTrue(FullRoutines.getShootAtSpeakerRoutine(m_flyWheelSubsystem));
 
@@ -140,6 +143,8 @@ public class RobotContainer {
 
     m_operatorController.button(8).onTrue(new FlywheelAimIntakeReceiveCommand(m_flyWheelSubsystem));
 
+
+    //m_operatorController.button(8).onTrue(new FlywheelAimIntakeReceiveCommand(m_flyWheelSubsystem));
 
 
 
@@ -205,13 +210,13 @@ public class RobotContainer {
 
 
     new Thread(() ->{
-      m_driveSubsystem.setThrottle(throttleSelection.getSelected());
+      globalSetThrottle(throttleSelection.getSelected());
       //m_driveSubsystem.setThrottle(ThrottlesSmartdashboard.MEDIUM);
 
-      while(true){
+      while (true) {
         if(throttleSelection.getSelected() != prevThrottle){
           prevThrottle = throttleSelection.getSelected();
-          m_driveSubsystem.setThrottle(throttleSelection.getSelected());
+          globalSetThrottle(throttleSelection.getSelected());
         }
       } 
     }).start();
@@ -252,7 +257,7 @@ public class RobotContainer {
       zRotation *= DriveConstants.kRotationPreset2;
     }*/
 
-    Pair<Double, Double> arcadeDriveSpeedsPair = new Pair<Double, Double>(xSpeed, zRotation);
+    Pair <Double, Double> arcadeDriveSpeedsPair = new Pair<Double, Double>(xSpeed, zRotation);
 
     return arcadeDriveSpeedsPair;
   }
@@ -263,5 +268,11 @@ public class RobotContainer {
 
   public ClimberSubsystem getClimberSubsystem() {
     return m_climberSubsystem;
+  }
+
+  public void globalSetThrottle (ThrottlesSmartdashboard throttles) {
+    m_driveSubsystem.setThrottle (throttles);
+    m_flyWheelSubsystem.setThrottle(throttles); 
+    m_intakeSubsystem.setThrottle(throttles);
   }
 }

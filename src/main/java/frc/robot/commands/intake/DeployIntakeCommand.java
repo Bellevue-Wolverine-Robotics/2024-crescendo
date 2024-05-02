@@ -8,6 +8,7 @@ public class DeployIntakeCommand extends Command {
 
 	public DeployIntakeCommand(IntakeSubsystem intakeSubsystem) {
 		m_intakeSubsystem = intakeSubsystem;
+		System.out.println(m_intakeSubsystem.getAngle());
 
 		addRequirements(m_intakeSubsystem);
 	}
@@ -16,6 +17,11 @@ public class DeployIntakeCommand extends Command {
 	public void initialize() {
 		m_intakeSubsystem.startIntakeMotor();
 		m_intakeSubsystem.deployIntakeArm();
+	}
+
+	@Override 
+	public void execute(){
+		System.out.println(m_intakeSubsystem.getAngle());
 	}
 
 	@Override

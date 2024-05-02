@@ -52,10 +52,10 @@ public final class FullRoutines {
 
   public static Command getFullIntakeRoutine(IntakeSubsystem intakeSubsystem, FlywheelSubsystem flywheelSubsystem) {
     return new SequentialCommandGroup(
-        new FlywheelMoveToMakeSpaceForIntakeCommand(flywheelSubsystem),
+        //new FlywheelMoveToMakeSpaceForIntakeCommand(flywheelSubsystem),
         new DeployIntakeCommand(intakeSubsystem),
-        new StowIntakeCommand(intakeSubsystem),
-        new FlywheelAimIntakeReceiveCommand(flywheelSubsystem)
+        new StowIntakeCommand(intakeSubsystem)
+        //new FlywheelAimIntakeReceiveCommand(flywheelSubsystem)
   
         
         );

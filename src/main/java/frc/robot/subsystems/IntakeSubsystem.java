@@ -13,8 +13,11 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.Enums.ThrottlesSmartdashboard;
+import frc.robot.constants.DriveConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.utils.PIDUtils;
+import frc.utils.Throttles;
 
 public class IntakeSubsystem extends SubsystemBase {
 	private CANSparkMax m_intakeArm;
@@ -143,6 +146,13 @@ public class IntakeSubsystem extends SubsystemBase {
 	// -- SHOOTER MODE -- //
 	public void shoot() {
 		setIntakeMotorSpeed(-1.0);
+	}
+
+	public void setThrottle (ThrottlesSmartdashboard throttles) {
+		final Throttles throttle = DriveConstants.driveThrottles[DriveSubsystem.getThrottleInt(throttles)];
+
+		throttle.setLimit(m_feederMotor);
+		throttle.setLimit(m_intakeArm);
 	}
 
 }

@@ -57,5 +57,9 @@ public final class DriveConstants {
 	public static final double rotationIntensity = 0.5;
     public static double aboveSpeedThreshold = 0.05;
 
-	public static final Throttles[] driveThrottles = {new Throttles(1, 1), new Throttles(1, 0.7), new Throttles(1, 0.4)};
+	public static final Throttles[] driveThrottles = {
+		new Throttles(1, 1),
+		new Throttles(1, 0.7),
+		new Throttles(1, 0.4)
+	};
 }	

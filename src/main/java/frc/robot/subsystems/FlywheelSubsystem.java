@@ -17,9 +17,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.DebugSettings;
+import frc.robot.Enums.ThrottlesSmartdashboard;
+import frc.robot.constants.DriveConstants;
 import frc.robot.constants.FlywheelConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.utils.PIDUtils;
+import frc.utils.Throttles;
 
 public class FlywheelSubsystem extends SubsystemBase {
 	private WPI_TalonSRX m_shooterMotorLeader;
@@ -266,6 +269,16 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 	public double getElbowEncoderValue() {
 		return m_armElbowEncoder.getPosition();
+	}
+
+	public void setThrottle (ThrottlesSmartdashboard throttles) {
+		final Throttles throttle = DriveConstants.driveThrottles[DriveSubsystem.getThrottleInt(throttles)];
+
+		throttle.setLimit(m_shooterMotorFollower);
+		throttle.setLimit(m_shooterMotorLeader);
+
+		throttle.setLimit(m_armElbowMotor);
+		throttle.setLimit(m_armShoulderMotor);
 	}
 
 }

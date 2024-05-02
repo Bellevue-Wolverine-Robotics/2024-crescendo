@@ -16,11 +16,9 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -71,13 +69,14 @@ public class DriveSubsystem extends SubsystemBase {
 
 
     private final DifferentialDrivePoseEstimator m_poseEstimator = new DifferentialDrivePoseEstimator(
-            new DifferentialDriveKinematics(0.0),
-            m_imu.getRotation2d(),
-            m_leftEncoder.getPosition(),
-            m_rightEncoder.getPosition(),
-            new Pose2d(),
-            VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-            VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+        new DifferentialDriveKinematics(0.0),
+        m_imu.getRotation2d(),
+        m_leftEncoder.getPosition(),
+        m_rightEncoder.getPosition(),
+        new Pose2d(),
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))
+    );
 
     // TODO: update these to reflect actual values using SysId
     // https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/drivesim-tutorial/drivetrain-model.html
@@ -193,10 +192,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     }
 
-
-
-
-
     public Pose2d getPose() {
         return m_odometry.getPoseMeters();
     }
@@ -221,8 +216,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void drive(ChassisSpeeds speeds) {
-        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
-                DriveConstants.kTrackWidthMeters);
+        DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(DriveConstants.kTrackWidthMeters);
 
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
@@ -250,27 +244,31 @@ public class DriveSubsystem extends SubsystemBase {
         this.m_drive.arcadeDrive(DriveConstants.driveThrottles[this.throttleMode].applyGradient(xSpeed), DriveConstants.driveThrottles[this.throttleMode].applyGradient(rotation));
     }
 
+    public int getThrottleInt () {
+        return this.throttleMode;
+    }
+
+    public static int getThrottleInt (ThrottlesSmartdashboard throttles) {
+        switch(throttles){
+            case FAST: return 0;
+            case MEDIUM: return 1;
+            case SLOW: return 2;
+            default: return 0;
+        }
+    }
+
+    public ThrottlesSmartdashboard getThrottle () {
+        switch (this.throttleMode) {
+            case 0: return ThrottlesSmartdashboard.FAST;
+            case 1: return ThrottlesSmartdashboard.MEDIUM;
+            case 2: return ThrottlesSmartdashboard.SLOW;
+            default: return ThrottlesSmartdashboard.SLOW; 
+        }
+    }
+
 
     public void setThrottle(ThrottlesSmartdashboard throttles) {
-
-        switch(throttles){
-            case FAST: {
-              this.throttleMode = 0;
-              break;
-            }
-            case MEDIUM: {
-              this.throttleMode = 1;
-              break;
-            }
-            case SLOW: {
-              this.throttleMode = 2;
-              break;
-            }
-            default:{
-              this.throttleMode = 0;
-              break;
-            }
-        }
+        this.throttleMode = getThrottleInt(throttles);
         DriveConstants.driveThrottles[this.throttleMode].setLimit(m_frontLeftMotor);
         DriveConstants.driveThrottles[this.throttleMode].setLimit(m_frontRightMotor);
         DriveConstants.driveThrottles[this.throttleMode].setLimit(m_backLeftMotor);
