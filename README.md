@@ -1,5 +1,5 @@
 ## TODO
-
+training link https://docs.google.com/document/d/1ExntLCb15kRPGoHU-4W0bI3tHJhysG3rIfcOTPJJ-8I/edit?tab=t.0
 ### Drivetrain
  - [x] Odometry
  - [x] Driving speed switcher (fast, med, slow) [MED]
